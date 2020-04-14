@@ -1,0 +1,133 @@
+﻿.foo {
+    color: green;
+}
+
+.header-round {
+    font-weight: 800;
+    font-size: large;
+}
+
+.container {
+    padding: 2px 16px;
+}
+
+.player-actions {
+    border: double;
+    border-width: 1px;
+    height: 200px;
+    width: 400px;
+}
+
+.bold-small-header {
+    font-weight: 700;
+}
+
+.player-actions-buysellstock {
+    font-size: medium;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+    padding: .4rem .4rem;
+    font-size: .875rem;
+    line-height: .5;
+    border-radius: .2rem;
+}
+
+.player-status-box {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border:outset;
+    border-width: 2px;
+    height: 150px;
+    width: 200px;
+    float: left;
+    font-family: Courier New, Courier, monospace;
+    position: relative;
+}
+
+.player-status-box-active {
+    border-color: blue;
+}
+
+.player-status-box-name {
+    text-align:center;
+    font-size:medium;
+    font-weight: 700;
+    border-bottom-style:dashed;
+    border-bottom-width: 2px;
+}
+
+.player-status-box-name-active {
+    font-weight: 700;
+}
+
+.player-status-box-networth {
+    text-align:left;
+}
+
+.player-status-panel {
+    float:none;
+}
+
+.company-status-panel {
+    float: none;
+}
+
+.company-status-key {
+    border: thin;
+    border-width: 2px;
+    height: 150px;
+    width: 200px;
+    float: left;
+    font-family: Courier New, Courier, monospace;
+    font-size: smaller;
+}
+
+.company-status-box {
+    border: thin;
+    border-width: 2px;
+    height: 150px;
+    width: 150px;
+    float: left;
+    font-family: Courier New, Courier, monospace;
+    font-size: smaller;
+}
+
+.company-status-box-name {
+    height: 45px;
+    border-bottom-style:dashed;
+    border-bottom-width:thin;
+}
+
+.company-status-box-sharevalue {
+
+}
+
+.company-status-box-sharesoutstanding {
+
+}
+
+.player-status-box-size {
+
+}
+
+.map {
+    font-family: Courier New, Courier, monospace;
+}
+
+.map-star {
+
+}
+.map-blackhole {
+
+}
+
+.map-emptysector {
+
+}
+
+.map-developedsector {
+
+}
+.map-companyowned {
+
+}
