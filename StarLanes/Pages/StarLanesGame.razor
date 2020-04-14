@@ -75,7 +75,7 @@
             <br />
             <label>
                 @((MarkupString)(GameState == GameStates.PlayerMove ? "<b>Move<b> >" : "Move > "))
-                @((MarkupString)(GameState == GameStates.PlayerStockPurchasing ? "<b>Stock Trading<b> > " : "Stock Trading > "))
+                @((MarkupString)(GameState == GameStates.PlayerStockPurchasing ? "<b>Stock Buying<b> > " : "Stock Trading > "))
                 End Turn
             </label>
         </p>
@@ -90,17 +90,29 @@
             @if (Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
             {
                 <div class="clearfix">
-                    <span class="bold-small-header">Buy/Sell Stocks with $@(Players[PlayerTurn].Money)</span>
+                    <span class="bold-small-header">Buy Stocks with $@(Players[PlayerTurn].Money)</span>
                 </div>
                 <div>
                     @foreach (var c in Companies)
                     {
                         @if (c.Value.IsActive)
                         {
+                            <div>
+                                <label class="player-actions-buysellstock">@(c.Value.Name)</label>
+                            </div>
+                            <div>
+                                <label>$@(c.Value.ShareValue) x </label>
+                                <input id="Buy=@(c.Key)" class="stock-buying" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                                <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
+                            </div>
+       @*                     <button class="btn btn-secondary btn-xs" onclick="alert(" onclick="document.getElementById("Buy=@(c.Key)").value = document.getElementById("Buy=@(c.Key)").attr('max');";">Max</button> *@
+
+@*
                             <label class="player-actions-buysellstock">@(c.Value.Name)</label>
                             <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
                             <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
                             <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
+*@
                         }
                     }
                 </div>
@@ -109,12 +121,12 @@
             else @* no companies *@
             {
                 <div>
-                    No companies available for stock trading
+                    No companies available for stock purchasing
                 </div>
             }
             @* End Turn Button *@
             <div style="align-self:flex-end">
-                <button class="btn btn-secondary" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">End Turn</button>
+                <button class="btn btn-secondary" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "End Turn")</button>
             </div>
 
         }
@@ -321,7 +333,8 @@
         Random rand = new Random();
 
         // Initialize Companies
-        int Max_Companies = 5;
+        public const int Max_NumberOfCompanies = 12;
+        public int Max_Companies = 5;   //configurable
         int FounderShares = 5;
         Dictionary<int, Company> Companies = new Dictionary<int, Company>();
 
@@ -350,19 +363,6 @@
         Dictionary<int, Player> Players = new Dictionary<int, Player>();
 
 
-        public class GameStateObject
-        {
-            public int NumberOfPlayers = 2;
-
-            public GameStateObject()
-            {
-
-            }
-
-        }
-
-        public GameStateObject GameStateObj = new GameStateObject();
-
         // Game state variables
         int PlayerTurn = 0;
         //Dictionary<int, string> OldMoves = new Dictionary<int, string>();
@@ -384,6 +384,29 @@
         public int FirstPlayer = 0;
         public int MaxNumberOfRounds = 48;
         public int NumberOfMoves = 4;
+
+        public class GameStateObject
+        {
+            public int NumberOfPlayers = 2;
+            public int[] StockToBuy = new int[Max_NumberOfCompanies+1];
+            public int MoneyToBuy = 0;
+
+            public GameStateObject()
+            {
+
+            }
+
+            public void ResetStockExchange()
+            {
+                Array.Clear(StockToBuy, 0, StockToBuy.Length);
+            }
+
+
+
+
+        }
+
+        public GameStateObject GameStateObj = new GameStateObject();
 
         private void TestGame()
         {
@@ -487,6 +510,49 @@
 
             AvailableMoves = GenerateMoves();
             GameState = GameStates.PlayerMove;
+        }
+
+        public int AvailableMoneyForStockBuying()
+        {
+            return AvailableMoneyForStockBuying(0); // pass a 0 to indicate not to exclude any company;
+        }
+
+        public int AvailableMoneyForStockBuying(int ExcludeCompanyId)
+        {
+            int availableMoney = Players[PlayerTurn].Money;
+            foreach (int i in GameStateObj.StockToBuy)
+            {
+                if (i != ExcludeCompanyId && Companies.ContainsKey(i) && Companies[i].IsActive)
+                    availableMoney -= GameStateObj.StockToBuy[i] * Companies[i].ShareValue;
+            }
+
+            return availableMoney;
+        }
+
+        public int MaxCanBuy(int CompanyKey)
+        {
+            return Convert.ToInt32(Math.Floor(AvailableMoneyForStockBuying(CompanyKey) / (double)Companies[CompanyKey].ShareValue));
+        }
+
+        public void ExecuteStockTrades()
+        {
+            for (int i = 0; i <= GameStateObj.StockToBuy.Length; i++)
+            {
+                @*
+                if(Companies.ContainsKey(i))
+                {
+                    Console.WriteLine(GameStateObj.StockToBuy.Length.ToString() + " >>> " + Companies[i].Name + " = " + GameStateObj.StockToBuy[i].ToString());
+                }
+                else
+                {
+                    Console.WriteLine(GameStateObj.StockToBuy.Length.ToString() + "No Company found at index " + i.ToString());
+                }
+                    *@
+                if (Companies.ContainsKey(i) && Companies[i].IsActive && (GameStateObj.StockToBuy[i] > 0))
+                {
+                    BuyStock(PlayerTurn, i, GameStateObj.StockToBuy[i]);
+                }
+            }
         }
 
         private int BuyStock(int playerId, int companyId, int shares)
@@ -616,8 +682,14 @@
 
         }
 
+
         private void EndTurn()
         {
+            //Buy Stocks
+            ExecuteStockTrades();
+            GameStateObj.ResetStockExchange();
+            StateHasChanged();
+
             // Increment Turn
             NextPlayerTurn();
 
