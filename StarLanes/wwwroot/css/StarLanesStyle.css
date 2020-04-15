@@ -44,7 +44,7 @@
 }
 
 .map-panel {
-    width: 800px;
+    width: 600px;
     align-content:center;
     text-align:center;
 }
@@ -61,6 +61,11 @@
 
 .map-axis {
     font-weight: 700;
+}
+
+.map-sectors {
+    margin: auto;
+    text-align: center;
 }
 
 .map-sector {
@@ -93,6 +98,24 @@
 .map-sector-star {
     color: darkgoldenrod;
     font-weight: 600;
+}
+
+.event-panel {
+    width: 300px;
+}
+
+.event-panel-title {
+    height:35px;
+    border-bottom-width:2px;
+    border-bottom-style:dashed;
+    text-align:center;
+}
+
+.event-panel-readout {
+    width: 300px;
+    font-size: small;
+    height: 250px;
+    overflow:auto;
 }
 
 .player-status-box {
