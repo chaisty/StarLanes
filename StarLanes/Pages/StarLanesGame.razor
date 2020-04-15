@@ -35,7 +35,7 @@
     @* Game Status Header *@
     <div>
         <p class="header-round">
-            Round @(GameRound) of @(MaxNumberOfRounds)<br />
+            Round @(GameRound) of @(MaxNumberOfMovesPerGame / NumberOfPlayers)<br />
         </p>
     </div>
 
@@ -71,8 +71,7 @@
     @* Show whose turn it is *@
     <div class="container turn-instructions-panel">
         <p>
-            <label style="font-weight:bold">@(Players.ContainsKey(PlayerTurn) != true ? "" : Players[PlayerTurn].Name + "'s") Turn:</label>
-            <br />
+            <label style="font-weight:bold">@(Players.ContainsKey(PlayerTurn) != true ? "" : Players[PlayerTurn].Name + "'s") Turn: </label>
             <label>
                 @((MarkupString)(GameState == GameStates.PlayerMove ? "<b>Move<b> >" : "Move > "))
                 @((MarkupString)(GameState == GameStates.PlayerStockPurchasing ? "<b>Stock Buying<b> > " : "Stock Trading > "))
@@ -92,7 +91,7 @@
                 <div class="clearfix">
                     <span class="bold-small-header">Buy Stocks with $@(Players[PlayerTurn].Money)</span>
                 </div>
-                <div>
+                <div class="clearfix">
                     @foreach (var c in Companies)
                     {
                         @if (c.Value.IsActive)
@@ -134,7 +133,7 @@
         }
 
         @* Available Move Buttons *@
-        <div class="playe-moves-panel">
+        <div class="player-moves-panel">
             @if (GameState == GameStates.PlayerMove)
             {
                 @foreach (var move in AvailableMoves)
@@ -147,37 +146,35 @@
 
     @* Map Display *@
     @*
-    <div class="map-panel">
-        <div class="map">
-            <label>@((MarkupString)(String.Concat(Enumerable.Repeat("&nbsp", Convert.ToInt32(Math.Floor((double)(2 + X_dimension * 3 - 1 - MapTitle.Length) / 2.0))))))@MapTitle</label><br />
-            <label>@((MarkupString)("&nbsp&nbsp" + (String.Concat(Enumerable.Repeat("*", X_dimension * 3 - 2)))))</label><br />
-            <label>@((MarkupString)PrintMap())</label>
+        <div class="map-panel">
+            <div class="map">
+                <label>@((MarkupString)(String.Concat(Enumerable.Repeat("&nbsp", Convert.ToInt32(Math.Floor((double)(2 + X_dimension * 3 - 1 - MapTitle.Length) / 2.0))))))@MapTitle</label><br />
+                <label>@((MarkupString)("&nbsp&nbsp" + (String.Concat(Enumerable.Repeat("*", X_dimension * 3 - 2)))))</label><br />
+                <label>@((MarkupString)PrintMap())</label>
+            </div>
         </div>
-    </div>
     *@
 
     @* Map Display *@
-    <div class="map-panel">
+    <div class="map-panel clearfix">
         <div class="map">
-            <div class="map-title">
-                Map of the Universe<br />
-                *******************<br />
-            </div>
+            <div class="map-title">Map of the Universe</div>
+            <div class="map-title">@((String.Concat(Enumerable.Repeat("*", X_dimension * 3 - 2))))</div>
             <div class="map-x-axis" style="clear: both;">
                 <div class="map-sector">&nbsp;</div>
                 @for (int x = 0; x <= Map.GetUpperBound(0); x++)
                 {
-                    <div class="map-sector">@((char)(x+65))</div>
+                    <div class="map-sector map-axis map-x-axis">@((char)(x + 65))</div>
                 }
             </div>
 
             @for (int y = 0; y <= Map.GetUpperBound(1); y++)
             {
                 <div style="clear: both;">
-                    <div class="map-sector map-y-axis" style="float: left; clear: none">@(y+1)</div>
+                    <div class="map-sector map-axis map-y-axis" style="float: left; clear: none">@(y + 1)</div>
                     @for (int x = 0; x <= Map.GetUpperBound(0); x++)
                     {
-                        <div class="map-sector" style="float: left; clear: none">@(Map[x, y])</div>
+                        <div class="map-sector @(SectorClass(Map[x, y]))">@(Map[x, y])</div>
                     }
                 </div>
             }
@@ -417,7 +414,7 @@
     public GameStates GameState = GameStates.NotStarted;
     public int GameRound = 0;
     public int FirstPlayer = 0;
-    public int MaxNumberOfRounds = 48;
+    public int MaxNumberOfMovesPerGame = 48;
     public int NumberOfMoves = 4;
 
     public class GameStateObject
@@ -748,9 +745,10 @@
         StateHasChanged();
 
         // Increment Turn
-        NextPlayerTurn();
+        if (NextPlayerTurn())
+            PayDividends();
 
-        if (GameRound == MaxNumberOfRounds)
+        if (GameRound == (MaxNumberOfMovesPerGame / NumberOfPlayers))
         {
             GameState = GameStates.GameEnding;
         }
@@ -766,19 +764,54 @@
 
     private void PayDividends()
     {
-        foreach (Player p in Players.Values)
+        foreach (var p in Players)
         {
-            p.Money = p.Money + (int)Math.Round(p.Money * DividendPercetange);
+            p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * DividendPercetange);
         }
     }
 
-    private int NextPlayerTurn()
+    @* Returns True if new round *@
+    private bool NextPlayerTurn()
     {
         PlayerTurn++;
         if (PlayerTurn > NumberOfPlayers) { PlayerTurn = 1; }
-        if (PlayerTurn == FirstPlayer) { GameRound++; }
+        if (PlayerTurn == FirstPlayer)
+        {
+            GameRound++;
+            return true;
+        }
+        else { return false; }
+    }
 
-        return GameRound;
+    private string SectorClass(string sectorValue)
+    {
+        switch (sectorValue)
+        {
+            case NullSector:
+                return "map-sector-null";
+            case EmptySector:
+                return "map-sector-empty";
+            case DevelopedSector:
+                return "map-sector-developed";
+            case StarSector:
+                return "map-sector-star";
+            case BlackholeSector:
+                return "map-sector-blackhole";
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+            case "8":
+                return "map-sector-move";
+        }
+
+        if ("ABCDEFGHIJKL".Contains(sectorValue)) return "map-sector-company";
+
+        return String.Empty;
+
     }
 
     //prints the map using text string
@@ -847,8 +880,7 @@
         return neighbors;
     }
 
-    public List<string>
-        AdjacentCompanies(int x, int y)
+    public List<string> AdjacentCompanies(int x, int y)
     {
         string[] neighbors = GetNeighbors(x, y);
 
