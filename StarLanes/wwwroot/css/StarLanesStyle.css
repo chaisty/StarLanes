@@ -26,11 +26,55 @@
     font-size: medium;
 }
 
+.stock-to-buy-box {
+    float:left;
+    margin: 0px 5px;
+}
+
 .btn-group-xs > .btn, .btn-xs {
     padding: .4rem .4rem;
     font-size: .875rem;
     line-height: .5;
     border-radius: .2rem;
+}
+
+.map-panel {
+    width: 800px;
+    align-content:center;
+}
+
+.map {
+}
+
+.map-sector {
+    padding: 0px 9px;
+    font-size: medium;
+    float: left;
+}
+
+.map-blackhole {
+   
+}
+
+.map-companyowned {
+
+}
+
+.map-developedsector {
+
+}
+
+.map-emptysector {
+
+}
+
+.map-move {
+    font-weight: 700;
+}
+
+.map-star {
+    color: darkgoldenrod;
+    font-weight: 700;
 }
 
 .player-status-box {
