@@ -394,8 +394,8 @@
     Dictionary<int, Company> Companies = new Dictionary<int, Company>();
 
     //Initialize Map
-    const int X_dimension = 12;
-    const int Y_dimension = 9;
+    const int X_dimension = 20;
+    const int Y_dimension = 15;
     const double StarChance = 0.1;
     const bool Stars = true;
     const double BlackholeChance = 0.03;
@@ -1298,9 +1298,9 @@ private string EventsText()
 
 private void LogGameEvent(string eventText)
 {
-    if (Events.Count >= 100)
+    if (Events.Count >= 8)
         Events.Dequeue();
-    Events.Enqueue(eventText);
+    Events.Enqueue("&raquo;" + eventText);
 }
 
 }
