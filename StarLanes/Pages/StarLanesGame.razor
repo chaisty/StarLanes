@@ -31,8 +31,6 @@
 @if (GameState != GameStates.NotStarted)
 {
 
-    @*  <button class="btn btn-primary" @onclick="(e => { AvailableMoves = GenerateMoves(); })">GenerateMoves</button> *@
-
     @* Game Status Header *@
     <div class="row">
         <div class="col-3 header-round">
@@ -136,11 +134,13 @@
                         {
                             @if (c.Value.IsActive)
                             {
-                                <div class="stock-to-buy-box">
-                                    <div>
-                                        <label class="player-actions-buysellstock">@(c.Value.Name)&nbsp;</label>
-                                        <label>$@(c.Value.ShareValue) x </label>
-                                        <input id="Buy=@(c.Key)" class="stock-buying" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                                <div class="row stock-to-buy-box">
+                                    <div class="w-auto">
+                                        <label>@(c.Value.Name)&nbsp;</label>
+                                    </div>
+                                    <div class="w-auto">
+                                        <label for="Buy=@(c.Key)">$@(c.Value.ShareValue) x </label>
+                                        <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
                                         <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
                                     </div>
                                 </div>
@@ -179,6 +179,13 @@
                     {
                         <button class="btn btn-outline-secondary move-button" hidden="@(GameState != GameStates.PlayerMove)" disabled="@(GameState != GameStates.PlayerMove)" @onclick="(e => { MakeMove(move.Key); })">@(move.Value)</button>
                     }
+                    <div>
+                    @* if this is testing, allow for the player to regenerate the available moves *@
+                    @if (GameStateObj.TestGame)
+                    {
+                        <button class="btn btn-primary" @onclick="(e => { RemoveMovesFromMap(); AvailableMoves = GenerateMoves(); AddMovesToMap(); })">GenerateMoves</button>
+                    }
+                </div>
                 }
             </div>
         </div>
@@ -212,8 +219,7 @@
     *@
     @* Show company status *@
     <div class="company-status-panel">
-        <table>
-            <tr>
+
                 @* Leftmost box is column names *@
                 <div class="container company-status-key">
                     <div class="company-status-box-name">
@@ -247,8 +253,7 @@
                         </div>
                     </div>
                 }
-            </tr>
-        </table>
+
     </div>
 }
 
@@ -265,8 +270,8 @@
     public Dictionary<int, string> CompanyNames = new Dictionary<int, string>()
 {
         { 1, "Altair Starways" },
-        { 2, "Betelgeuse, Ltd." },
-        { 3, "Capella Frieght Co." },
+        { 2, "Betelgeuse, Ltd" },
+        { 3, "Capella Frieght" },
         { 4, "Denebola Shippers" },
         { 5, "Eridani Expediters" },
         { 6, "Fornax Freightways" },
@@ -457,6 +462,7 @@
         public int NumberOfPlayers = 2;
         public int[] StockToBuy = new int[Max_NumberOfCompanies + 1];
         public int MoneyToBuy = 0;
+        public bool TestGame = false;
 
         public GameStateObject()
         {
@@ -475,8 +481,11 @@
 
     public GameStateObject GameStateObj = new GameStateObject();
 
-    private void TestGame()
+
+
+    private void TestGame1()
     {
+        GameStateObj.TestGame = true;
 
         Map[2, 1] = "A";
         Map[3, 1] = "A";
@@ -507,12 +516,38 @@
 
     }
 
+    private void TestGame2()
+    {
+        TestGame1();
+    }
+
+    //Convert a string to map values - used for loading maps for things such as testing;
+    private void StringToMapSection(string MapString, int StartX = 0, int Y = 0)
+    {
+        for (int x = 0; x < MapString.Length; x++)
+        {
+            if((x + StartX) < Map.GetUpperBound(0))
+                Map[x, Y] = MapString[x + StartX].ToString();
+        }
+    }
+
+    //Convert an array of strings to map values - used for loading maps for things such as testing;
+    private void StringToMapSection(string[] MapStrings, int StartX = 0, int StartY = 0)
+    {
+        for (int y = 0; y < MapStrings.GetUpperBound(0); y++)
+        {
+            if ((y + StartY) < Map.GetUpperBound(0))
+                StringToMapSection(MapStrings[y], StartX, StartY);
+        }
+    }
+
+
     private void InitializeGame()
     {
         GameState = GameStates.Initiating;
 
 
-        //Test Game Setuo
+        //Test Game Player Setuo
         PlayerName[0] = "Chris";
         PlayerName[1] = "Geoff";
         PlayerName[2] = "Holly";
@@ -573,7 +608,7 @@
         // Initialize Stock Holdings
         StockHoldings = new int[Max_Companies, NumberOfPlayers];
 
-        //TestGame();
+        TestGame1();
 
         AvailableMoves = GenerateMoves();
         AddMovesToMap();
@@ -697,9 +732,7 @@
         int y_move;
         //MoveOutcome move_outcome;
 
-        SortedDictionary<string, Move>
-            tempMoves = new SortedDictionary<string, Move>
-                ();
+        SortedDictionary<string, Move> tempMoves = new SortedDictionary<string, Move>();
 
         int existingCompanies = Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
 
@@ -740,9 +773,7 @@
         }
 
         //Take the sorted dictionary and re-key to numeric index
-        Dictionary<int, Move>
-            moves = new Dictionary<int, Move>
-                ();
+        Dictionary<int, Move> moves = new Dictionary<int, Move>();
         foreach (Move mv in tempMoves.Values)
             moves.Add(moves.Count + 1, mv);
 
@@ -1098,7 +1129,7 @@
                 if (neighbors[3] == DevelopedSector)
                     Map[x, y + 1] = Companies[newCo].Symbol;
 
-                LogGameEvent("NEW COMPANY!<br/>" + Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
+                LogGameEvent("NEW COMPANY!", Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
             }
         }
         // Check for expansion of company
@@ -1165,12 +1196,12 @@
                 // merge winner and loser
                 MergeCompanies(Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)], Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)]);
 
+                string winnerName = Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
+                string loserName = Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)].Name;
+                LogGameEvent("MERGER!!!!!", $"{winnerName} and {loserName} have merged! The unified company will now be known as {winnerName}.");
+
                 //remove loser
                 coS.Remove(coS.ElementAt(loser).Key);
-
-                string winnerName = Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
-                string loserName = Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
-                LogGameEvent($"MERGER!!!!!<br/>" + "{winnerName} and {loserName} have merged! The unified company will now be known as {winnerName}.<br/>");
             } while (coS.Count > 1);
 
             // Update the newly developed sector that created the merger
@@ -1197,7 +1228,7 @@
                                 ReplaceSymbolOnMap(Companies[Company.KeyFromSymbol(c)].Symbol, EmptySector);
                                 Companies[Company.KeyFromSymbol(c)].CloseCompany();
 
-                                LogGameEvent(Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
+                                LogGameEvent("DISASTER!", Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
                             }
                         }
 
