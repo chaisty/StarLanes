@@ -95,8 +95,12 @@
 
 }
 
+.map-sector-empty {
+
+}
+
 .map-sector-null {
-    background-color: lightgray;
+
 }
 
 .map-sector-move {

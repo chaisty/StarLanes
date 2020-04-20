@@ -12,9 +12,9 @@ namespace StarLanesUnitTest
             int x = 5;
             int y = 3;
 
-            Assert.AreEqual("F4", StarLanesGame.Move.ToString(x, y), "Incorrect Move.ToString() static result");
+            Assert.AreEqual("F4", StarLanes.Move.ToString(x, y), "Incorrect Move.ToString() static result");
 
-            StarLanesGame.Move move = new StarLanesGame.Move(x, y);
+            StarLanes.Move move = new StarLanes.Move(x, y);
 
             Assert.AreEqual("F4", move.ToString(), "Incorrect Move.ToString() instance result.");
         }
