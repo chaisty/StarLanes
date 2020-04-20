@@ -35,7 +35,7 @@
 
 .stock-to-buy-box {
     float:left;
-    width: 100%
+    width: 100%;
     margin: 0px 5px;
 }
 
@@ -76,6 +76,7 @@
 }
 
 .map-sector {
+    width: 15px;
     padding: 0px 9px;
     font-size: medium;
     float: left;
@@ -94,8 +95,8 @@
 
 }
 
-.map-sector-empty {
-
+.map-sector-null {
+    background-color: lightgray;
 }
 
 .map-sector-move {

@@ -26,15 +26,31 @@
     <p>
         <button class="btn btn-primary" @onclick="InitializeGame">Start Game!</button>
     </p>
+
+    <h3>Advanced Options</h3>
+    <p>
+        <label for="NumberOfCompanies">Max # of Companies: </label><input id="NumberOfCompanies" type="number" min="5" max="@Max_NumberOfCompanies" @bind="Max_Companies" /> (5-10, default 5)<br />
+        <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="12" max="20" @bind="X_dimension" /> x <input id="MapSizeY" type="number" min="9" max="20" @bind="Y_dimension" /> (Min 12x9, Max 20x20, default 12x9)<br />
+        <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="StarChance" />% (0-15, default 10)<br />
+        <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="BlackholeChance" />% (0-10, default 3)<br />
+        <label for="StartingOrder">Starting Player:</label><br /><input type="radio" id="InOrder" name="StartingOrder" value="1" /><label for="InOrder">In Order Above</label><br />
+        <input type="radio" id="RandomStart" name="StartingOrder" value="2" checked /><label for="RandomStart">Random Starter</label><br />
+        <input type="radio" id="All Random" name="StartingOrder" value="3" /><label for="InOrder">Random Starter, Random Order</label><br />
+        <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="FounderShares" /> (0-20, default 5)<br />
+        <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
+        <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="DividendPercetange" />% (1-10, default 5)<br />
+        <label for="NumberOfRounds"># of Rounds: </label><input id="NumberOfRounds" type="number" min="1" max="15" @bind="NumberOfRounds" /> (1-15, default based on number of players)<br />
+        <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type ="number" min="4" max="5" @bind="NumberOfAvailableMoves" /> (3-5, default 4)<br/>
+    </p>
 }
 
-@if (GameState != GameStates.NotStarted)
+@if ((GameState != GameStates.NotStarted) && (GameState != GameStates.GameEnding))
 {
 
     @* Game Status Header *@
     <div class="row">
         <div class="col-3 header-round">
-            Round @(GameRound) of @(MaxNumberOfMovesPerGame / NumberOfPlayers)
+            Round @(GameRound) of @(NumberOfRounds)
         </div>
         @* Show whose turn it is *@
         <div class="col-9 turn-instructions-panel">
@@ -180,12 +196,12 @@
                         <button class="btn btn-outline-secondary move-button" hidden="@(GameState != GameStates.PlayerMove)" disabled="@(GameState != GameStates.PlayerMove)" @onclick="(e => { MakeMove(move.Key); })">@(move.Value)</button>
                     }
                     <div>
-                    @* if this is testing, allow for the player to regenerate the available moves *@
-                    @if (GameStateObj.TestGame)
-                    {
-                        <button class="btn btn-primary" @onclick="(e => { RemoveMovesFromMap(); AvailableMoves = GenerateMoves(); AddMovesToMap(); })">GenerateMoves</button>
-                    }
-                </div>
+                        @* if this is testing, allow for the player to regenerate the available moves *@
+                        @if (GameStateObj.TestGame)
+                        {
+                            <button class="btn btn-primary" @onclick="(e => { RemoveMovesFromMap(); AvailableMoves = GenerateMoves(); AddMovesToMap(); })">GenerateMoves</button>
+                        }
+                    </div>
                 }
             </div>
         </div>
@@ -220,46 +236,58 @@
     @* Show company status *@
     <div class="company-status-panel">
 
-                @* Leftmost box is column names *@
-                <div class="container company-status-key">
-                    <div class="company-status-box-name">
-                        Company:
-                    </div>
-                    <div class="company-status-box-sharevalue">
-                        Share Value($):
-                    </div>
-                    <div class="company-status-box-sharesoutstanding">
-                        Outstanding Shares:
-                    </div>
-                    <div class="player-status-box-size">
-                        # of Sectors:
-                    </div>
-                </div>
+        @* Leftmost box is column names *@
+        <div class="container company-status-key">
+            <div class="company-status-box-name">
+                Company:
+            </div>
+            <div class="company-status-box-sharevalue">
+                Share Value($):
+            </div>
+            <div class="company-status-box-sharesoutstanding">
+                Outstanding Shares:
+            </div>
+            <div class="player-status-box-size">
+                # of Sectors:
+            </div>
+        </div>
 
-                @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
-                {
-                    <div class="container company-status-box">
-                        <div class="company-status-box-name">
-                            @(c.Value.Name)
-                        </div>
-                        <div class="company-status-box-sharevalue">
-                            @(c.Value.ShareValue.ToString())
-                        </div>
-                        <div class="company-status-box-sharesoutstanding">
-                            @(c.Value.OutstandingShares())
-                        </div>
-                        <div class="company-status-box-size">
-                            @(CompanySize(c.Value))
-                        </div>
-                    </div>
-                }
+        @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
+        {
+            <div class="container company-status-box">
+                <div class="company-status-box-name">
+                    @(c.Value.Name)
+                </div>
+                <div class="company-status-box-sharevalue">
+                    @(c.Value.ShareValue.ToString())
+                </div>
+                <div class="company-status-box-sharesoutstanding">
+                    @(c.Value.OutstandingShares())
+                </div>
+                <div class="company-status-box-size">
+                    @(CompanySize(c.Value))
+                </div>
+            </div>
+        }
 
     </div>
 }
 
+@if (GameState == GameStates.GameEnding)
+{
+    <h2>The Game is over!</h2>
+
+    @foreach (var p in Players)
+    {
+        <label>@PlayerRank(p.Key)) @(p.Value.Name): $</label><label>@(PlayerNetWorth(p.Key))</label>
+    }
+
+}
+
+
 @code {
 
-    public const string NullSector = " ";
+    public const string NullSector = "-";
     public const string EmptySector = ".";
     public const string DevelopedSector = "+";
     public const string StarSector = "*";
@@ -402,29 +430,30 @@
     Random rand = new Random();
 
     // Initialize Companies
-    public const int Max_NumberOfCompanies = 12;
+    public const int Max_NumberOfCompanies = 10;
     public int Max_Companies = 5;   //configurable
-    int FounderShares = 5;
+    public int FounderShares = 5;
     Dictionary<int, Company> Companies = new Dictionary<int, Company>();
 
     //Initialize Map
-    const int X_dimension = 20;
-    const int Y_dimension = 15;
-    const double StarChance = 0.1;
-    const bool Stars = true;
-    const double BlackholeChance = 0.03;
-    const double BlackholeConsumptionChance = 0.25; // chance a developed sector will be consumed by a black hole
-    const bool Blackholes = true;
-    public string[,] Map = new string[X_dimension, Y_dimension];
+    const int Max_X_dimension = 20;
+    const int Max_Y_dimension = 15;
+    public int X_dimension = 12;
+    public int Y_dimension = 9;
+    public int StarChance = 10;
+    public int BlackholeChance = 3;
+    public int BlackholeConsumptionChance = 25; // chance a developed sector will be consumed by a black hole
+
+    public string[,] Map = new string[1, 1];
 
     //Initialize Sector Values
     const int NormalValue = 100;
     const int StarValue = 500;
 
     //Finance Constants
-    const int MergerRatio = 2; // Old shares needed to equal one new share
-    const int PlayerStartingMoney = 3000;
-    const double DividendPercetange = 0.05;
+    public int MergerRatio = 2; // Old shares needed to equal one new share
+    public int PlayerStartingMoney = 6000;
+    public int DividendPercetange = 5;
 
     //Initialize Player dictionary
     const int Max_NumberOfPlayers = 5;
@@ -453,6 +482,7 @@
     public int GameRound = 0;
     public int FirstPlayer = 0;
     public int MaxNumberOfMovesPerGame = 48;
+    public int NumberOfRounds = 12;
     public int NumberOfMoves = 4;
 
     public Queue<string> Events = new Queue<string>();
@@ -481,7 +511,18 @@
 
     public GameStateObject GameStateObj = new GameStateObject();
 
-
+    private void LoadTestGamePlayerNames()
+    {
+        //Test Game Player Setuo
+        PlayerName[0] = "Chris";
+        PlayerName[1] = "Geoff";
+        if (NumberOfPlayers > 2)
+            PlayerName[2] = "Holly";
+        if (NumberOfPlayers > 3)
+            PlayerName[3] = "Muffin";
+        if (NumberOfPlayers > 4)
+            PlayerName[4] = "Whoever";
+    }
 
     private void TestGame1()
     {
@@ -526,7 +567,7 @@
     {
         for (int x = 0; x < MapString.Length; x++)
         {
-            if((x + StartX) < Map.GetUpperBound(0))
+            if ((x + StartX) < Map.GetUpperBound(0))
                 Map[x, Y] = MapString[x + StartX].ToString();
         }
     }
@@ -541,21 +582,37 @@
         }
     }
 
+    private int SetInitialNumberOfRounds()
+    {
+        if ((NumberOfPlayers == 5) && (NumberOfMoves == 48))
+        {
+            NumberOfMoves = 50;
+            NumberOfRounds = 10;
+        }
+        else if ((NumberOfPlayers < 5) && (NumberOfMoves == 50))
+        {
+            NumberOfMoves = 48;
+            NumberOfRounds = NumberOfMoves / NumberOfPlayers;
+        }
+
+        return NumberOfRounds;
+    }
 
     private void InitializeGame()
     {
         GameState = GameStates.Initiating;
 
+        //ReDim Map
+        Map = new string[X_dimension, Y_dimension];
 
-        //Test Game Player Setuo
-        PlayerName[0] = "Chris";
-        PlayerName[1] = "Geoff";
-        PlayerName[2] = "Holly";
-        PlayerName[3] = "Muffin";
+        //Load Test Names
+        LoadTestGamePlayerNames();
 
         // Randomize who starts game first
         FirstPlayer = rand.Next(0, NumberOfPlayers - 1);
         GameRound = 1;
+        if (NumberOfPlayers == 5)
+            NumberOfMoves = 50; // 48 is the usual count, but not divisible by 5
 
         //Mild deviation from the original - reset player numbers to put who ever goes first as player 1
 
@@ -581,9 +638,9 @@
         {
             for (int x = 0; x <= Map.GetUpperBound(0); x++)
             {
-                double sectortype = rand.NextDouble();
+                int sectortype = rand.Next(1, 100);
 
-                if (Stars && Blackholes)
+                if ((StarChance > 0) && (BlackholeChance > 0))
                 {
                     if (sectortype <= StarChance)
                         Map[x, y] = "*";
@@ -592,7 +649,7 @@
                     else
                         Map[x, y] = ".";
                 }
-                else if (Stars)
+                else if (StarChance > 0)
                 {
                     if (sectortype <= StarChance)
                         Map[x, y] = "*";
@@ -817,7 +874,7 @@
         if (NextPlayerTurn())
             PayDividends();
 
-        if (GameRound == (MaxNumberOfMovesPerGame / NumberOfPlayers))
+        if (GameRound > NumberOfRounds)
         {
             GameState = GameStates.GameEnding;
         }
@@ -835,7 +892,7 @@
     {
         foreach (var p in Players)
         {
-            p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * DividendPercetange);
+            p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)DividendPercetange / 100);
         }
     }
 
@@ -845,7 +902,7 @@
         PlayerTurn++;
         if (PlayerTurn > NumberOfPlayers)
         {
-            PlayerTurn = 1; 
+            PlayerTurn = 1;
             GameRound++;
             return true;
         }
@@ -1070,7 +1127,7 @@
             }
 
             //Check for black hole
-            if (Blackholes)
+            if (BlackholeChance > 0)
             {
                 if (String.Join("", neighbors).Contains(BlackholeSector))
                 {
@@ -1211,7 +1268,7 @@
         }
 
         //Check for black hole(s), that could wipe out any newly merged or expanded companies!
-        if (Blackholes)
+        if (BlackholeChance > 0)
         {
             for (int x_loop = 0; x_loop <= Map.GetUpperBound(0); x_loop++)
             {
@@ -1238,7 +1295,7 @@
                         {
                             if (blackholeNeighbors[n] == DevelopedSector)
                             {
-                                if (rand.NextDouble() <= BlackholeConsumptionChance)
+                                if (rand.Next(1, 100) <= BlackholeConsumptionChance)
                                 {
                                     // Destroy the sector
                                     int x_destroyed = x_loop;
@@ -1248,8 +1305,13 @@
                                     if (n == 2) { x_destroyed = x_loop + 1; }
                                     if (n == 3) { y_destroyed = y_loop + 1; }
 
-                                    Map[x_destroyed, y_destroyed] = NullSector;
-                                    LogGameEvent("Sector " + Move.ToString(x_destroyed, y_destroyed) + " consumed by black hole!");
+
+                                    // The sector just developed on this turn cannot be destroyed on the same turn
+                                    if ((x != x_destroyed) && (y != y_destroyed))
+                                    {
+                                        Map[x_destroyed, y_destroyed] = NullSector;
+                                        LogGameEvent("Sector " + Move.ToString(x_destroyed, y_destroyed) + " consumed by black hole!");
+                                    }
                                 }
                             }
                         }
@@ -1365,6 +1427,22 @@
         }
 
         return rank;
+    }
+
+    private int[] PlayerRanks()
+    {
+
+        Dictionary<int, int> NetWorths = new Dictionary<int, int>();
+
+        foreach (var p in Players)
+        {
+            NetWorths.Add(p.Key, PlayerNetWorth(p.Key));
+        }
+
+        int[] ranks = new int[NumberOfPlayers];
+        NetWorths.OrderByDescending(p => p.Value).ToArray().CopyTo(ranks, 0);
+
+        return ranks;
     }
 }
 
