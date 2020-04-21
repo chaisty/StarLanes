@@ -112,19 +112,19 @@
                 <div class="map-sectors">
                     <div class="map-x-axis" style="clear: both;">
                         <div class="map-sector">&nbsp;</div>
-                        @for (int x = 0; x <= My.GetUpperBound(0); x++)
+                        @for (int x = 0; x <= map.X_Dimension; x++)
                         {
                             <div class="map-sector map-axis map-x-axis">@((char)(x + 65))</div>
                         }
                     </div>
 
-                    @for (int y = 0; y <= My.GetUpperBound(1); y++)
+                    @for (int y = 0; y <= map.Y_Dimension; y++)
                     {
                         <div style="clear: both;">
                             <div class="map-sector map-axis map-y-axis" style="float: left; clear: none">@(y + 1)</div>
-                            @for (int x = 0; x <= My.GetUpperBound(0); x++)
+                            @for (int x = 0; x <= map.X_Dimension; x++)
                             {
-                                <div class="map-sector @(SectorClass(My[x, y]))">@(My[x, y])</div>
+                                <div class="map-sector @(SectorClass(map[x, y]))">@(map[x, y])</div>
                             }
                         </div>
                     }
@@ -310,435 +310,438 @@
     public int BlackholeChance = 3;
     public int BlackholeConsumptionChance = 25; // chance a developed sector will be consumed by a black hole
 
-    public string[,] My = new string[1, 1];
+    @*public string[,] My = new string[1, 1]; *@
+public Map map = new Map(1, 1);
 
-    //Initialize Sector Values
-    const int NormalValue = 100;
-    const int StarValue = 500;
+//Initialize Sector Values
+const int NormalValue = 100;
+const int StarValue = 500;
 
-    //Finance Constants
-    public int MergerRatio = 2; // Old shares needed to equal one new share
-    public int PlayerStartingMoney = 6000;
-    public int DividendPercetange = 5;
+//Finance Constants
+public int MergerRatio = 2; // Old shares needed to equal one new share
+public int PlayerStartingMoney = 6000;
+public int DividendPercetange = 5;
 
-    //Initialize Player dictionary
-    const int Max_NumberOfPlayers = 5;
-    public int NumberOfPlayers = 4;
-    string[] PlayerName = new string[Max_NumberOfPlayers];
-    Dictionary<int, Player> Players = new Dictionary<int, Player>();
+//Initialize Player dictionary
+const int Max_NumberOfPlayers = 5;
+public int NumberOfPlayers = 4;
+string[] PlayerName = new string[Max_NumberOfPlayers];
+Dictionary<int, Player> Players = new Dictionary<int, Player>();
 
 
-    // Game state variables
-    int PlayerTurn = 1;
-    //Dictionary<int, string> OldMoves = new Dictionary<int, string>();
-    Dictionary<int, Move> AvailableMoves = new Dictionary<int, Move>();
-    string MovesDescription = string.Empty;
-    string GameStatus = "Not Started.";
-    public enum GameStates
+// Game state variables
+int PlayerTurn = 1;
+//Dictionary<int, string> OldMoves = new Dictionary<int, string>();
+Dictionary<int, Move> AvailableMoves = new Dictionary<int, Move>();
+string MovesDescription = string.Empty;
+string GameStatus = "Not Started.";
+public enum GameStates
+{
+    NotStarted = 0,
+    Initiating = 1,
+    PlayerMove = 10,
+    PlayerStockPurchasing = 15,
+    BetweenMoves = 15,
+    GameEnding = 20,
+    GameEnded = 25
+}
+public GameStates GameState = GameStates.NotStarted;
+public int GameRound = 0;
+public int FirstPlayer = 0;
+public int MaxNumberOfMovesPerGame = 48;
+public int NumberOfRounds = 12;
+public int NumberOfMoves = 4;
+public int NumberOfAvailableMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
+
+public Queue<string> Events = new Queue<string>();
+
+public class GameStateObject
+{
+    public int NumberOfPlayers = 2;
+    public int[] StockToBuy = new int[Max_NumberOfCompanies + 1];
+    public int MoneyToBuy = 0;
+    public bool TestGame = false;
+
+    public GameStateObject()
     {
-        NotStarted = 0,
-        Initiating = 1,
-        PlayerMove = 10,
-        PlayerStockPurchasing = 15,
-        BetweenMoves = 15,
-        GameEnding = 20,
-        GameEnded = 25
-    }
-    public GameStates GameState = GameStates.NotStarted;
-    public int GameRound = 0;
-    public int FirstPlayer = 0;
-    public int MaxNumberOfMovesPerGame = 48;
-    public int NumberOfRounds = 12;
-    public int NumberOfMoves = 4;
-    public int NumberOfAvailableMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
-
-    public Queue<string> Events = new Queue<string>();
-
-    public class GameStateObject
-    {
-        public int NumberOfPlayers = 2;
-        public int[] StockToBuy = new int[Max_NumberOfCompanies + 1];
-        public int MoneyToBuy = 0;
-        public bool TestGame = false;
-
-        public GameStateObject()
-        {
-
-        }
-
-        public void ResetStockExchange()
-        {
-            Array.Clear(StockToBuy, 0, StockToBuy.Length);
-        }
-
-
-
 
     }
 
-    public GameStateObject GameStateObj = new GameStateObject();
-
-    private void LoadTestGamePlayerNames()
+    public void ResetStockExchange()
     {
-        //Test Game Player Setuo
-        PlayerName[0] = "Chris";
-        PlayerName[1] = "Geoff";
-        if (NumberOfPlayers > 2)
-            PlayerName[2] = "Holly";
-        if (NumberOfPlayers > 3)
-            PlayerName[3] = "Muffin";
-        if (NumberOfPlayers > 4)
-            PlayerName[4] = "Whoever";
+        Array.Clear(StockToBuy, 0, StockToBuy.Length);
     }
 
-    private void TestGame1()
+
+
+
+}
+
+public GameStateObject GameStateObj = new GameStateObject();
+
+private void LoadTestGamePlayerNames()
+{
+    //Test Game Player Setuo
+    PlayerName[0] = "Chris";
+    PlayerName[1] = "Geoff";
+    if (NumberOfPlayers > 2)
+        PlayerName[2] = "Holly";
+    if (NumberOfPlayers > 3)
+        PlayerName[3] = "Muffin";
+    if (NumberOfPlayers > 4)
+        PlayerName[4] = "Whoever";
+}
+
+private void TestGame1()
+{
+    GameStateObj.TestGame = true;
+
+    map[2, 1] = "A";
+    map[3, 1] = "A";
+    map[4, 1] = "A";
+
+    map[1, 3] = "B";
+    map[2, 3] = "B";
+    map[3, 3] = "B";
+    map[4, 3] = "B";
+
+    map[6, 1] = "C";
+    map[6, 2] = "C";
+    map[5, 2] = "C";
+    map[7, 1] = Map.StarSector;
+
+    map[3, 5] = Map.BlackholeSector;
+
+    Companies[1].OpenCompany(1, FounderShares);
+    CalculateSharePrice(Companies[1]);
+
+    Companies[2].OpenCompany(2, FounderShares);
+    CalculateSharePrice(Companies[2]);
+
+    Companies[3].OpenCompany(3, FounderShares);
+    CalculateSharePrice(Companies[3]);
+
+    StateHasChanged();
+
+}
+
+private void TestGame2()
+{
+    TestGame1();
+}
+
+//Convert a string to map values - used for loading maps for things such as testing;
+private void StringToMapSection(string MapString, int StartX = 0, int Y = 0)
+{
+    for (int x = 0; x < MapString.Length; x++)
     {
-        GameStateObj.TestGame = true;
+        if ((x + StartX) < map.X_Dimension)
+            map[x, Y] = MapString[x + StartX].ToString();
+    }
+}
 
-        My[2, 1] = "A";
-        My[3, 1] = "A";
-        My[4, 1] = "A";
+//Convert an array of strings to map values - used for loading maps for things such as testing;
+private void StringToMapSection(string[] MapStrings, int StartX = 0, int StartY = 0)
+{
+    for (int y = 0; y < MapStrings.GetUpperBound(0); y++)
+    {
+        if ((y + StartY) < map.X_Dimension)
+            StringToMapSection(MapStrings[y], StartX, StartY);
+    }
+}
 
-        My[1, 3] = "B";
-        My[2, 3] = "B";
-        My[3, 3] = "B";
-        My[4, 3] = "B";
-
-        My[6, 1] = "C";
-        My[6, 2] = "C";
-        My[5, 2] = "C";
-        My[7, 1] = Map.StarSector;
-
-        My[3, 5] = Map.BlackholeSector;
-
-        Companies[1].OpenCompany(1, FounderShares);
-        CalculateSharePrice(Companies[1]);
-
-        Companies[2].OpenCompany(2, FounderShares);
-        CalculateSharePrice(Companies[2]);
-
-        Companies[3].OpenCompany(3, FounderShares);
-        CalculateSharePrice(Companies[3]);
-
-        StateHasChanged();
-
+private int SetInitialNumberOfRounds()
+{
+    if ((NumberOfPlayers == 5) && (NumberOfMoves == 48))
+    {
+        NumberOfMoves = 50;
+        NumberOfRounds = 10;
+    }
+    else if ((NumberOfPlayers < 5) && (NumberOfMoves == 50))
+    {
+        NumberOfMoves = 48;
+        NumberOfRounds = NumberOfMoves / NumberOfPlayers;
     }
 
-    private void TestGame2()
+    return NumberOfRounds;
+}
+
+private void InitializeGame()
+{
+    GameState = GameStates.Initiating;
+
+    //ReDim Map
+    //My = new string[X_dimension, Y_dimension];
+    map = new Map(X_dimension, Y_dimension);
+
+    //Load Test Names
+    LoadTestGamePlayerNames();
+
+    // Randomize who starts game first
+    FirstPlayer = rand.Next(0, NumberOfPlayers - 1);
+    GameRound = 1;
+    //    if (NumberOfPlayers == 5)
+    //        NumberOfMoves = 50; // 48 is the usual count, but not divisible by 5
+
+    //Mild deviation from the original - reset player numbers to put who ever goes first as player 1
+
+    // Initialize Players
+    GameStateObj.NumberOfPlayers = NumberOfPlayers;
+
+    int nameIndex = FirstPlayer;
+    for (int l = 1; l <= GameStateObj.NumberOfPlayers; l++)
     {
-        TestGame1();
+        // Start each Player with some $
+        Players.Add(l, new Player(PlayerName[nameIndex], PlayerStartingMoney));
+        nameIndex = (nameIndex < (GameStateObj.NumberOfPlayers - 1) ? nameIndex + 1 : 0);
     }
 
-    //Convert a string to map values - used for loading maps for things such as testing;
-    private void StringToMapSection(string MapString, int StartX = 0, int Y = 0)
+    // Initialize Companies
+    for (int companyIndex = 1; companyIndex <= Max_Companies; companyIndex++)
     {
-        for (int x = 0; x < MapString.Length; x++)
-        {
-            if ((x + StartX) < My.GetUpperBound(0))
-                My[x, Y] = MapString[x + StartX].ToString();
-        }
+        Companies.Add(companyIndex, new Company(companyIndex, GameStateObj.NumberOfPlayers));
     }
 
-    //Convert an array of strings to map values - used for loading maps for things such as testing;
-    private void StringToMapSection(string[] MapStrings, int StartX = 0, int StartY = 0)
+    //Initialize Map with empty sectors
+    for (int y = 0; y <= map.Y_Dimension; y++)
     {
-        for (int y = 0; y < MapStrings.GetUpperBound(0); y++)
+        for (int x = 0; x <= map.X_Dimension; x++)
         {
-            if ((y + StartY) < My.GetUpperBound(0))
-                StringToMapSection(MapStrings[y], StartX, StartY);
-        }
-    }
+            int sectortype = rand.Next(1, 100);
 
-    private int SetInitialNumberOfRounds()
-    {
-        if ((NumberOfPlayers == 5) && (NumberOfMoves == 48))
-        {
-            NumberOfMoves = 50;
-            NumberOfRounds = 10;
-        }
-        else if ((NumberOfPlayers < 5) && (NumberOfMoves == 50))
-        {
-            NumberOfMoves = 48;
-            NumberOfRounds = NumberOfMoves / NumberOfPlayers;
-        }
-
-        return NumberOfRounds;
-    }
-
-    private void InitializeGame()
-    {
-        GameState = GameStates.Initiating;
-
-        //ReDim Map
-        My = new string[X_dimension, Y_dimension];
-
-        //Load Test Names
-        LoadTestGamePlayerNames();
-
-        // Randomize who starts game first
-        FirstPlayer = rand.Next(0, NumberOfPlayers - 1);
-        GameRound = 1;
-        if (NumberOfPlayers == 5)
-            NumberOfMoves = 50; // 48 is the usual count, but not divisible by 5
-
-        //Mild deviation from the original - reset player numbers to put who ever goes first as player 1
-
-        // Initialize Players
-        GameStateObj.NumberOfPlayers = NumberOfPlayers;
-
-        int nameIndex = FirstPlayer;
-        for (int l = 1; l <= GameStateObj.NumberOfPlayers; l++)
-        {
-            // Start each Player with some $
-            Players.Add(l, new Player(PlayerName[nameIndex], PlayerStartingMoney));
-            nameIndex = (nameIndex < (GameStateObj.NumberOfPlayers - 1) ? nameIndex + 1 : 0);
-        }
-
-        // Initialize Companies
-        for (int companyIndex = 1; companyIndex <= Max_Companies; companyIndex++)
-        {
-            Companies.Add(companyIndex, new Company(companyIndex, GameStateObj.NumberOfPlayers));
-        }
-
-        //Initialize Map with empty sectors
-        for (int y = 0; y <= My.GetUpperBound(1); y++)
-        {
-            for (int x = 0; x <= My.GetUpperBound(0); x++)
+            if ((StarChance > 0) && (BlackholeChance > 0))
             {
-                int sectortype = rand.Next(1, 100);
-
-                if ((StarChance > 0) && (BlackholeChance > 0))
-                {
-                    if (sectortype <= StarChance)
-                        My[x, y] = Map.StarSector;
-                    else if (sectortype <= (StarChance + BlackholeChance))
-                        My[x, y] = Map.BlackholeSector;
-                    else
-                        My[x, y] = Map.DevelopedSector;
-                }
-                else if (StarChance > 0)
-                {
-                    if (sectortype <= StarChance)
-                        My[x, y] = Map.StarSector;
-                    else
-                        My[x, y] = Map.DevelopedSector;
-                }
+                if (sectortype <= StarChance)
+                    map[x, y] = Map.StarSector;
+                else if (sectortype <= (StarChance + BlackholeChance))
+                    map[x, y] = Map.BlackholeSector;
                 else
-                    My[x, y] = Map.DevelopedSector;
-
+                    map[x, y] = Map.EmptySector;
             }
+            else if (StarChance > 0)
+            {
+                if (sectortype <= StarChance)
+                    map[x, y] = Map.StarSector;
+                else
+                    map[x, y] = Map.EmptySector;
+            }
+            else
+                map[x, y] = Map.EmptySector;
+
         }
+    }
 
-        // Initialize Stock Holdings
-        StockHoldings = new int[Max_Companies, NumberOfPlayers];
+    // Initialize Stock Holdings
+    StockHoldings = new int[Max_Companies, NumberOfPlayers];
 
-        TestGame1();
+    TestGame1();
 
+    AvailableMoves = GenerateMoves();
+    AddMovesToMap();
+    GameState = GameStates.PlayerMove;
+
+    LogGameEvent("The Game has begun!");
+
+}
+
+public int AvailableMoneyForStockBuying()
+{
+    return AvailableMoneyForStockBuying(0); // pass a 0 to indicate not to exclude any company;
+}
+
+public int AvailableMoneyForStockBuying(int ExcludeCompanyId)
+{
+    int availableMoney = Players[PlayerTurn].Money;
+    foreach (int i in GameStateObj.StockToBuy)
+    {
+        if (i != ExcludeCompanyId && Companies.ContainsKey(i) && Companies[i].IsActive)
+            availableMoney -= GameStateObj.StockToBuy[i] * Companies[i].ShareValue;
+    }
+
+    return availableMoney;
+}
+
+public int MaxCanBuy(int CompanyKey)
+{
+    return Convert.ToInt32(Math.Floor(AvailableMoneyForStockBuying(CompanyKey) / (double)Companies[CompanyKey].ShareValue));
+}
+
+public void ExecuteStockTrades()
+{
+    for (int i = 0; i <= GameStateObj.StockToBuy.Length; i++)
+    {
+        if (Companies.ContainsKey(i) && Companies[i].IsActive && (GameStateObj.StockToBuy[i] > 0))
+        {
+            BuyStock(PlayerTurn, i, GameStateObj.StockToBuy[i]);
+        }
+    }
+}
+
+private int BuyStock(int playerId, int companyId, int shares)
+{
+    //int shares = 1;
+
+    //Determine if the player has enough money
+    if (Players[playerId].Money >= (shares * Companies[companyId].ShareValue))
+    {
+        //Buy shares
+        Players[playerId].Money -= (shares * Companies[companyId].ShareValue);  // Take away the money
+        Companies[companyId].StockHolderShares[playerId] += shares; // Add the shares
+    }
+    else
+        shares = 0; // no shares bought
+
+    return shares;
+}
+
+[Obsolete("Selling not exercised in this version", true)]
+private int SellStock(int playerId, int companyId, int shares)
+{
+    // Determine if player has that many shares to sell, if trying to sell more than have, sell all
+    if (Companies[companyId].StockHolderShares[playerId] < shares)
+        shares = Companies[companyId].StockHolderShares[playerId];
+
+    // Sell the stock
+    Players[playerId].Money += (shares * Companies[companyId].ShareValue); // Give the money
+    Companies[companyId].StockHolderShares[playerId] -= shares;
+
+    return shares;
+}
+
+private void GetMoves()
+{
+    AvailableMoves = GenerateMoves();
+}
+
+private void AddMovesToMap()
+{
+    foreach (var m in AvailableMoves)
+    {
+        map[m.Value.X, m.Value.Y] = m.Key.ToString();
+    }
+}
+
+private void RemoveMovesFromMap()
+{
+    foreach (Move m in AvailableMoves.Values)
+    {
+        map[m.X, m.Y] = Map.EmptySector;
+    }
+}
+
+private Dictionary<int, Move> GenerateMoves()
+{
+    int x_move;
+    int y_move;
+    //MoveOutcome move_outcome;
+
+    SortedDictionary<string, Move> tempMoves = new SortedDictionary<string, Move>();
+
+    int existingCompanies = Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
+
+    // Find open moves
+    for (int l = 1; l <= NumberOfMoves; l++)
+    {
+        // Find an open move
+        bool moveisgood = false;
+        do
+        {
+            x_move = rand.Next(0, map.Sectors.GetUpperBound(0));
+            y_move = rand.Next(0, map.Sectors.GetUpperBound(1));
+            //move_outcome = DetermineOutcome(x_move, y_move);
+
+            // Make sure sector is empty;
+            moveisgood = (map[x_move, y_move] == Map.EmptySector);
+            Console.WriteLine(x_move.ToString() + "," + y_move.ToString() + "=" + map[x_move, y_move]);
+
+            // Make sure move isn't already in list
+            foreach (Move m in tempMoves.Values)
+            {
+                if ((m.X == x_move) && (m.Y == y_move))
+                    moveisgood = false;
+            }
+
+            // prevent creation of too many companies
+            if (existingCompanies == Max_Companies)
+            {
+                // check if move will create new company
+                if (DetermineMoveOutcome(x_move, y_move) == MoveOutcome.StartNewCompany)
+                    moveisgood = false;
+            }
+
+        } while (!moveisgood);
+
+        // Add move to the list of available moves
+        Move nm = new Move(x_move, y_move);
+        tempMoves.Add(nm.ToString(), nm);
+    }
+
+    //Take the sorted dictionary and re-key to numeric index
+    Dictionary<int, Move> moves = new Dictionary<int, Move>();
+    foreach (Move mv in tempMoves.Values)
+        moves.Add(moves.Count + 1, mv);
+
+    // Ensure Map Display -- ADD CODE to mode this to a controller most likely
+    GameState = GameStates.PlayerMove;
+    StateHasChanged();
+
+    //return moves;
+    return moves;
+}
+
+public void MakeMove(int moveNumber)
+{
+    Move move = AvailableMoves[moveNumber];
+
+    //Update Status
+    GameStatus = "Player " + PlayerTurn.ToString() + " opens up sector " + move.ToString();
+    // Update map with new status based on move
+    RemoveMovesFromMap();
+    map[move.X, move.Y] = Map.DevelopedSector;
+
+    GameState = GameStates.PlayerStockPurchasing;
+
+    // Calculate results of the move
+    ExecuteMove(move.X, move.Y, map);
+
+    //Advance Game
+    GameState = GameStates.PlayerStockPurchasing;
+
+}
+
+
+private void EndTurn()
+{
+    //Buy Stocks
+    ExecuteStockTrades();
+    GameStateObj.ResetStockExchange();
+    StateHasChanged();
+
+    // Increment Turn
+    if (NextPlayerTurn())
+        PayDividends();
+
+    if (GameRound > NumberOfRounds)
+    {
+        GameState = GameStates.GameEnding;
+    }
+    else
+    {
+        GameState = GameStates.PlayerMove;
+
+        //Generate the moves for the next player
         AvailableMoves = GenerateMoves();
         AddMovesToMap();
-        GameState = GameStates.PlayerMove;
-
-        LogGameEvent("The Game has begun!");
-
     }
+}
 
-    public int AvailableMoneyForStockBuying()
+private void PayDividends()
+{
+    foreach (var p in Players)
     {
-        return AvailableMoneyForStockBuying(0); // pass a 0 to indicate not to exclude any company;
+        p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)DividendPercetange / 100);
     }
-
-    public int AvailableMoneyForStockBuying(int ExcludeCompanyId)
-    {
-        int availableMoney = Players[PlayerTurn].Money;
-        foreach (int i in GameStateObj.StockToBuy)
-        {
-            if (i != ExcludeCompanyId && Companies.ContainsKey(i) && Companies[i].IsActive)
-                availableMoney -= GameStateObj.StockToBuy[i] * Companies[i].ShareValue;
-        }
-
-        return availableMoney;
-    }
-
-    public int MaxCanBuy(int CompanyKey)
-    {
-        return Convert.ToInt32(Math.Floor(AvailableMoneyForStockBuying(CompanyKey) / (double)Companies[CompanyKey].ShareValue));
-    }
-
-    public void ExecuteStockTrades()
-    {
-        for (int i = 0; i <= GameStateObj.StockToBuy.Length; i++)
-        {
-            if (Companies.ContainsKey(i) && Companies[i].IsActive && (GameStateObj.StockToBuy[i] > 0))
-            {
-                BuyStock(PlayerTurn, i, GameStateObj.StockToBuy[i]);
-            }
-        }
-    }
-
-    private int BuyStock(int playerId, int companyId, int shares)
-    {
-        //int shares = 1;
-
-        //Determine if the player has enough money
-        if (Players[playerId].Money >= (shares * Companies[companyId].ShareValue))
-        {
-            //Buy shares
-            Players[playerId].Money -= (shares * Companies[companyId].ShareValue);  // Take away the money
-            Companies[companyId].StockHolderShares[playerId] += shares; // Add the shares
-        }
-        else
-            shares = 0; // no shares bought
-
-        return shares;
-    }
-
-    [Obsolete("Selling not exercised in this version", true)]
-    private int SellStock(int playerId, int companyId, int shares)
-    {
-        // Determine if player has that many shares to sell, if trying to sell more than have, sell all
-        if (Companies[companyId].StockHolderShares[playerId] < shares)
-            shares = Companies[companyId].StockHolderShares[playerId];
-
-        // Sell the stock
-        Players[playerId].Money += (shares * Companies[companyId].ShareValue); // Give the money
-        Companies[companyId].StockHolderShares[playerId] -= shares;
-
-        return shares;
-    }
-
-    private void GetMoves()
-    {
-        AvailableMoves = GenerateMoves();
-    }
-
-    private void AddMovesToMap()
-    {
-        foreach (var m in AvailableMoves)
-        {
-            My[m.Value.X, m.Value.Y] = m.Key.ToString();
-        }
-    }
-
-    private void RemoveMovesFromMap()
-    {
-        foreach (Move m in AvailableMoves.Values)
-        {
-            My[m.X, m.Y] = Map.EmptySector;
-        }
-    }
-
-    private Dictionary<int, Move> GenerateMoves()
-    {
-        int x_move;
-        int y_move;
-        //MoveOutcome move_outcome;
-
-        SortedDictionary<string, Move> tempMoves = new SortedDictionary<string, Move>();
-
-        int existingCompanies = Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
-
-        // Find 4 open moves
-        for (int l = 1; l <= NumberOfMoves; l++)
-        {
-            // Find an open move
-            bool moveisgood = false;
-            do
-            {
-                x_move = rand.Next(0, My.GetUpperBound(0)) + 1;
-                y_move = rand.Next(0, My.GetUpperBound(1)) + 1;
-                //move_outcome = DetermineOutcome(x_move, y_move);
-
-                // Make sure sector is empty;
-                moveisgood = (My[x_move, y_move] == Map.EmptySector);
-
-                // Make sure move isn't already in list
-                foreach (Move m in tempMoves.Values)
-                {
-                    if ((m.X == x_move) && (m.Y == y_move))
-                        moveisgood = false;
-                }
-
-                // prevent creation of too many companies
-                if (existingCompanies == Max_Companies)
-                {
-                    // check if move will create new company
-                    if (DetermineMoveOutcome(x_move, y_move) == MoveOutcome.StartNewCompany)
-                        moveisgood = false;
-                }
-
-            } while (!moveisgood);
-
-            // Add move to the list of available moves
-            Move nm = new Move(x_move, y_move);
-            tempMoves.Add(nm.ToString(), nm);
-        }
-
-        //Take the sorted dictionary and re-key to numeric index
-        Dictionary<int, Move> moves = new Dictionary<int, Move>();
-        foreach (Move mv in tempMoves.Values)
-            moves.Add(moves.Count + 1, mv);
-
-        // Ensure Map Display -- ADD CODE to mode this to a controller most likely
-        GameState = GameStates.PlayerMove;
-        StateHasChanged();
-
-        //return moves;
-        return moves;
-    }
-
-    public void MakeMove(int moveNumber)
-    {
-        Move move = AvailableMoves[moveNumber];
-
-        //Update Status
-        GameStatus = "Player " + PlayerTurn.ToString() + " opens up sector " + move.ToString();
-        // Update map with new status based on move
-        RemoveMovesFromMap();
-        My[move.X, move.Y] = Map.DevelopedSector;
-
-        GameState = GameStates.PlayerStockPurchasing;
-
-        // Calculate results of the move
-        ExecuteMove(move.X, move.Y);
-
-        //Advance Game
-        GameState = GameStates.PlayerStockPurchasing;
-
-    }
-
-
-    private void EndTurn()
-    {
-        //Buy Stocks
-        ExecuteStockTrades();
-        GameStateObj.ResetStockExchange();
-        StateHasChanged();
-
-        // Increment Turn
-        if (NextPlayerTurn())
-            PayDividends();
-
-        if (GameRound > NumberOfRounds)
-        {
-            GameState = GameStates.GameEnding;
-        }
-        else
-        {
-            GameState = GameStates.PlayerMove;
-
-            //Generate the moves for the next player
-            AvailableMoves = GenerateMoves();
-            AddMovesToMap();
-        }
-    }
-
-    private void PayDividends()
-    {
-        foreach (var p in Players)
-        {
-            p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)DividendPercetange / 100);
-        }
-    }
+}
 
     @* Returns True if new round *@
 private bool NextPlayerTurn()
@@ -786,86 +789,7 @@ private string SectorClass(string sectorValue)
 //prints the map using text string - for debugging purposes only
 public string PrintMap()
 {
-    return PrintMap(GameState == GameStates.PlayerMove);
-}
-
-//prints the map using text string - for debugging purposes only
-public string PrintMap(bool showMoves)
-{
-
-    // Copy the Map so we can overlay the Moves
-    string[,] Map2 = new string[My.GetUpperBound(0) + 1, My.GetUpperBound(1) + 1];
-    Array.Copy(My, 0, Map2, 0, My.Length);
-
-    // Add Moves on Map
-    if (showMoves && (AvailableMoves != null))
-    {
-        for (int i = 1; i <= AvailableMoves.Count; i++)
-        {
-            Map2[AvailableMoves[i].X, AvailableMoves[i].Y] = i.ToString();
-        }
-    }
-
-    // Generate X-Axis Labels
-    string map = "&nbsp&nbsp";
-    for (int x = 0; x <= Map2.GetUpperBound(0); x++)
-        map += ((char)(x + 65)).ToString() + "&nbsp&nbsp";
-    map += "<br />";
-
-    //Generate Rows
-    for (int y = 0; y <= Map2.GetUpperBound(1); y++)
-    {
-        map += (y + 1).ToString() + " ";
-        for (int x = 0; x <= Map2.GetUpperBound(0); x++)
-        {
-            map += Map2[x, y] + "&nbsp&nbsp";
-        }
-        map += "<br>";
-    }
-
-    //Debug statments to list UBounds on Map Size
-    //map += "x=" + Map2.GetUpperBound(0).ToString() + ", Y=" + Map2.GetUpperBound(1).ToString();
-
-    return map;
-}
-
-public string[] GetNeighbors(int x, int y)
-{
-    string[] neighbors = new string[4] { " ", " ", " ", " " };  // Initialize to null space (null space is off the board)
-
-    // Get adjacent values
-    if (y > 0)
-        neighbors[0] = My[x, y - 1];
-
-    if (x > 0)
-        neighbors[1] = My[x - 1, y];
-
-    if (x < My.GetUpperBound(0))
-        neighbors[2] = My[x + 1, y];
-
-    if (y < My.GetUpperBound(1))
-        neighbors[3] = My[x, y + 1];
-
-    return neighbors;
-}
-
-public List<string> AdjacentCompanies(int x, int y)
-{
-    string[] neighbors = GetNeighbors(x, y);
-
-    GameStatus = neighbors.ToString();
-
-    List<string>
-        adjacentCompanies = new List<string>
-            ();
-    foreach (string s in neighbors)
-    {
-        // If the sector contains a company and we have not already added this company
-        if (("ABCDEFGHIJKL".Contains(s)) && (!adjacentCompanies.Contains(s)))
-            adjacentCompanies.Add(s);   // Add the company to the list
-    }
-
-    return adjacentCompanies;
+    return map.PrintMap(GameState == GameStates.PlayerMove, AvailableMoves);
 }
 
 public int CalculateAdjacentSectorValue(string sectorstate)
@@ -885,14 +809,14 @@ public int CalculateSharePrice(Company company)
 {
     int value = 0;
 
-    for (int x = My.GetLowerBound(0); x <= My.GetUpperBound(0); x++)
+    for (int x = 0; x <= map.X_Dimension; x++)
     {
-        for (int y = My.GetLowerBound(1); y <= My.GetUpperBound(1); y++)
+        for (int y = 0; y <= map.Y_Dimension; y++)
         {
-            if (My[x, y] == company.Symbol)    //if the company owns this sector
+            if (map[x, y] == company.Symbol)    //if the company owns this sector
             {
                 value += 100; // for the sector itself
-                string[] neighbors = GetNeighbors(x, y);
+                string[] neighbors = map.GetNeighbors(x, y);
                 foreach (string s in neighbors)
                 { value += CalculateAdjacentSectorValue(s); }
             }
@@ -902,25 +826,10 @@ public int CalculateSharePrice(Company company)
     return value;
 }
 
-public int NumberOfSymbolsOnMap(string symbol)
-{
-    int size = 0;
-
-    for (int x = My.GetLowerBound(0); x <= My.GetUpperBound(0); x++)
-    {
-        for (int y = My.GetLowerBound(1); y <= My.GetUpperBound(1); y++)
-        {
-            if (My[x, y] == symbol)
-                size++;
-        }
-    }
-
-    return size;
-}
 
 public int CompanySize(Company company)
 {
-    return NumberOfSymbolsOnMap(company.Symbol);
+    return map.NumberOfSymbolsOnMap(company.Symbol);
 }
 
 public int PlayerStockWorth(int playerid)
@@ -945,9 +854,8 @@ public MoveOutcome DetermineMoveOutcome(int x, int y)
         MoveOutcome moveOutcome = MoveOutcome.DevelopSector;
 
         //initialize adjacent locals
-        string[] neighbors = GetNeighbors(x, y);
-        List<string>
-            adjacentCompanies = AdjacentCompanies(x, y);
+        string[] neighbors = map.GetNeighbors(x, y);
+        List<string> adjacentCompanies = map.AdjacentCompanies(x, y);
 
 
         // Check for adjacent companies
@@ -989,18 +897,17 @@ public MoveOutcome DetermineMoveOutcome(int x, int y)
     }
 }
 
-public MoveOutcome ExecuteMove(int x, int y)
+public MoveOutcome ExecuteMove(int x, int y, Map theMap)
 {
     // evalute nearby spaces to determine outcome of this move
     MoveOutcome moveOutcome = MoveOutcome.DevelopSector; //default
 
     //initialize adjacent locals
-    string[] neighbors = GetNeighbors(x, y);
-    List<string>
-        adjacentCompanies = AdjacentCompanies(x, y);
+    string[] neighbors = theMap.GetNeighbors(x, y);
+    List<string> adjacentCompanies = theMap.AdjacentCompanies(x, y);
 
     // Develop Sector
-    My[x, y] = Map.DevelopedSector;
+    theMap[x, y] = Map.DevelopedSector;
 
     // Check for adjacent companies
     if (adjacentCompanies.Count == 0)
@@ -1009,7 +916,7 @@ public MoveOutcome ExecuteMove(int x, int y)
         if (String.Join("", neighbors) == new String('x', 4).Replace("x", Map.EmptySector))
         {
             // Develop Sector
-            My[x, y] = Map.DevelopedSector;
+            theMap[x, y] = Map.DevelopedSector;
         }
 
         // Check for creation of new company
@@ -1024,17 +931,17 @@ public MoveOutcome ExecuteMove(int x, int y)
 
             // Open up the new company
             Companies[newCo].OpenCompany(PlayerTurn, FounderShares);
-            My[x, y] = Companies[newCo].Symbol;
+            theMap[x, y] = Companies[newCo].Symbol;
 
             // Expand into any adjacent developed sectors
             if (neighbors[0] == Map.DevelopedSector)
-                My[x, y - 1] = Companies[newCo].Symbol;
+                theMap[x, y - 1] = Companies[newCo].Symbol;
             if (neighbors[1] == Map.DevelopedSector)
-                My[x - 1, y] = Companies[newCo].Symbol;
+                theMap[x - 1, y] = Companies[newCo].Symbol;
             if (neighbors[2] == Map.DevelopedSector)
-                My[x + 1, y] = Companies[newCo].Symbol;
+                theMap[x + 1, y] = Companies[newCo].Symbol;
             if (neighbors[3] == Map.DevelopedSector)
-                My[x, y + 1] = Companies[newCo].Symbol;
+                theMap[x, y + 1] = Companies[newCo].Symbol;
 
             LogGameEvent("NEW COMPANY!", Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
         }
@@ -1046,17 +953,17 @@ public MoveOutcome ExecuteMove(int x, int y)
         moveOutcome = MoveOutcome.ExpandCompany;
 
         // Expand into "move" sector
-        My[x, y] = adjacentCompanies[0];
+        theMap[x, y] = adjacentCompanies[0];
 
         // Expand into any developed adjacent sectors
         if (neighbors[0] == Map.DevelopedSector)
-            My[x, y - 1] = adjacentCompanies[0];
+            theMap[x, y - 1] = adjacentCompanies[0];
         if (neighbors[1] == Map.DevelopedSector)
-            My[x - 1, y] = adjacentCompanies[0];
+            theMap[x - 1, y] = adjacentCompanies[0];
         if (neighbors[2] == Map.DevelopedSector)
-            My[x + 1, y] = adjacentCompanies[0];
+            theMap[x + 1, y] = adjacentCompanies[0];
         if (neighbors[3] == Map.DevelopedSector)
-            My[x, y + 1] = adjacentCompanies[0];
+            theMap[x, y + 1] = adjacentCompanies[0];
     }
     // Check for Merger
     else if (adjacentCompanies.Count > 1)
@@ -1112,7 +1019,7 @@ public MoveOutcome ExecuteMove(int x, int y)
         } while (coS.Count > 1);
 
         // Update the newly developed sector that created the merger
-        My[x, y] = survivor;
+        theMap[x, y] = survivor;
 
         StateHasChanged();
     }
@@ -1120,19 +1027,19 @@ public MoveOutcome ExecuteMove(int x, int y)
     //Check for black hole(s), that could wipe out any newly merged or expanded companies!
     if (BlackholeChance > 0)
     {
-        for (int x_loop = 0; x_loop <= My.GetUpperBound(0); x_loop++)
+        for (int x_loop = 0; x_loop <= theMap.X_Dimension; x_loop++)
         {
-            for (int y_loop = 0; y_loop <= My.GetUpperBound(1); y_loop++)
+            for (int y_loop = 0; y_loop <= theMap.Y_Dimension; y_loop++)
             {
-                if (My[x_loop, y_loop] == Map.BlackholeSector)
+                if (theMap[x_loop, y_loop] == Map.BlackholeSector)
                 {
                     //Wipe out companies that touched the blackhole!
-                    adjacentCompanies = AdjacentCompanies(x_loop, y_loop);
+                    adjacentCompanies = theMap.AdjacentCompanies(x_loop, y_loop);
                     if (adjacentCompanies.Count > 0)
                     {
                         foreach (string c in adjacentCompanies)
                         {
-                            ReplaceSymbolOnMap(Companies[Company.KeyFromSymbol(c)].Symbol, Map.EmptySector);
+                            theMap.ReplaceSymbolOnMap(Companies[Company.KeyFromSymbol(c)].Symbol, Map.EmptySector);
                             Companies[Company.KeyFromSymbol(c)].CloseCompany();
 
                             LogGameEvent("DISASTER!", Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
@@ -1140,7 +1047,7 @@ public MoveOutcome ExecuteMove(int x, int y)
                     }
 
                     //Randomly destroy developed sectors next to blackholes
-                    string[] blackholeNeighbors = GetNeighbors(x_loop, y_loop);
+                    string[] blackholeNeighbors = theMap.GetNeighbors(x_loop, y_loop);
                     for (int n = 0; n < blackholeNeighbors.GetUpperBound(0); n++)
                     {
                         if (blackholeNeighbors[n] == Map.DevelopedSector)
@@ -1159,7 +1066,7 @@ public MoveOutcome ExecuteMove(int x, int y)
                                 // The sector just developed on this turn cannot be destroyed on the same turn
                                 if ((x != x_destroyed) && (y != y_destroyed))
                                 {
-                                    My[x_destroyed, y_destroyed] = Map.NullSector;
+                                    theMap[x_destroyed, y_destroyed] = Map.NullSector;
                                     LogGameEvent("Sector " + Move.ToString(x_destroyed, y_destroyed) + " consumed by black hole!");
                                 }
                             }
@@ -1183,28 +1090,12 @@ public MoveOutcome ExecuteMove(int x, int y)
     return moveOutcome;
 }
 
-public int ReplaceSymbolOnMap(string oldValue, string newValue)
-{
-    int replacements = 0;
 
-    //Update Map
-    for (int x = 0; x <= My.GetUpperBound(0); x++)
-    {
-        for (int y = 0; y <= My.GetUpperBound(1); y++)
-            if (My[x, y] == oldValue)
-            {
-                My[x, y] = newValue;
-                replacements++;
-            }
-    }
-
-    return replacements;
-}
 
 public void MergeCompanies(Company winner, Company loser)
 {
     //Update Map
-    ReplaceSymbolOnMap(loser.Symbol, winner.Symbol);
+    map.ReplaceSymbolOnMap(loser.Symbol, winner.Symbol);
 
     // Trade in old stock
     foreach (var item in loser.StockHolderShares)
