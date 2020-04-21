@@ -14,7 +14,7 @@
 .player-actions {
     border: none;
     border-width: 1px;
-    height: 500px;
+    height: 400px;
     width: 400px;
     align-content:center;
     float: left;
@@ -76,8 +76,8 @@
 }
 
 .map-sector {
-
-    padding: 0px 18px;
+    width: 30px;
+    padding: 0px 9px;
     font-size: medium;
     float: left;
     clear: none;

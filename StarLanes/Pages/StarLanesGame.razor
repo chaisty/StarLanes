@@ -11,7 +11,7 @@
 @if (GameState == GameStates.NotStarted)
 {
     <p>
-        <label for="numberOfPlayers"># of Players:</label> <input id="numberOfPlayers" type="number" min="2" max="@Max_NumberOfPlayers" @bind="NumberOfPlayers" />
+        <label for="numberOfPlayers"># of Players:</label> <input id="numberOfPlayers" type="number" min="2" max="@Max_NumberOfPlayers"  @bind="NumberOfPlayers" />
     </p>
     <p>
         @for (int p = 1; p <= NumberOfPlayers; p++)
@@ -39,7 +39,7 @@
         <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="FounderShares" /> (0-20, default 5)<br />
         <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
         <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="DividendPercetange" />% (1-10, default 5)<br />
-        <label for="NumberOfRounds"># of Rounds: </label><input id="NumberOfRounds" type="number" min="1" max="15" @bind="NumberOfRounds" /> (1-15, default based on number of players)<br />
+        <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }"/> Use Default <input disabled="@(DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="NumberOfRounds" /> (1-15, default based on number of players)<br />
         <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type ="number" min="4" max="5" @bind="NumberOfAvailableMoves" /> (3-5, default 4)<br/>
     </p>
 }
@@ -101,7 +101,8 @@
         </div>
     </div>
 
-    <div class="clearfix">
+    <div class="container-fluid clearfix">
+    <div class="row" style="height:400px">
         @* Container for side-by-side map and newswire*@
 
         @* Map Display *@
@@ -205,6 +206,7 @@
                 }
             </div>
         </div>
+    </div>
     </div>
 
     @* Map Display *@
@@ -350,6 +352,7 @@ public int GameRound = 0;
 public int FirstPlayer = 0;
 public int MaxNumberOfMovesPerGame = 48;
 public int NumberOfRounds = 12;
+public bool DefaultRounds = true;
 public int NumberOfMoves = 4;
 public int NumberOfAvailableMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
 
@@ -450,6 +453,37 @@ private void StringToMapSection(string[] MapStrings, int StartX = 0, int StartY 
     }
 }
 
+private void SetDefaultRounds(ChangeEventArgs e)
+{
+    DefaultRounds = Convert.ToBoolean(e.Value);
+    if (DefaultRounds)
+        UpdateRoundsBasedOnPlayerCount();
+
+}
+
+//private void UpdateRoundsBasedOnPlayerCount(ChangeEventArgs e)
+private void UpdateRoundsBasedOnPlayerCount()
+{
+    //    if(e.Value.GetType() == typeof(int)) {
+    //        NumberOfPlayers = Int32.Parse(e.Value.ToString());
+    //    }
+
+    switch(NumberOfPlayers)
+    {
+        case 2:
+            NumberOfRounds = 24; break;
+        case 3:
+            NumberOfRounds = 18; break;
+        case 4:
+            NumberOfRounds = 12; break;
+        case 5:
+            NumberOfRounds = 10; break;
+        default:
+            NumberOfRounds = 12; break;
+    }
+
+}
+
 private int SetInitialNumberOfRounds()
 {
     if ((NumberOfPlayers == 5) && (NumberOfMoves == 48))
@@ -475,7 +509,7 @@ private void InitializeGame()
     map = new Map(X_dimension, Y_dimension);
 
     //Load Test Names
-    LoadTestGamePlayerNames();
+//    LoadTestGamePlayerNames();
 
     // Randomize who starts game first
     FirstPlayer = rand.Next(0, NumberOfPlayers - 1);
@@ -534,7 +568,7 @@ private void InitializeGame()
     // Initialize Stock Holdings
     StockHoldings = new int[Max_Companies, NumberOfPlayers];
 
-    TestGame1();
+//    TestGame1();
 
     AvailableMoves = GenerateMoves();
     AddMovesToMap();

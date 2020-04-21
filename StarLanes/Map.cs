@@ -73,7 +73,7 @@ namespace StarLanes
 
             return adjacentCompanies;
         }
-
+       
         public int NumberOfSymbolsOnMap(string symbol)
         {
             int size = 0;
@@ -88,6 +88,23 @@ namespace StarLanes
             }
 
             return size;
+        }
+
+        public List<Move> OpenSectors()
+        {
+            List<Move> openSectors = new List<Move>();
+
+            //Update Map
+            for (int x = Sectors.GetLowerBound(0); x <= Sectors.GetUpperBound(0); x++)
+            {
+                for (int y = Sectors.GetLowerBound(1); y <= Sectors.GetUpperBound(1); y++)
+                    if (Sectors[x, y] == EmptySector)
+                    {
+                        openSectors.Add(new Move(x, y));
+                    }
+            }
+
+            return openSectors;
         }
 
         public int ReplaceSymbolOnMap(string oldValue, string newValue)
