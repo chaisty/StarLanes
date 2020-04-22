@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
+    <Version>0.5.1</Version>
+    <Copyright>C. Haisty</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

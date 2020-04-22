@@ -10,278 +10,278 @@
 
 @if (GameState == GameStates.NotStarted)
 {
-    <p>
-        <label for="numberOfPlayers"># of Players:</label> <input id="numberOfPlayers" type="number" min="2" max="@Max_NumberOfPlayers" @bind="NumberOfPlayers" />
-    </p>
-    <p>
-        @for (int p = 1; p <= NumberOfPlayers; p++)
+<p>
+    <label for="numberOfPlayers"># of Players:</label> <input id="numberOfPlayers" type="number" min="2" max="@Max_NumberOfPlayers" @bind="NumberOfPlayers" />
+</p>
+<p>
+    @for (int p = 1; p <= NumberOfPlayers; p++)
         {
 
             var pa = p - 1;
-            <label for="playerName(@p)">Player @p Name:</label> <input id="playerName(@p)" type="text" minlength="2" maxlength="20" @bind="PlayerName[pa]" />
-            <br />
+    <label for="playerName(@p)">Player @p Name:</label>  <input id="playerName(@p)" type="text" minlength="2" maxlength="20" @bind="PlayerName[pa]" />
+    <br />
         }
-    </p>
+</p>
 
-    <p>
-        <button class="btn btn-primary" @onclick="InitializeGame">Start Game!</button>
-    </p>
+<p>
+    <button class="btn btn-primary" @onclick="InitializeGame">Start Game!</button>
+</p>
 
-    <h3>Advanced Options</h3>
-    <p>
-        <label for="NumberOfCompanies">Max # of Companies: </label><input id="NumberOfCompanies" type="number" min="5" max="@Max_NumberOfCompanies" @bind="Max_Companies" /> (5-10, default 5)<br />
-        <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="12" max="20" @bind="X_dimension" /> x <input id="MapSizeY" type="number" min="9" max="20" @bind="Y_dimension" /> (Min 12x9, Max 20x20, default 12x9)<br />
-        <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="StarChance" />% (0-15, default 10)<br />
-        <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="BlackholeChance" />% (0-10, default 3)<br />
-        <label for="StartingOrder">Starting Player:</label><br /><input type="radio" id="InOrder" name="StartingOrder" value="1" /><label for="InOrder">In Order Above</label><br />
-        <input type="radio" id="RandomStart" name="StartingOrder" value="2" checked /><label for="RandomStart">Random Starter</label><br />
-        <input type="radio" id="All Random" name="StartingOrder" value="3" /><label for="InOrder">Random Starter, Random Order</label><br />
-        <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="FounderShares" /> (0-20, default 5)<br />
-        <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
-        <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="DividendPercetange" />% (1-10, default 5)<br />
-        <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="NumberOfRounds" /> (1-15, default based on number of players)<br />
-        <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="NumberOfAvailableMoves" /> (3-5, default 4)<br />
-    </p>
+<h3>Advanced Options</h3>
+<p>
+    <label for="NumberOfCompanies">Max # of Companies: </label><input id="NumberOfCompanies" type="number" min="5" max="@Max_NumberOfCompanies" @bind="Max_Companies" /> (5-10, default 5)<br />
+    <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="12" max="20" @bind="X_dimension" /> x <input id="MapSizeY" type="number" min="9" max="20" @bind="Y_dimension" /> (Min 12x9, Max 20x20, default 12x9)<br />
+    <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="StarChance" />% (0-15, default 10)<br />
+    <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="BlackholeChance" />% (0-10, default 3)<br />
+    <label for="StartingOrder">Starting Player:</label><br /><input type="radio" id="InOrder" name="StartingOrder" value="1" /><label for="InOrder">In Order Above</label><br />
+    <input type="radio" id="RandomStart" name="StartingOrder" value="2" checked /><label for="RandomStart">Random Starter</label><br />
+    <input type="radio" id="All Random" name="StartingOrder" value="3" /><label for="InOrder">Random Starter, Random Order</label><br />
+    <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="FounderShares" /> (0-20, default 5)<br />
+    <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
+    <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="DividendPercentage" />% (1-10, default 5)<br />
+    <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="NumberOfRounds" /> (1-15, default based on number of players)<br />
+    <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="NumberOfAvailableMoves" /> (3-5, default 4)<br />
+</p>
 }
 
 @if ((GameState != GameStates.NotStarted) && (GameState != GameStates.GameEnding))
 {
 
-    @* Game Status Header *@
-    <div class="row">
-        <div class="col-3 header-round">
-            Round @(GameRound) of @(NumberOfRounds)
-        </div>
-        @* Show whose turn it is *@
-        <div class="col-9 turn-instructions-panel">
-            <p>
-                <label style="font-weight:bold">@(Players.ContainsKey(PlayerTurn) != true ? "" : Players[PlayerTurn].Name + "'s") Turn: </label>
-                <label>
-                    @((MarkupString)(GameState == GameStates.PlayerMove ? "<b>Move<b> >" : "Move > "))
-                    @((MarkupString)(GameState == GameStates.PlayerStockPurchasing ? "<b>Stock Buying<b> > " : "Stock Trading > "))
-                    End Turn
-                </label>
-            </p>
-        </div>
+@* Game Status Header *@
+<div class="row">
+    <div class="col-3 header-round">
+        Round @(GameRound) of @(NumberOfRounds)
     </div>
+    @* Show whose turn it is *@
+    <div class="col-9 turn-instructions-panel">
+        <p>
+            <label style="font-weight:bold">@(Players.ContainsKey(PlayerTurn) != true ? "" : Players[PlayerTurn].Name + "'s") Turn: </label>
+            <label>
+                @((MarkupString)(GameState == GameStates.PlayerMove ? "<b>Move<b> >" : "Move > "))
+                @((MarkupString)(GameState == GameStates.PlayerStockPurchasing ? "<b>Stock Buying<b> > " : "Stock Trading > "))
+                End Turn
+            </label>
+        </p>
+    </div>
+</div>
 
-    @* Show player status *@
-    <div class="container row justify-content-center player-status-panel">
-        <div>
-            @foreach (var p in Players)
+@* Show player status *@
+<div class="container row justify-content-center player-status-panel">
+    <div>
+        @foreach (var p in Players)
             {
 
-                <div class="container player-status-box @(PlayerTurn == p.Key ? "player-status-box-active" : "")">
-                    <div class="player-status-box-name @(PlayerTurn == p.Key ? "player-status-name-active" : "")">
-                        @(p.Value.Name + " ["+ PlayerRank(p.Key) + "]")
-                    </div>
-                    <div class="player-status-box-money">
-                        Bank: @("$" + p.Value.Money.ToString())
-                    </div>
-                    <div class="player-status-box-stocks">
-                        @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
+        <div class="container player-status-box @(PlayerTurn == p.Key ? "player-status-box-active" : "")">
+            <div class="player-status-box-name @(PlayerTurn == p.Key ? "player-status-name-active" : "")">
+                @(p.Value.Name + " ["+ PlayerRank(p.Key) + "]")
+            </div>
+            <div class="player-status-box-money">
+                Bank: @("$" + p.Value.Money.ToString())
+            </div>
+            <div class="player-status-box-stocks">
+                @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
                         {
-                            @((MarkupString)(c.Value.Symbol + ":&nbsp;" + c.Value.StockHolderShares[p.Key].ToString() + "&nbsp;&nbsp; "))
+                @((MarkupString)(c.Value.Symbol + ":&nbsp;" + c.Value.StockHolderShares[p.Key].ToString() + "&nbsp;&nbsp; "))
                         }
-                    </div>
-                    <div class="player-status-box-networth">
-                        @(("Net Worth: $" + PlayerNetWorth(p.Key)))
-                    </div>
-                </div>
+            </div>
+            <div class="player-status-box-networth">
+                @(("Net Worth: $" + PlayerNetWorth(p.Key)))
+            </div>
+        </div>
             }
-        </div>
     </div>
+</div>
 
-    <div class="container row event-panel clearfix" style="width: 100%; height: 100px; margin: 25px 0px;">
-        <div class="col-2 event-panel-title">
-            Universal Newswire
-        </div>
-        <div class="col-10 event-panel-readout overflow-auto">
-            @((MarkupString)EventsText())
-        </div>
+<div class="container row event-panel clearfix" style="width: 100%; height: 100px; margin: 25px 0px;">
+    <div class="col-2 event-panel-title">
+        Universal Newswire
     </div>
+    <div class="col-10 event-panel-readout overflow-auto">
+        @((MarkupString)EventsText())
+    </div>
+</div>
 
-    <div class="container-fluid clearfix">
-        <div class="row" style="height:400px">
-            @* Container for side-by-side map and newswire*@
+<div class="container-fluid clearfix">
+    <div class="row" style="height:400px">
+        @* Container for side-by-side map and newswire*@
 
-            @* Map Display *@
-            <div class="map-panel">
-                <div class="map" style="float:left;">
-                    <div class="map-title">Map of the Universe</div>
-                    <div class="map-title">@((String.Concat(Enumerable.Repeat("*", X_dimension * 3 - 2))))</div>
-                    <div class="map-sectors">
-                        <div class="map-x-axis" style="clear: both;">
-                            <div class="map-sector">&nbsp;</div>
-                            @for (int x = 0; x <= map.X_Dimension; x++)
+        @* Map Display *@
+        <div class="map-panel">
+            <div class="map" style="float:left;">
+                <div class="map-title">Map of the Universe</div>
+                <div class="map-title">@((String.Concat(Enumerable.Repeat("*", X_dimension * 3 - 2))))</div>
+                <div class="map-sectors">
+                    <div class="map-x-axis" style="clear: both;">
+                        <div class="map-sector">&nbsp;</div>
+                        @for (int x = 0; x <= map.X_Dimension; x++)
                             {
-                                <div class="map-sector map-axis map-x-axis">@((char)(x + 65))</div>
+                        <div class="map-sector map-axis map-x-axis">@((char)(x + 65))</div>
                             }
-                        </div>
-
-                        @for (int y = 0; y <= map.Y_Dimension; y++)
-                        {
-                            <div style="clear: both;">
-                                <div class="map-sector map-axis map-y-axis" style="float: left; clear: none">@(y + 1)</div>
-                                @for (int x = 0; x <= map.X_Dimension; x++)
-                                {
-                                    <div class="map-sector @(SectorClass(map[x, y]))">@(map[x, y])</div>
-                                }
-                            </div>
-                        }
                     </div>
 
+                    @for (int y = 0; y <= map.Y_Dimension; y++)
+                        {
+                    <div style="clear: both;">
+                        <div class="map-sector map-axis map-y-axis" style="float: left; clear: none">@(y + 1)</div>
+                        @for (int x = 0; x <= map.X_Dimension; x++)
+                                {
+                        <div class="map-sector @(SectorClass(map[x, y]))">@(map[x, y])</div>
+                                }
+                    </div>
+                        }
                 </div>
 
             </div>
 
-            <div class="player-actions">
-                @* Stock purchasing buttons*@
+        </div>
 
-                @if (GameState == GameStates.PlayerStockPurchasing)
+        <div class="player-actions">
+            @* Stock purchasing buttons*@
+
+            @if (GameState == GameStates.PlayerStockPurchasing)
                 {
-                    @* if there are any companies *@
-                    @if (Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
+            @* if there are any companies *@
+            @if (Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
                     {
-                        <div class="clearfix">
-                            <span class="bold-small-header">Buy Stocks with $@(Players[PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
-                        </div>
-                        <div class="clearfix">
-                            @foreach (var c in Companies)
+            <div class="clearfix">
+                <span class="bold-small-header">Buy Stocks with $@(Players[PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
+            </div>
+            <div class="clearfix">
+                @foreach (var c in Companies)
                     {
-                        @if (c.Value.IsActive)
+                @if (c.Value.IsActive)
                                 {
-                                    <div class="row stock-to-buy-box">
-                                        <div class="w-auto">
-                                            <label>@(c.Value.Name)&nbsp;</label>
-                                        </div>
-                                        <div class="w-auto">
-                                            <label for="Buy=@(c.Key)">$@(c.Value.ShareValue) x </label>
-                                            <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
-                                            <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
-                                        </div>
-                                    </div>
-                                    @*                     <button class="btn btn-secondary btn-xs" onclick="alert(" onclick="document.getElementById("Buy=@(c.Key)").value = document.getElementById("Buy=@(c.Key)").attr('max');";">Max</button> *@
+                <div class="row stock-to-buy-box">
+                    <div class="w-auto">
+                        <label>@(c.Value.Name)&nbsp;</label>
+                    </div>
+                    <div class="w-auto">
+                        <label for="Buy=@(c.Key)">$@(c.Value.ShareValue) x </label>
+                        <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                        <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
+                    </div>
+                </div>
+                @*                     <button class="btn btn-secondary btn-xs" onclick="alert(" onclick="document.getElementById("Buy=@(c.Key)").value = document.getElementById("Buy=@(c.Key)").attr('max');";">Max</button> *@
 
-                                    @*
-                                        <label class="player-actions-buysellstock">@(c.Value.Name)</label>
-                                        <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
-                                        <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
-                                        <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
-                                    *@
+                @*
+                    <label class="player-actions-buysellstock">@(c.Value.Name)</label>
+                    <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
+                    <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
+                    <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
+                *@
                                 }
                             }
-                        </div>
+            </div>
 
                     }
                     else @* no companies *@
                     {
-                        <div>
-                            No companies available for stock purchasing
-                        </div>
-                    }
-                    @* End Turn Button *@
-                    <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
-                        <button class="btn btn-secondary" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "End Turn")</button>
+                    <div>
+                        No companies available for stock purchasing
                     </div>
+                    }
+            @* End Turn Button *@
+            <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
+                <button class="btn btn-secondary" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "End Turn")</button>
+            </div>
 
                 }
 
-                @* Available Move Buttons *@
-                <div class="player-moves-panel">
-                    @if (GameState == GameStates.PlayerMove)
+            @* Available Move Buttons *@
+            <div class="player-moves-panel">
+                @if (GameState == GameStates.PlayerMove)
                     {
-                        <div class="player-moves-title">Available Moves:</div>
-                        @foreach (var move in AvailableMoves)
+                <div class="player-moves-title">Available Moves:</div>
+                @foreach (var move in AvailableMoves)
                         {
-                            <button class="btn btn-outline-secondary move-button" hidden="@(GameState != GameStates.PlayerMove)" disabled="@(GameState != GameStates.PlayerMove)" @onclick="(e => { MakeMove(move.Key); })">@(move.Value)</button>
+                <button class="btn btn-outline-secondary move-button" hidden="@(GameState != GameStates.PlayerMove)" disabled="@(GameState != GameStates.PlayerMove)" @onclick="(e => { MakeMove(move.Key); })">@(move.Value)</button>
                         }
-                        <div>
-                            @* if this is testing, allow for the player to regenerate the available moves *@
-                            @if (GameStateObj.TestGame)
+                <div>
+                    @* if this is testing, allow for the player to regenerate the available moves *@
+                    @if (GameStateObj.TestGame)
                             {
-                                <button class="btn btn-primary" @onclick="(e => { RemoveMovesFromMap(); AvailableMoves = GenerateMoves(); AddMovesToMap(); })">GenerateMoves</button>
+                    <button class="btn btn-primary" @onclick="(e => { RemoveMovesFromMap(); AvailableMoves = GenerateMoves(); AddMovesToMap(); })">GenerateMoves</button>
                             }
-                        </div>
-                    }
                 </div>
+                    }
             </div>
         </div>
     </div>
+</div>
 
-    @* Map Display *@
-    @*
-        <div class="map-panel">
-            <div class="map">
-                <label>@((MarkupString)(String.Concat(Enumerable.Repeat("&nbsp", Convert.ToInt32(Math.Floor((double)(2 + X_dimension * 3 - 1 - MapTitle.Length) / 2.0))))))@MapTitle</label><br />
-                <label>@((MarkupString)("&nbsp&nbsp" + (String.Concat(Enumerable.Repeat("*", X_dimension * 3 - 2)))))</label><br />
-                <label>@((MarkupString)PrintMap())</label>
+@* Map Display *@
+@*
+    <div class="map-panel">
+        <div class="map">
+            <label>@((MarkupString)(String.Concat(Enumerable.Repeat("&nbsp", Convert.ToInt32(Math.Floor((double)(2 + X_dimension * 3 - 1 - MapTitle.Length) / 2.0))))))@MapTitle</label><br />
+            <label>@((MarkupString)("&nbsp&nbsp" + (String.Concat(Enumerable.Repeat("*", X_dimension * 3 - 2)))))</label><br />
+            <label>@((MarkupString)PrintMap())</label>
+        </div>
+    </div>
+*@
+@*
+    <div class="clearfix">
+*@
+
+@* Show event readout *@
+@*
+        <div class="event-panel" style="float:left margin: 0px 50px 0px 0px;">
+            <div class="event-panel-title">
+                Universal Newswire
+            </div>
+            <div class="event-panel-readout">
+                @((MarkupString)EventsText())
             </div>
         </div>
-    *@
-    @*
-        <div class="clearfix">
-    *@
+    </div>
+*@
+@* Show company status *@
+<div class="company-status-panel">
 
-    @* Show event readout *@
-    @*
-            <div class="event-panel" style="float:left margin: 0px 50px 0px 0px;">
-                <div class="event-panel-title">
-                    Universal Newswire
-                </div>
-                <div class="event-panel-readout">
-                    @((MarkupString)EventsText())
-                </div>
-            </div>
+    @* Leftmost box is column names *@
+    <div class="container company-status-key">
+        <div class="company-status-box-name">
+            Company:
         </div>
-    *@
-    @* Show company status *@
-    <div class="company-status-panel">
-
-        @* Leftmost box is column names *@
-        <div class="container company-status-key">
-            <div class="company-status-box-name">
-                Company:
-            </div>
-            <div class="company-status-box-sharevalue">
-                Share Value($):
-            </div>
-            <div class="company-status-box-sharesoutstanding">
-                Outstanding Shares:
-            </div>
-            <div class="player-status-box-size">
-                # of Sectors:
-            </div>
+        <div class="company-status-box-sharevalue">
+            Share Value($):
         </div>
+        <div class="company-status-box-sharesoutstanding">
+            Outstanding Shares:
+        </div>
+        <div class="player-status-box-size">
+            # of Sectors:
+        </div>
+    </div>
 
-        @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
+    @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
         {
-            <div class="container company-status-box">
-                <div class="company-status-box-name">
-                    @(c.Value.Name)
-                </div>
-                <div class="company-status-box-sharevalue">
-                    @(c.Value.ShareValue.ToString())
-                </div>
-                <div class="company-status-box-sharesoutstanding">
-                    @(c.Value.OutstandingShares())
-                </div>
-                <div class="company-status-box-size">
-                    @(CompanySize(c.Value))
-                </div>
-            </div>
+    <div class="container company-status-box">
+        <div class="company-status-box-name">
+            @(c.Value.Name)
+        </div>
+        <div class="company-status-box-sharevalue">
+            @(c.Value.ShareValue.ToString())
+        </div>
+        <div class="company-status-box-sharesoutstanding">
+            @(c.Value.OutstandingShares())
+        </div>
+        <div class="company-status-box-size">
+            @(CompanySize(c.Value))
+        </div>
+    </div>
         }
 
-    </div>
+</div>
 }
 
 @if (GameState == GameStates.GameEnding)
 {
-    <h2>The Game is over!</h2>
+<h2>The Game is over!</h2>
 
-    @foreach (var p in Players)
+@foreach (var p in Players)
     {
-        <label>@PlayerRank(p.Key)) @(p.Value.Name): $</label><label>@(PlayerNetWorth(p.Key))</label>
+<label>@PlayerRank(p.Key)) @(p.Value.Name): $</label><label>@(PlayerNetWorth(p.Key))</label>
     }
 
 }
@@ -322,7 +322,7 @@ const int StarValue = 500;
 //Finance Constants
 public int MergerRatio = 2; // Old shares needed to equal one new share
 public int PlayerStartingMoney = 6000;
-public int DividendPercetange = 5;
+public int DividendPercentage = 5;
 
 //Initialize Player dictionary
 const int Max_NumberOfPlayers = 5;
@@ -780,7 +780,7 @@ public int AvailableMoneyForStockBuying(int ExcludeCompanyId)
     {
         foreach (var p in Players)
         {
-            p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)DividendPercetange / 100);
+            p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)DividendPercentage / 100);
         }
     }
 
