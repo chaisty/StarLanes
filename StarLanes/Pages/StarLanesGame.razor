@@ -30,9 +30,9 @@
     <h3>Advanced Options</h3>
     <p>
         <label for="NumberOfCompanies">Max # of Companies: </label><input id="NumberOfCompanies" type="number" min="5" max="@Max_NumberOfCompanies" @bind="NumberOfCompanies" /> (5-10, default 5)<br />
-        <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="12" max="20" @bind="X_dimension" /> x <input id="MapSizeY" type="number" min="9" max="20" @bind="Y_dimension" /> (Min 12x9, Max 20x20, default 12x9)<br />
+        <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="6" max="20" @bind="X_dimension" /> x <input id="MapSizeY" type="number" min="5" max="20" @bind="Y_dimension" /> (Min 6x5, Normal 12x9, Max 20x20, default 12x9)<br />
         <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="StarChance" />% (0-15, default 10)<br />
-        <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="BlackholeChance" />% (0-10, default 3)<br />
+        <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="BlackholeChance" />% (0-5, default 3)<br />
         <label for="StartingOrder">Starting Player:</label><br /><input type="radio" id="InOrder" name="StartingOrder" value="1" /><label for="InOrder">In Order Above</label><br />
         <input type="radio" id="RandomStart" name="StartingOrder" value="2" checked /><label for="RandomStart">Random Starter</label><br />
         <input type="radio" id="All Random" name="StartingOrder" value="3" /><label for="InOrder">Random Starter, Random Order</label><br />
@@ -40,7 +40,7 @@
         <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
         <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="DividendPercentage" />% (1-10, default 5)<br />
         <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
-        <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="NumberOfAvailableMoves" /> (3-5, default 4)<br />
+        <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="NumberOfMoves" /> (3-5, default 4)<br />
     </p>
 }
 
@@ -289,35 +289,35 @@
 
 @code {
 
+    // Initialize Randomizer
+    Random rand = new Random();
 
+    //Create Base Objects
     public int[,] StockHoldings = new int[1, 1];    //Redim this later
     public Dictionary<string, int> Stocks = new Dictionary<string, int>();
-
-
-    // Initialzie Randomizer
-    Random rand = new Random();
 
     // Initialize Companies
     public const int Max_NumberOfCompanies = 10;
     public int Max_Companies = 5;   //configurable
-    public int FounderShares = 5;
+    public int founderShares = 5;
     Dictionary<int, Company> Companies = new Dictionary<int, Company>();
 
     //Initialize Map
     const int Max_X_dimension = 20;
     const int Max_Y_dimension = 15;
-    public int X_dimension = 12;
-    public int Y_dimension = 9;
-    public int StarChance = 10;
-    public int BlackholeChance = 3;
-    public int BlackholeConsumptionChance = 25; // chance a developed sector will be consumed by a black hole
+    public int x_dimension = 12;
+    public int y_dimension = 9;
+    public int starChance = 10;
+    public int blackholeChance = 3;
+    public int blackholeConsumptionChance = 25; // chance a developed sector will be consumed by a black hole
 
     @*public string[,] My = new string[1, 1]; *@
 public Map map = new Map(1, 1);
 
 //Initialize Sector Values
-const int NormalValue = 100;
-const int StarValue = 500;
+public int normalValue = 100;
+public int starValue = 500;
+public int blackholeValue = 0; // can't build next to them yet, so 0 value will indicate they destroy companies vs. just impair value
 
 //Finance Constants
 public int MergerRatio = 2; // Old shares needed to equal one new share
@@ -351,10 +351,9 @@ public GameStates GameState = GameStates.NotStarted;
 public int GameRound = 0;
 public int FirstPlayer = 0;
 public int MaxNumberOfMovesPerGame = 48;
-public int NumberOfRounds = 12;
+public int numberOfRounds = 12;
 public bool DefaultRounds = true;
-public int NumberOfMoves = 4;
-public int NumberOfAvailableMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
+public int numberOfMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
 
 public Queue<string> Events = new Queue<string>();
 
@@ -373,16 +372,194 @@ private int NumberOfCompanies
     }
 }
 
-[System.ComponentModel.DataAnnotations.Range(0,10, ErrorMessage ="Dividend % must be between 0 and 10")]
+private int FounderShares
+{
+    get { return founderShares; }
+    set
+    { if (value < 0)
+            founderShares = 0;
+        else if (value > 20)
+            founderShares = 20;
+        else
+            founderShares = value;
+    }
+}
+
+/*const int NormalValue = 100;
+const int StarValue = 500;
+
+//Finance Constants
+public int MergerRatio = 2; // Old shares needed to equal one new share
+*/
+
+private int NormalValue
+{
+    get { return normalValue; }
+    set
+    {
+        if (value < 0)
+            normalValue = 0;
+        else if (value > 1000)
+            normalValue = 1000;
+        else
+            normalValue = value;
+    }
+}
+
+private int StarValue
+{
+    get { return starValue; }
+    set
+    {
+        if (value < 0)
+            starValue = 0;
+        else if (value > 2000)
+            starValue = 2000;
+        else
+            starValue = value;
+    }
+}
+
+private int BlackholeValue
+{
+    get { return blackholeValue; }
+    set
+    {
+        if (value < -2000)
+            blackholeValue = -2000;
+        else if (value > 0)
+            blackholeValue = 0;
+        else
+            blackholeValue = value;
+    }
+}
+
+/*
+//Initialize Map
+const int Max_X_dimension = 20;
+const int Max_Y_dimension = 15;
+public int x_dimension = 12;
+public int y_dimension = 9;
+public int starChance = 10;
+public int blackholeChance = 3;
+public int blackholeConsumptionChance = 25;
+*/
+
+private int X_dimension
+{
+    get { return x_dimension; }
+    set
+    { if (value < 5)
+            x_dimension = 5;
+        else if (value > Max_X_dimension)
+            x_dimension = Max_X_dimension;
+        else
+            x_dimension = value;
+    }
+}
+
+private int Y_dimension
+{
+    get { return y_dimension; }
+    set
+    {
+        if (value < 5)
+            y_dimension = 5;
+        else if (value > Max_Y_dimension)
+            y_dimension = Max_Y_dimension;
+        else
+            y_dimension = value;
+    }
+}
+
+private int StarChance
+{
+    get { return starChance; }
+    set
+    {
+        if (value < 0)
+            starChance = 0;
+        else if (value > 20)
+            starChance = 20;
+        else
+            starChance = value;
+    }
+}
+
+private int BlackholeChance
+{
+    get { return blackholeChance; }
+    set
+    {
+        if (value < 0)
+            blackholeChance = 0;
+        else if (value > 5)
+            blackholeChance = 5;
+        else
+            blackholeChance = value;
+    }
+}
+
+private int BlackholeConsumptionChance
+{
+    get { return blackholeConsumptionChance; }
+    set
+    {
+        if (value < 0)
+            blackholeConsumptionChance = 0;
+        else if (value > 100)
+            blackholeConsumptionChance = 100;
+        else
+            blackholeConsumptionChance = value;
+    }
+}
+
+/*
+public int MaxNumberOfMovesPerGame = 48;
+public int NumberOfRounds = 12;
+public bool DefaultRounds = true;
+public int NumberOfMoves = 4;
+public int NumberOfAvailableMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
+*/
+
+private int NumberOfRounds
+{
+    get { return numberOfRounds;  }
+    set
+    {
+        if (value < 1)
+            numberOfRounds = 1;
+        else if (value > 24)
+            numberOfRounds = 24;
+        else
+            numberOfRounds = value;
+    }
+}
+
+private int NumberOfMoves
+{
+    get { return numberOfMoves; }
+    set
+    {
+        if (value < 3)
+            numberOfMoves = 3;
+        else if (value > 5)
+            numberOfMoves = 5;
+        else numberOfMoves = value;
+    }
+}
+
 private int DividendPercentage
 {
     get { return dividendPercentage; }
     set
     {
         if ((value > 0) && (value <= 10))
-           dividendPercentage = value;
+            dividendPercentage = value;
     }
 }
+
+
 
 public class GameStateObject
 {
@@ -964,11 +1141,14 @@ private void PayDividends()
             }
 
             //Check for black hole
-            if (BlackholeChance > 0)
+            if (moveOutcome != MoveOutcome.StartNewCompany) // there will be two outcomes actually, but the new company will cause issues if max companies already exist, so prevent that
             {
-                if (String.Join("", neighbors).Contains(Map.BlackholeSector))
+                if (BlackholeChance > 0)
                 {
-                    moveOutcome = MoveOutcome.Blackhole;
+                    if (String.Join("", neighbors).Contains(Map.BlackholeSector))
+                    {
+                        moveOutcome = MoveOutcome.Blackhole;
+                    }
                 }
             }
 
