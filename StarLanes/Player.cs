@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +19,7 @@ namespace StarLanes
         public string Name { get; }
         public int Money { get; set; }
         public PlayerType Type { get; set; }
+        public int FinalRank { get; set; }
 
         public Player(string name, int money)
         {
@@ -29,5 +31,7 @@ namespace StarLanes
         {
             return (Type == PlayerType.Human);
         }
+
+
     }
 }
