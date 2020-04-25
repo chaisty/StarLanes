@@ -24,9 +24,9 @@
         }
     </p>
 
-    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat">Standard Game (12x9)</label></div>
-    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat">Big Game (16x12)</label></div>
-    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat">Jumbo Game (20x16)</label></div>
+    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="standard" checked @onchange="(e) => SetMapSize(12,9)">Standard Game (12x9)</label></div>
+    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="large" @onchange="(e) => SetMapSize(16,12)">Big Game (16x12)</label></div>
+    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="jumbo" @onchange="(e) => SetMapSize(20,16)">Jumbo Game (20x16)</label></div>
 
     <p>
         <button class="btn btn-primary" @onclick="InitializeGame">Start Game!</button>
@@ -270,7 +270,7 @@
     <div class="company-status-panel">
 
         @* Leftmost box is column names *@
-        <div class="container company-status-key">
+        <div class="company-status-key">
             <div class="company-status-box-name">
                 Company:
             </div>
@@ -287,7 +287,7 @@
 
         @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
         {
-            <div class="container company-status-box">
+            <div class="company-status-box">
                 <div class="company-status-box-name">
                     @(c.Value.Name)
                 </div>
@@ -352,7 +352,7 @@
 
     //Initialize Map
     const int Max_X_dimension = 20;
-    const int Max_Y_dimension = 15;
+    const int Max_Y_dimension = 20;
     public int x_dimension = 12;
     public int y_dimension = 9;
     public int starChance = 10;
@@ -392,7 +392,7 @@ public enum GameStates
     Initiating = 1,
     PlayerMove = 10,
     PlayerStockPurchasing = 15,
-    BetweenMoves = 15,
+    BetweenMoves = 17,
     GameEnding = 20,
     GameEnded = 25
 }
@@ -414,6 +414,12 @@ private void ToggleAdvancedOptions()
 
 
 // Game Properties
+
+private void SetMapSize(int x, int y)
+{
+    X_dimension = x;
+    Y_dimension = y;
+}
 
 private int NumberOfCompanies
 {

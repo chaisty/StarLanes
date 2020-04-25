@@ -136,7 +136,8 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border:outset;
     border-width: 2px;
-    height: 150px;
+    min-height: 150px;
+    max-height: 225px;
     width: 200px;
     float: left;
     font-family: Courier New, Courier, monospace;
@@ -175,7 +176,8 @@
     border: thin;
     border-width: 2px;
     height: 150px;
-    width: 200px;
+    width: 180px;
+    padding: 10px 2px;
     float: left;
     font-family: Courier New, Courier, monospace;
     font-size: smaller;
@@ -184,8 +186,9 @@
 .company-status-box {
     border: thin;
     border-width: 2px;
-    height: 150px;
-    width: 150px;
+    padding: 10px 2px;
+    height: 125px;
+    width: 100px;
     float: left;
     font-family: Courier New, Courier, monospace;
     font-size: smaller;
