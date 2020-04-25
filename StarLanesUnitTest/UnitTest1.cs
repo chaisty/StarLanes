@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StarLanes.Pages;
+using StarLanes;
 
 namespace StarLanesUnitTest
 {

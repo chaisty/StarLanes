@@ -16,6 +16,7 @@ namespace StarLanes
             Computer3 = 3, // HAL 9001 - goes for the max value move
         }
 
+
         public string Name { get; }
         public int Money { get; set; }
         public Dictionary<int, int> StockShares { get; set; }
