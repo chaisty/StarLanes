@@ -18,6 +18,7 @@ namespace StarLanes
 
         public string Name { get; }
         public int Money { get; set; }
+        public Dictionary<int, int> StockShares { get; set; }
         public PlayerType Type { get; set; }
         public int FinalRank { get; set; }
 
