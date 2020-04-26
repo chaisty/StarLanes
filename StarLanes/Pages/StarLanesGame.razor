@@ -1449,8 +1449,8 @@ private void PayDividends()
         // Trade in old stock
         foreach (var item in loser.StockHolderShares)
         {
-            winner.StockHolderShares[item.Key] += (item.Value / 2); // Award at 2 old for 1 new
-            Players[item.Key].Money += ((item.Value % 2) * loser.ShareValue); // Pay out remainer share
+            winner.StockHolderShares[item.Key] += (item.Value / MergerRatio); // Award at 2 old for 1 new
+            Players[item.Key].Money += ((item.Value % MergerRatio) * loser.ShareValue); // Pay out remainer share
         }
 
         // Close down prior company
