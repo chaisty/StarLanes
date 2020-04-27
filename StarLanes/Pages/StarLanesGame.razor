@@ -49,30 +49,31 @@
 
     @if (AdvancedOptionsVisible)
     {
-<div id="AdvOptions" class="collapse show" visible>
+        <div id="AdvOptions" class="collapse show" visible>
 
-    @*   <div id="AdvOptions" class="collapse show" aria-labelledby="AdvOptionsHeader" data-parent="#AdvOptionsAccordion"> *@
+            @*   <div id="AdvOptions" class="collapse show" aria-labelledby="AdvOptionsHeader" data-parent="#AdvOptionsAccordion"> *@
 
-    <label for="NumberOfCompanies">Max # of Companies: </label><input id="NumberOfCompanies" type="number" min="5" max="@Max_NumberOfCompanies" @bind="NumberOfCompanies" /> (5-10, default 5)<br />
-    <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="6" max="20" @bind="X_dimension" /> x <input id="MapSizeY" type="number" min="5" max="20" @bind="Y_dimension" /> (Min 6x5, Normal 12x9, Max 20x20, default 12x9)<br />
-    <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="StarChance" />% (0-15, default 10)<br />
-    <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="BlackholeChance" />% (0-5, default 3)<br />
-    <label for="BlackholeConsumptionChance">Black Hole Consumption %: </label><input id="BlackholeConsumptionChance" type="number" min="0" max="100" @bind="BlackholeConsumptionChance" /> (0-100, default 25, applies to developed sectors, not companies)<br />
-    <label for="StartingOrder">Starting Player:</label><br /><input type="radio" id="InOrder" name="StartingOrder" value="1" /><label for="InOrder">In Order Above</label><br />
-    <input type="radio" id="RandomStart" name="StartingOrder" value="2" checked /><label for="RandomStart">Random Starter</label><br />
-    <input type="radio" id="All Random" name="StartingOrder" value="3" /><label for="InOrder">Random Starter, Random Order</label><br />
-    <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="FounderShares" /> (0-20, default 5)<br />
-    <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
-    <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="DividendPercentage" />% (1-10, default 5)<br />
-    <label for="MergerRatio">Merger Ratio: </label><input id="MergerRatio" type="number" min="1" max="5" @bind="MergerRatio" /> (1-5, default 2, number of shares of smaller merged company to equal 1 in new company)<br />
-    <label for="SectorValue">Sector Value $: </label><input id="SectorValue" type="number" min="0" max="500" step="100" @bind="NormalValue" /> (0-500, 100 default) <br />
-    <label for="StarSectorValue">Star Sector Value $: </label><input id="StarSectorValue" type="number" min="0" max="2000" step="100" @bind="StarValue" /> (0-2000, 500 default) <br />
-    <label for="BlackholeDestructive">Blackhole Destroys: </label><input id="BlackholeDestroys" type="checkbox" @bind="BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
-    <label for="BlackholeSectorValue">Blackhole Sector Value $: </label><input id="BlackholeSectorValue" disabled="@(BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="BlackholeValue" /> (-2000-0, 0 default) <br />
-    <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
-    <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="NumberOfMoves" /> (3-5, default 4)<br />
+            <label for="NumberOfCompanies">Max # of Companies: </label><input id="NumberOfCompanies" type="number" min="5" max="@Max_NumberOfCompanies" @bind="NumberOfCompanies" /> (5-10, default 5)<br />
+            <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="6" max="20" @bind="X_dimension" /> x <input id="MapSizeY" type="number" min="5" max="20" @bind="Y_dimension" /> (Min 6x5, Normal 12x9, Max 20x20, default 12x9)<br />
+            <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="StarChance" />% (0-15, default 10)<br />
+            <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="BlackholeChance" />% (0-5, default 3)<br />
+            <label for="BlackholeConsumptionChance">Black Hole Consumption %: </label><input id="BlackholeConsumptionChance" type="number" min="0" max="100" @bind="BlackholeConsumptionChance" /> (0-100, default 25, applies to developed sectors, not companies)<br />
+            <label for="StartingOrder">Starting Player:</label><br />
+            <input type="radio" id="InOrder" name="StartingOrder" value="1" /><label for="InOrder">In Order Above</label><br />
+            <input type="radio" id="RandomStart" name="StartingOrder" value="2" checked /><label for="RandomStart">Random Starter</label><br />
+            <input type="radio" id="All Random" name="StartingOrder" value="3" /><label for="InOrder">Random Starter, Random Order</label><br />
+            <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="FounderShares" /> (0-20, default 5)<br />
+            <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
+            <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="DividendPercentage" />% (1-10, default 5)<br />
+            <label for="MergerRatio">Merger Ratio: </label><input id="MergerRatio" type="number" min="1" max="5" @bind="MergerRatio" /> (1-5, default 2, number of shares of smaller merged company to equal 1 in new company)<br />
+            <label for="SectorValue">Sector Value $: </label><input id="SectorValue" type="number" min="0" max="500" step="100" @bind="NormalValue" /> (0-500, 100 default) <br />
+            <label for="StarSectorValue">Star Sector Value $: </label><input id="StarSectorValue" type="number" min="0" max="2000" step="100" @bind="StarValue" /> (0-2000, 500 default) <br />
+            <label for="BlackholeDestructive">Blackhole Destroys: </label><input id="BlackholeDestroys" type="checkbox" @bind="BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
+            <label for="BlackholeSectorValue">Blackhole Sector Value $: </label><input id="BlackholeSectorValue" disabled="@(BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="BlackholeValue" /> (-2000-0, 0 default) <br />
+            <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
+            <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="NumberOfMoves" /> (3-5, default 4)<br />
 
-</div>
+        </div>
     }
 
 }
@@ -106,7 +107,7 @@
 
                 <div class="container player-status-box @(PlayerTurn == p.Key ? "player-status-box-active" : "")">
                     <div class="player-status-box-name @(PlayerTurn == p.Key ? "player-status-name-active" : "")">
-                        @(p.Value.Name + " ["+ PlayerRank(p.Key) + "]")
+                        @(p.Value.Name + " ["+ PlayerRank(p.Key) + "]") @((MarkupString)PlayerIcon(p.Key)) 
                     </div>
                     <div class="player-status-box-money">
                         Bank: @("$" + p.Value.Money.ToString())
@@ -169,75 +170,84 @@
             </div>
 
             <div class="player-actions">
-                @* Stock purchasing buttons*@
+                <fieldset id="playeractionelements" disabled="@(!(Players[PlayerTurn].IsHuman))">
+                    @* Stock purchasing buttons*@
 
-                @if (GameState == GameStates.PlayerStockPurchasing)
-                {
-                    @* if there are any companies *@
-                    @if (Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
+                    @if (GameState == GameStates.PlayerStockPurchasing)
                     {
-                        <div class="clearfix">
-                            <span class="bold-small-header">Buy Stocks with $@(Players[PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
-                        </div>
-                        <div class="clearfix">
-                            @foreach (var c in Companies)
-                            {
-                                @if (c.Value.IsActive)
-                                {
-                                    <div class="row stock-to-buy-box">
-                                        <div class="w-auto">
-                                            <label>@(c.Value.Name)&nbsp;</label>
-                                        </div>
-                                        <div class="w-auto">
-                                            <label for="Buy=@(c.Key)">$@(c.Value.ShareValue) x </label>
-                                            <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
-                                            <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
-                                        </div>
-                                    </div>
-                                    @*                     <button class="btn btn-secondary btn-xs" onclick="alert(" onclick="document.getElementById("Buy=@(c.Key)").value = document.getElementById("Buy=@(c.Key)").attr('max');";">Max</button> *@
-
-                                    @*
-                                        <label class="player-actions-buysellstock">@(c.Value.Name)</label>
-                                        <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
-                                        <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
-                                        <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
-                                    *@
-                                }
-                            }
-                        </div>
-
-                    }
-                    else @* no companies *@
-                    {
-                        <div>
-                            No companies available for stock purchasing
-                        </div>
-                    }
-                    @* End Turn Button *@
-                    <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
-                        <button class="btn btn-secondary" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "End Turn")</button>
-                    </div>
-
-                }
-
-                @* Available Move Buttons *@
-                <div class="player-moves-panel">
-                    @if (GameState == GameStates.PlayerMove)
-                    {
-                        <div class="player-moves-title">Available Moves:</div>
-                        @foreach (var move in AvailableMoves)
+                        @* if there are any companies *@
+                        @if (Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
                         {
-                            <button class="btn btn-outline-secondary move-button" hidden="@(GameState != GameStates.PlayerMove)" disabled="@(GameState != GameStates.PlayerMove)" @onclick="(e => { MakeMove(move.Key); })">@(move.Value)</button>
+                            <div class="clearfix">
+                                <span class="bold-small-header">Buy Stocks with $@(Players[PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
+                            </div>
+                            <div class="clearfix">
+                                @foreach (var c in Companies)
+                                {
+                                    @if (c.Value.IsActive)
+                                    {
+                                        <div class="row stock-to-buy-box">
+                                            <div class="w-auto">
+                                                <label>@(c.Value.Name)&nbsp;</label>
+                                            </div>
+                                            <div class="w-auto">
+                                                <label for="Buy=@(c.Key)">$@(c.Value.ShareValue) x </label>
+                                                <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                                                <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
+                                            </div>
+                                        </div>
+                                        @*                     <button class="btn btn-secondary btn-xs" onclick="alert(" onclick="document.getElementById("Buy=@(c.Key)").value = document.getElementById("Buy=@(c.Key)").attr('max');";">Max</button> *@
+
+                                        @*
+                                <label class="player-actions-buysellstock">@(c.Value.Name)</label>
+                                <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
+                                <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
+                                <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
+                                        *@
+                                    }
+                                }
+                            </div>
+
                         }
-                        <div>
-                            @* if this is testing, allow for the player to regenerate the available moves *@
-                            @if (GameStateObj.TestGame)
-                            {
-                                <button class="btn btn-primary" @onclick="(e => { RemoveMovesFromMap(); AvailableMoves = GenerateMoves(); AddMovesToMap(); })">GenerateMoves</button>
-                            }
+                        else @* no companies *@
+                        {
+                            <div>
+                                No companies available for stock purchasing
+                            </div>
+                        }
+                        @* End Turn Button for Humans Players *@
+                        <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
+                            <button class="btn btn-secondary" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "End Turn")</button>
                         </div>
+
                     }
-                </div>
+
+                    @* Available Move Buttons *@
+                    <div class="player-moves-panel">
+                        @if (GameState == GameStates.PlayerMove)
+                        {
+                            <div class="player-moves-title">Available Moves:</div>
+                            @foreach (var move in AvailableMoves)
+                            {
+                                <button class="btn btn-outline-secondary move-button" hidden="@(GameState != GameStates.PlayerMove)" disabled="@(GameState != GameStates.PlayerMove)" @onclick="(e => { MakeMove(move.Key); })">@(move.Value)</button>
+                            }
+                            <div>
+                                @* if this is testing, allow for the player to regenerate the available moves *@
+                                @if (GameStateObj.TestGame)
+                                {
+                                    <button class="btn btn-primary" @onclick="(e => { RemoveMovesFromMap(); AvailableMoves = GenerateMoves(); AddMovesToMap(); })">GenerateMoves</button>
+                                }
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+                @* End Turn Button for Human to continue game after Computer Turn *@
+                @if ((GameState == GameStates.PlayerStockPurchasing) && (!Players[PlayerTurn].IsHuman))
+                {
+                    <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
+                        <button class="btn btn-primary" @onclick="(e => { EndTurn(); })"> Next Turn </button>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -338,6 +348,22 @@
 
 
 @code {
+
+    //UI only functions
+    private string GenerateControlRef(int Id)
+    {
+        return "Move" + Id.ToString();
+    }
+
+    private string PlayerIcon(int Id)
+    {
+        if (!Players[Id].IsHuman)
+            return "<img src=" + (char)34 + "css/font-awesome/robot.svg" + (char)34 + " width=" + (char)34 + "16" + (char)34 + " height=" + (char)34 + "16" + (char)34 + " alt=" + (char)34 + "C" + (char)34 + " />";
+        else
+            return "";
+    }
+
+
 
     // Initialize Randomizer
     Random rand = new Random();
@@ -465,7 +491,7 @@ private int PlayerStartingMoney
 
 private int MergerRatio
 {
-    get { return mergerRatio;  }
+    get { return mergerRatio; }
     set
     {
         if (value < 1) { mergerRatio = 1; }
@@ -828,9 +854,9 @@ private void InitializeGame()
     for (int l = 1; l <= GameStateObj.NumberOfPlayers; l++)
     {
         // Start each Player with some $ and set their name
-        if (string.IsNullOrWhiteSpace(PlayerName[nameIndex])) { PlayerName[nameIndex] = "Player " + (nameIndex + 1).ToString(); }  // Assign default name if not entered
-        Players.Add(l, new Player(PlayerName[nameIndex], PlayerStartingMoney));
-        if (ComputerPlayer[nameIndex]) { Players[nameIndex].Type = Player.PlayerType.Computer1; };
+        if (string.IsNullOrWhiteSpace(PlayerName[nameIndex])) { PlayerName[nameIndex] = (ComputerPlayer[nameIndex] ? "Computer " : "Player ") + (nameIndex + 1).ToString(); }  // Assign default name if not entered
+        Players.Add(l, new Player(PlayerName[nameIndex], PlayerStartingMoney, ComputerPlayer[nameIndex] ? Player.PlayerType.Computer1 : Player.PlayerType.Human));
+        //if (ComputerPlayer[nameIndex]) { Players[nameIndex].Type = Player.PlayerType.Computer1; };
         nameIndex = (nameIndex < (GameStateObj.NumberOfPlayers - 1) ? nameIndex + 1 : 0);
     }
 
@@ -874,13 +900,92 @@ private void InitializeGame()
 
     //    TestGame1();
 
-    AvailableMoves = GenerateMoves();
-    AddMovesToMap();
-    GameState = GameStates.PlayerMove;
+
+    ExecuteTurn();
 
     LogGameEvent("The Game has begun!");
 
 }
+
+
+private void ExecuteTurn()
+{
+    GameState = GameStates.PlayerMove;
+
+    //Generate the moves for the next player
+    AvailableMoves = GenerateMoves();
+    AddMovesToMap();
+
+    if (!(Players[PlayerTurn].IsHuman))
+    {
+        // Computer move
+
+        //Disable UI pieces for end user clicking
+
+        //Have computer user make move selection
+        int computerMove = 1;
+        MakeMove(computerMove);
+        //ExecuteMove(AvailableMoves[computerMove].X, AvailableMoves[computerMove].Y, map);
+        GameState = GameStates.PlayerStockPurchasing;
+
+        // Have computer user make stock purchases
+        int computerStockToBuy = BuyComputerStock(PlayerTurn);
+        if (computerStockToBuy > 0)
+        {
+            // MaxCanBuy
+            int sharesToBuy = MaxCanBuy(computerStockToBuy);
+            GameStateObj.StockToBuy[computerStockToBuy] = sharesToBuy;
+            LogGameEvent(Players[PlayerTurn].Name + " purchased " + sharesToBuy.ToString() + " shares of " + Companies[computerStockToBuy].Name);
+        }
+    }
+}
+
+private int SelectComputerMove(Dictionary<int, Move> moves, int playerId)
+{
+    return 1;   //always select the first move for test purposes right now;
+}
+
+private int BuyComputerStock(int playerId)
+{
+    if (ExistingCompanies() == 0) { return 0; } // No Companies to buy stock in
+
+    //Check holdings and buy more of the same company as initial logic
+    int mostOwned = 0;
+    int ownedShares = 0;
+    int cheapestStock = 0;
+
+    for (int i = 1; i <= Companies.Count; i++)
+    {
+        if (Companies[i].IsActive)
+        {
+            if (Companies[i].StockHolderShares[playerId] >= ownedShares)
+            {
+                mostOwned = i;
+            }
+        }
+    }
+
+    // Doesn't own any stock right now, buy cheapest
+    if (mostOwned == 0)
+    {
+
+        int stockValue = 999999999;
+
+        for (int i = 1; i <= Companies.Count; i++)
+        {
+            if (Companies[i].IsActive)
+            {
+                if(Companies[i].ShareValue < stockValue)
+                {
+                    cheapestStock = i;
+                }
+            }
+        }
+    }
+
+    return (mostOwned == 0 ? mostOwned : cheapestStock);
+}
+
 
 public int AvailableMoneyForStockBuying()
 {
@@ -974,6 +1079,11 @@ private void RemoveMovesFromMap()
     }
 }
 
+private int ExistingCompanies()
+{
+    return Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
+}
+
 private Dictionary<int, Move> GenerateMoves()
 {
     //        int x_move;
@@ -982,7 +1092,7 @@ private Dictionary<int, Move> GenerateMoves()
 
     SortedDictionary<string, Move> tempMoves = new SortedDictionary<string, Move>();
 
-    int existingCompanies = Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
+    int existingCompanies = ExistingCompanies();
 
     List<Move> openSectors = map.OpenSectors();
     int moveIndex;
@@ -1050,7 +1160,7 @@ public void MakeMove(int moveNumber)
 private void EndTurn()
 {
     //Buy Stocks
-    ExecuteStockTrades();
+    if (Players[PlayerTurn].IsHuman) { ExecuteStockTrades(); } //already executed if non-human playe turn
     GameStateObj.ResetStockExchange();
     StateHasChanged();
 
@@ -1075,11 +1185,9 @@ private void EndTurn()
         // Pay Dividends to start the round
         if (newRound) PayDividends();
 
-        GameState = GameStates.PlayerMove;
 
-        //Generate the moves for the next player
-        AvailableMoves = GenerateMoves();
-        AddMovesToMap();
+        ExecuteTurn();
+
     }
 }
 

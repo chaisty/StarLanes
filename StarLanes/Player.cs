@@ -20,7 +20,7 @@ namespace StarLanes
         public string Name { get; }
         public int Money { get; set; }
         public Dictionary<int, int> StockShares { get; set; }
-        public PlayerType Type { get; set; }
+        public PlayerType Type { get; set; } = PlayerType.Human;
         public int FinalRank { get; set; }
 
         public Player(string name, int money)
@@ -29,9 +29,14 @@ namespace StarLanes
             Money = money;
         }
 
-        public bool IsHuman()
+        public Player(string name, int money, PlayerType playerType) : this(name, money)
         {
-            return (Type == PlayerType.Human);
+            Type = playerType;
+        }
+
+        public bool IsHuman
+        {
+            get { return (Type == PlayerType.Human); }
         }
 
 
