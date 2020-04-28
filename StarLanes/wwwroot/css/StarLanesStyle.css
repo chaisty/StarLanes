@@ -112,6 +112,10 @@
     font-weight: 600;
 }
 
+.map-last-move {
+    font-weight: 700;
+}
+
 .event-panel {
     display: flex;
     width: 300px;
