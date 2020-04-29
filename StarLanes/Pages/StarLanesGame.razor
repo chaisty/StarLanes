@@ -169,7 +169,7 @@
             </div>
 
             <div class="player-actions">
-                <fieldset id="playeractionelements" disabled="@(!(Players[PlayerTurn].IsHuman))">
+                <fieldset id="playeractionelements" disabled="@(Players[PlayerTurn].IsComputer))">
                     @* Available Move Buttons *@
                     <div class="player-moves-panel">
                         @if (GameState == GameStates.PlayerMove)
@@ -245,7 +245,7 @@
                 </fieldset>
 
                 @* End Turn Button for Human to continue game after Computer Turn *@
-                @if ((GameState == GameStates.PlayerStockPurchasing) && (!Players[PlayerTurn].IsHuman))
+                @if ((GameState == GameStates.PlayerStockPurchasing) && (Players[PlayerTurn].IsComputer))
                 {
                     <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
                         <button class="btn btn-primary" @onclick="(e => { EndTurn(); })"> Next Turn </button>
@@ -360,7 +360,7 @@
 
     private string PlayerIcon(int Id)
     {
-        if (!Players[Id].IsHuman)
+        if (Players[Id].IsComputer)
             return "<img src=" + (char)34 + "css/font-awesome/robot.svg" + (char)34 + " width=" + (char)34 + "16" + (char)34 + " height=" + (char)34 + "16" + (char)34 + " alt=" + (char)34 + "C" + (char)34 + " />";
         else
             return "";
@@ -952,7 +952,7 @@
         AvailableMoves = GenerateMoves();
         AddMovesToMap();
 
-        if (!(Players[PlayerTurn].IsHuman))
+        if (Players[PlayerTurn].IsComputer)
         {
             // Computer move
 
