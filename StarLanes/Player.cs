@@ -8,7 +8,7 @@ namespace StarLanes
         {
             Human = 0,
             Computer1 = 1, // Maximillian - avoids black holes
-            Computer2 = 2, // WOPR - preferse to destroy his opponents
+            Computer2 = 2, // WOPR - prefers to destroy his opponents
             Computer3 = 3, // HAL 9001 - goes for the max value move
         }
 
@@ -32,6 +32,6 @@ namespace StarLanes
 
         public bool IsHuman => (Type == PlayerType.Human);
 
-
+        public bool IsComputer => (!IsHuman);
     }
 }
