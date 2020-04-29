@@ -15,6 +15,9 @@ namespace StarLanes
 
         public string[,] Sectors = new string[0, 0];
 
+
+        // Constructors
+
         public Map(int X_Dimension, int Y_Dimension)
         {
             Sectors = new string[X_Dimension, Y_Dimension];
@@ -26,9 +29,13 @@ namespace StarLanes
             set => Sectors[x, y] = value;
         }
 
+        // Properties
+
         public int X_Dimension => Sectors.GetUpperBound(0);
 
         public int Y_Dimension => Sectors.GetUpperBound(1);
+
+        // Functions
 
         public string[] GetNeighbors(int x, int y)
         {
@@ -116,7 +123,25 @@ namespace StarLanes
             return replacements;
         }
 
+        //Convert a string to map values - used for loading maps for things such as testing;
+        private void StringToMapSection(string MapString, int StartX = 0, int Y = 0)
+        {
+            for (int x = 0; x < MapString.Length; x++)
+            {
+                if ((x + StartX) < X_Dimension)
+                    Sectors[x, Y] = MapString[x + StartX].ToString();
+            }
+        }
 
+        //Convert an array of strings to map values - used for loading maps for things such as testing;
+        private void StringToMapSection(string[] MapStrings, int StartX = 0, int StartY = 0)
+        {
+            for (int y = 0; y < MapStrings.GetUpperBound(0); y++)
+            {
+                if ((y + StartY) < X_Dimension)
+                    StringToMapSection(MapStrings[y], StartX, StartY);
+            }
+        }
 
         //prints the map using text string - for debugging purposes only
         public string PrintMap(bool showMoves, Dictionary<int, Move> AvailableMoves)

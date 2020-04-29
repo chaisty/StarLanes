@@ -140,6 +140,7 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border:outset;
     border-width: 2px;
+    padding: 2px 8px;
     min-height: 150px;
     max-height: 225px;
     width: 200px;
