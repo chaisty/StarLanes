@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace StarLanes
 {
@@ -34,7 +32,7 @@ namespace StarLanes
 
             if (symbol.Length > 0)
             {
-                key = (int)(symbol[0]) - 64;
+                key = symbol[0] - 64;
             }
 
             return key;

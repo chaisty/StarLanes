@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace StarLanes
 {
@@ -34,10 +30,7 @@ namespace StarLanes
             Type = playerType;
         }
 
-        public bool IsHuman
-        {
-            get { return (Type == PlayerType.Human); }
-        }
+        public bool IsHuman => (Type == PlayerType.Human);
 
 
     }

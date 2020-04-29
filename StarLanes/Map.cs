@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace StarLanes
 {
@@ -25,19 +22,13 @@ namespace StarLanes
 
         public string this[int x, int y]
         {
-            get { return Sectors[x, y]; }
-            set { Sectors[x, y] = value; }
+            get => Sectors[x, y];
+            set => Sectors[x, y] = value;
         }
 
-        public int X_Dimension
-        {
-            get { return Sectors.GetUpperBound(0); }
-        }
+        public int X_Dimension => Sectors.GetUpperBound(0);
 
-        public int Y_Dimension
-        {
-            get { return Sectors.GetUpperBound(1); }
-        }
+        public int Y_Dimension => Sectors.GetUpperBound(1);
 
         public string[] GetNeighbors(int x, int y)
         {
@@ -73,14 +64,14 @@ namespace StarLanes
 
             return adjacentCompanies;
         }
-       
+
         public int NumberOfSymbolsOnMap(string symbol)
         {
             int size = 0;
 
             for (int x = Sectors.GetLowerBound(0); x <= Sectors.GetUpperBound(0); x++)
             {
-                for (int y =Sectors.GetLowerBound(1); y <= Sectors.GetUpperBound(1); y++)
+                for (int y = Sectors.GetLowerBound(1); y <= Sectors.GetUpperBound(1); y++)
                 {
                     if (Sectors[x, y] == symbol)
                         size++;
