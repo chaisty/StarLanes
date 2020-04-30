@@ -23,16 +23,16 @@ namespace StarLanes
         public int starChance = 10;
         public int blackholeChance = 3;
         public int blackholeConsumptionChance = 25; // chance a developed sector will be consumed by a black hole
-        public bool blackholeDestroys = true;
+        public bool BlackholeDestroys = true;
 
         //Initialize Sector Values
         public int normalValue = 100;
         public int starValue = 500;
-        public int blackholeValue = 0; // can't build next to them yet, so 0 value will indicate they destroy companies vs. just impair value
+        public int blackholeValue = -500; // if they don't destroy the company, they impair its value
 
         //Finance Constants
         public int mergerRatio = 2; // Old shares needed to equal one new share
-        public int playerStartingMoney = 6000;
+        public long playerStartingMoney = 6000;
         public int dividendPercentage = 5;
         public bool StockSplits = true;
         public int stockSplitPrice = 3000;
@@ -98,7 +98,7 @@ namespace StarLanes
             }
         }
 
-        public int PlayerStartingMoney
+        public long PlayerStartingMoney
         {
             get { return playerStartingMoney; }
             set
@@ -169,22 +169,6 @@ namespace StarLanes
             }
         }
 
-        public bool BlackholeDestroys
-        {
-            get; set;
-        }
-
-        /*
-        //Initialize Map
-        const int Max_X_dimension = 20;
-        const int Max_Y_dimension = 15;
-        public int x_dimension = 12;
-        public int y_dimension = 9;
-        public int starChance = 10;
-        public int blackholeChance = 3;
-        public int blackholeConsumptionChance = 25;
-        */
-
         public int X_dimension
         {
             get { return x_dimension; }
@@ -254,14 +238,6 @@ namespace StarLanes
                     blackholeConsumptionChance = value;
             }
         }
-
-        /*
-        public int MaxNumberOfMovesPerGame = 48;
-        public int NumberOfRounds = 12;
-        public bool DefaultRounds = true;
-        public int NumberOfMoves = 4;
-        public int NumberOfAvailableMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
-        */
 
         public int NumberOfRounds
         {

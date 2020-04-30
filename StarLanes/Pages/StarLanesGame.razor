@@ -68,7 +68,7 @@
             <label for="SectorValue">Sector Value $: </label><input id="SectorValue" type="number" min="0" max="500" step="100" @bind="GameConfig.NormalValue" /> (0-500, 100 default) <br />
             <label for="StarSectorValue">Star Sector Value $: </label><input id="StarSectorValue" type="number" min="0" max="2000" step="100" @bind="GameConfig.StarValue" /> (0-2000, 500 default) <br />
             <label for="BlackholeDestructive">Blackhole Destroys: </label><input id="BlackholeDestroys" type="checkbox" @bind="GameConfig.BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
-            <label for="BlackholeSectorValue">Blackhole Sector Value $: </label><input id="BlackholeSectorValue" disabled="@(GameConfig.BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="GameConfig.BlackholeValue" /> (-2000-0, 0 default) <br />
+            <label for="BlackholeSectorValue">Blackhole Sector Value $: </label><input id="BlackholeSectorValue" disabled="@(GameConfig.BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="GameConfig.BlackholeValue" /> (-2000-0, -500 default) <br />
             <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(GameConfig.DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="GameConfig.NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
             <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="GameConfig.NumberOfMoves" /> (3-5, default 4)<br />
 
@@ -728,14 +728,14 @@
     }
 
 
-    public int AvailableMoneyForStockBuying()
+    public long AvailableMoneyForStockBuying()
     {
         return AvailableMoneyForStockBuying(0); // pass a 0 to indicate not to exclude any company;
     }
 
-    public int AvailableMoneyForStockBuying(int ExcludeCompanyId)
+    public long AvailableMoneyForStockBuying(int ExcludeCompanyId)
     {
-        int availableMoney = Players[PlayerTurn].Money;
+        long availableMoney = Players[PlayerTurn].Money;
         //    Console.WriteLine("StockToBuy.Length=" + GameStateObj.StockToBuy.Length + " ExcludeId = " + ExcludeCompanyId.ToString());
         //    foreach (int i in GameStateObj.StockToBuy)
         for (int i = GameStateObj.StockToBuy.GetLowerBound(0); i <= GameStateObj.StockToBuy.GetUpperBound(0); i++)
@@ -1022,7 +1022,7 @@ public int CompanySize(Company company)
     return map.NumberOfSymbolsOnMap(company.Symbol);
 }
 
-public int PlayerStockWorth(int playerid)
+public long PlayerStockWorth(int playerid)
 {
     int stockvalue = 0;
     foreach (Company c in Companies.Values)
@@ -1032,7 +1032,7 @@ public int PlayerStockWorth(int playerid)
     return stockvalue;
 }
 
-public int PlayerNetWorth(int playerid)
+public long PlayerNetWorth(int playerid)
 {
     return Players[playerid].Money + PlayerStockWorth(playerid);
 }
@@ -1363,12 +1363,12 @@ private void LogGameEvent(string eventHeader, string eventText)
 private int PlayerRankOld(int playerId)
 {
     int rank = 1;
-    int netWorth = PlayerNetWorth(playerId);
+    long netWorth = PlayerNetWorth(playerId);
     for (int i = 1; i <= Players.Count; i++)
     {
         if (i != playerId)
         {
-            int iNetWorth = PlayerNetWorth(i);
+            long iNetWorth = PlayerNetWorth(i);
             if (iNetWorth > netWorth)       // Tie breaker one: Net Worth
                 rank++;
             else if (iNetWorth == netWorth)

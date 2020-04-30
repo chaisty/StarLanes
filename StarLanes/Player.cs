@@ -16,19 +16,19 @@ namespace StarLanes
         }
 
         public string Name { get; private set; }
-        public int Money { get; set; }
+        public long Money { get; set; }
         public Dictionary<int, int> StockShares { get; set; }
         public Personas Persona { get; set; } = Personas.Human;
         //private string[] PersonaName = new string[Enum.Getnames( Persona]
         public int FinalRank { get; set; }
 
-        public Player(string name, int money)
+        public Player(string name, long money)
         {
             Name = name;
             Money = money;
         }
 
-        public Player(string name, int money, Personas persona) : this(name, money)
+        public Player(string name, long money, Personas persona) : this(name, money)
         {
             Persona = persona;
         }
