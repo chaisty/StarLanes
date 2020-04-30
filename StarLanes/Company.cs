@@ -8,6 +8,7 @@ namespace StarLanes
         public string Name { get; }
         public string Symbol { get; }
         public int ShareValue { get; set; }
+        public int SplitOffset { get; set; } = 0;
         public bool IsActive { get; private set; }
         public Dictionary<int, int> StockHolderShares { get; set; }
         public static Dictionary<int, string> CompanyNames = new Dictionary<int, string>()
@@ -78,6 +79,18 @@ namespace StarLanes
         public int OutstandingShares()
         {
             return StockHolderShares.Sum(v => v.Value);
+        }
+
+        public void SplitStock(int SplitPrice)
+        {
+            // Split Share Price in half
+            ShareValue = ShareValue / 2;
+            SplitOffset += ShareValue;
+            // Double share counts for stockholders
+            for (int p = 1; p <= StockHolderShares.Count; p++)
+            {
+                StockHolderShares[p] += StockHolderShares[p]; //double the shares
+            }
         }
     }
 }

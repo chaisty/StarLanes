@@ -105,6 +105,22 @@ namespace StarLanes
             return openSectors;
         }
 
+        public void AddMovesToMap(Dictionary<int, Move> Moves)
+        {
+            foreach (var m in Moves)
+            {
+                Sectors[m.Value.X, m.Value.Y] = m.Key.ToString();
+            }
+        }
+
+        public void RemoveMovesFromMap(Dictionary<int, Move> Moves)
+        {
+            foreach (Move m in Moves.Values)
+            {
+                Sectors[m.X, m.Y] = Map.EmptySector;
+            }
+        }
+
         public int ReplaceSymbolOnMap(string oldValue, string newValue)
         {
             int replacements = 0;
