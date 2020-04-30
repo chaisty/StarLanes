@@ -153,6 +153,11 @@
     font-weight: 700;
 }
 
+.map-sector-move:hover {
+    font-weight: 700;
+    background-color: lightgray;
+}
+
 .map-sector-star {
     color: darkgoldenrod;
     font-weight: 600;
