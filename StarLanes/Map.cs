@@ -7,7 +7,7 @@ namespace StarLanes
     {
         // Map Constants
         public const string MapTitle = "Map of the Galaxy";
-        public const string NullSector = "-";
+        public const string ConsumedSector = "-";
         public const string EmptySector = ".";
         public const string DevelopedSector = "+";
         public const string StarSector = "*";
@@ -26,9 +26,9 @@ namespace StarLanes
         public Map(Map mapToCopy)
         {
             Sectors = new string[mapToCopy.Sectors.GetUpperBound(0), mapToCopy.Sectors.GetUpperBound(1)];
-            for (int x = mapToCopy.Sectors.GetLowerBound(0); x <= mapToCopy.Sectors.GetUpperBound(0); x++)
+            for (int x = 0; x <= mapToCopy.Sectors.GetUpperBound(0); x++)
             {
-                for (int y = mapToCopy.Sectors.GetLowerBound(1); y <= mapToCopy.Sectors.GetUpperBound(1); y++)
+                for (int y = 0; y <= mapToCopy.Sectors.GetUpperBound(1); y++)
                 {
                     Sectors[x, y] = mapToCopy.Sectors[x, y];
                 }
