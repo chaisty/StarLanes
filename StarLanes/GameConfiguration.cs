@@ -71,6 +71,27 @@ namespace StarLanes
             Y_dimension = y;
         }
 
+        public void UpdateRoundsBasedOnPlayerCount()
+        {
+            //    if(e.Value.GetType() == typeof(int)) {
+            //        NumberOfPlayers = Int32.Parse(e.Value.ToString());
+            //    }
+
+            switch (NumberOfPlayers)
+            {
+                case 2:
+                    NumberOfRounds = 24; break;
+                case 3:
+                    NumberOfRounds = 18; break;
+                case 4:
+                    NumberOfRounds = 12; break;
+                case 5:
+                    NumberOfRounds = 10; break;
+                default:
+                    NumberOfRounds = 12; break;
+            }
+        }
+
         public int NumberOfCompanies
         {
             get { return Max_Companies; }

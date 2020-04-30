@@ -29,6 +29,16 @@
     }
 }
 
+@keyframes shrink-unchosen-move {
+    0% { transform: scale(1.0); }
+    100% {transform: scale(0.1); }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0 }
+}
+
 @keyframes big-ping {
     0% {
         transform: scale(.3);

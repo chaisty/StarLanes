@@ -6,7 +6,7 @@ namespace StarLanes
     public class Map
     {
         // Map Constants
-        public const string MapTitle = "Map of the Universe";
+        public const string MapTitle = "Map of the Galaxy";
         public const string NullSector = "-";
         public const string EmptySector = ".";
         public const string DevelopedSector = "+";
@@ -21,6 +21,17 @@ namespace StarLanes
         public Map(int X_Dimension, int Y_Dimension)
         {
             Sectors = new string[X_Dimension, Y_Dimension];
+        }
+
+        public Map(Map mapToCopy)
+        {
+            for (int x = mapToCopy.Sectors.GetLowerBound(0); x <= mapToCopy.Sectors.GetUpperBound(0); x++)
+            {
+                for (int y = mapToCopy.Sectors.GetLowerBound(1); y <= mapToCopy.Sectors.GetUpperBound(1); y++)
+                {
+                    Sectors[x, y] = mapToCopy.Sectors[x, y];
+                }
+            }
         }
 
         public string this[int x, int y]
