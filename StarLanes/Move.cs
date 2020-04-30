@@ -34,7 +34,6 @@
         public override string ToString()
         {
             return Move.ToString(X, Y);
-            //return (char)(X + 65) + (Y + 1).ToString();
         }
     }
 }

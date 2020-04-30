@@ -20,7 +20,7 @@
             var pa = p - 1;
             @*<span class="text-danger">@_playerNameValidationMessage(p))</span>*@
             <label for="playerName(@p)">Player @p Name:</label> <input id="playerName(@p)" type="text" minlength="2" maxlength="20" @bind="PlayerName[pa]" />
-            <label for="computerPlayer(@p)" style="font-size: small;">Computer Player<input type="checkbox" id="computerPlayer(@p)" @bind="ComputerPlayer[pa]" /> </label>
+            <label for="computerPlayer(@p)" style="font-size: small;"><input type="checkbox" id="computerPlayer(@p)" @bind="ComputerPlayer[pa]" /> Computer Player</label>
             <br />
         }
     </p>

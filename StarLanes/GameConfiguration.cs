@@ -38,6 +38,7 @@ namespace StarLanes
         public int stockSplitPrice = 3000;
 
         string GameStatus = "Not Started.";
+
         public enum GameStates
         {
             NotStarted = 0,
