@@ -7,6 +7,48 @@
     font-size: large;
 }
 
+@keyframes last-move-highlight {
+    0% {
+        background-color: white;
+    }
+
+    25% {
+        background-color: gray;
+    }
+
+    50% {
+        background-color: black;
+    }
+
+    75% {
+        background-color: lightgray;
+    }
+
+    100% {
+        background-color: white;
+    }
+}
+
+@keyframes big-ping {
+    0% {
+        transform: scale(.3);
+        background-color: gray;
+        border-radius: 100%;
+    }
+
+    50% {
+        background-color: lightgray;
+    }
+
+    75% { transform: scale(2.0); }
+
+    100% {
+        transform: scale(1.0);
+        background-color: white;
+        border-radius: 100%;
+    }
+}
+
 .container {
     padding: 2px 16px;
 }
@@ -16,12 +58,12 @@
     border-width: 1px;
     height: 400px;
     width: 400px;
-    align-content:center;
+    align-content: center;
     float: left;
 }
 
 .player-moves-panel {
-    text-align:center;
+    text-align: center;
 }
 
 .bold-small-header {
@@ -34,13 +76,12 @@
 }
 
 .stock-to-buy-box {
-    float:left;
+    float: left;
     width: 100%;
     margin: 0px 5px;
 }
 
 .stock-buying {
-
 }
 
 .btn-group-xs > .btn, .btn-xs {
@@ -52,8 +93,8 @@
 
 .map-panel {
     width: 600px;
-    align-content:center;
-    text-align:center;
+    align-content: center;
+    text-align: center;
 }
 
 .map {
@@ -84,23 +125,18 @@
 }
 
 .map-sector-blackhole {
-   
 }
 
 .map-sector-company {
-
 }
 
 .map-sector-developed {
-
 }
 
 .map-sector-empty {
-
 }
 
 .map-sector-null {
-
 }
 
 .map-sector-move {
@@ -114,6 +150,8 @@
 
 .map-last-move {
     font-weight: 700;
+    animation-name: big-ping;
+    animation-duration: 1s;
 }
 
 .event-panel {
@@ -124,21 +162,21 @@
 }
 
 .event-panel-title {
-    border-right-width:2px;
-    border-right-style:dashed;
-    text-align:left;
+    border-right-width: 2px;
+    border-right-style: dashed;
+    text-align: left;
     margin: 0 0 0 0;
 }
 
 .event-panel-readout {
-/*    flex-grow: 1; */
+    /*    flex-grow: 1; */
     font-size: small;
     height: 100%
 }
 
 .player-status-box {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    border:outset;
+    border: outset;
     border-width: 2px;
     padding: 2px 8px;
     min-height: 150px;
@@ -155,10 +193,10 @@
 
 .player-status-box-name {
     width: 100%;
-    text-align:center;
-    font-size:medium;
+    text-align: center;
+    font-size: medium;
     font-weight: 700;
-    border-bottom-style:dashed;
+    border-bottom-style: dashed;
     border-bottom-width: 2px;
 }
 
@@ -167,11 +205,11 @@
 }
 
 .player-status-box-networth {
-    text-align:left;
+    text-align: left;
 }
 
 .player-status-panel {
-    float:none;
+    float: none;
 }
 
 .company-status-panel {
@@ -202,20 +240,15 @@
 
 .company-status-box-name {
     height: 45px;
-    border-bottom-style:dashed;
-    border-bottom-width:thin;
+    border-bottom-style: dashed;
+    border-bottom-width: thin;
 }
 
 .company-status-box-sharevalue {
-
 }
 
 .company-status-box-sharesoutstanding {
-
 }
 
 .player-status-box-size {
-
 }
-
-

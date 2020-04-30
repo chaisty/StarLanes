@@ -92,7 +92,7 @@
                 <label>
                     @((MarkupString)(GameConfig.GameState == GameConfiguration.GameStates.PlayerMove ? "<b>Move<b> >" : "Move > "))
                     @((MarkupString)(GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing ? "<b>Stock Buying<b> > " : "Stock Trading > "))
-                    End Turn
+                    End Turn 
                 </label>
             </p>
         </div>
@@ -218,10 +218,10 @@
                                         @*                     <button class="btn btn-secondary btn-xs" onclick="alert(" onclick="document.getElementById("Buy=@(c.Key)").value = document.getElementById("Buy=@(c.Key)").attr('max');";">Max</button> *@
 
                                         @*
-                                <label class="player-actions-buysellstock">@(c.Value.Name)</label>
-                                <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
-                                <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
-                                <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
+                                            <label class="player-actions-buysellstock">@(c.Value.Name)</label>
+                                            <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
+                                            <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
+                                            <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
                                         *@
                                     }
                                 }
@@ -297,7 +297,7 @@
                 Outstanding Shares:
             </div>
             <div class="player-status-box-size">
-# of Sectors:
+                # of Sectors:
             </div>
         </div>
 
@@ -374,6 +374,9 @@
     }
 
 
+
+
+
     // Initialize Randomizer
     Random rand = new Random();
 
@@ -381,21 +384,29 @@
     public Map map = new Map(1, 1);
 
     // Initialize Companies
-    Dictionary<int, Company> Companies = new Dictionary<int, Company>();
+    Dictionary<int, Company>
+    Companies = new Dictionary<int, Company>
+        ();
 
     //Initialize Player dictionary
     string[] PlayerName = new string[GameConfiguration.Max_NumberOfPlayers];
     bool[] ComputerPlayer = new bool[GameConfiguration.Max_NumberOfPlayers];
-    Dictionary<int, Player> Players = new Dictionary<int, Player>();
+    Dictionary<int, Player>
+        Players = new Dictionary<int, Player>
+            ();
 
     //Create Stock Holding Tracker
     public int[,] StockHoldings = new int[1, 1];    //Redim this later
-    public Dictionary<string, int> Stocks = new Dictionary<string, int>();
+    public Dictionary<string, int>
+        Stocks = new Dictionary<string, int>
+            ();
 
     // Game state variables
     int PlayerTurn = 1;
     public int GameRound = 0;
-    Dictionary<int, Move> AvailableMoves = new Dictionary<int, Move>();
+    Dictionary<int, Move>
+        AvailableMoves = new Dictionary<int, Move>
+            ();
     string MovesDescription = string.Empty;
 
     // Events objects for relaying game eent updates to players
@@ -411,7 +422,9 @@
         }
     }
 
-    public Queue<Event> Events = new Queue<Event>();
+    public Queue<Event>
+        Events = new Queue<Event>
+            ();
 
     public class GameStateObject
     {
@@ -439,7 +452,7 @@
 
     public GameConfiguration GameConfig = new GameConfiguration();
 
-#region Test Games
+    #region Test Games
     private void LoadTestGamePlayerNames()
     {
         //Test Game Player Setuo
@@ -490,7 +503,7 @@
     {
         TestGame1();
     }
-#endregion Test Games
+    #endregion Test Games
 
     private void SetDefaultRounds(ChangeEventArgs e)
     {
@@ -574,8 +587,8 @@
         {
             // Start each Player with some $ and set their name
             Players.Add(l, new Player(PlayerName[nameIndex], GameConfig.PlayerStartingMoney, ComputerPlayer[nameIndex] ? Player.RandomComputerPersona() : Player.Personas.Human));
-            if (string.IsNullOrWhiteSpace(Players[l].Name)) 
-                { Players[l].SetDefaultName(l); }  // Assign default name if none was entered
+            if (string.IsNullOrWhiteSpace(Players[l].Name))
+            { Players[l].SetDefaultName(l); }  // Assign default name if none was entered
             nameIndex = (nameIndex < (GameStateObj.NumberOfPlayers - 1) ? nameIndex + 1 : 0);
         }
 
@@ -627,6 +640,11 @@
     }
 
 
+    async Task Sleep(int Duration)
+    {
+        await Task.Delay(Duration);
+    }
+
     private void ExecuteTurn()
     {
         GameStateObj.LastMove = null;
@@ -638,31 +656,42 @@
 
         if (Players[PlayerTurn].IsComputer)
         {
-            // Computer move
-
-            //Have computer user make move selection
-            int computerMove = SelectComputerMove(AvailableMoves, PlayerTurn);
-            MakeMove(computerMove);
-            //ExecuteMove(AvailableMoves[computerMove].X, AvailableMoves[computerMove].Y, map);
-            GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
-
-            // Have computer user make stock purchases
-            int computerStockToBuy = BuyComputerStock(PlayerTurn);
-            if (computerStockToBuy > 0)
-            {
-                // MaxCanBuy
-                int sharesToBuy = MaxCanBuy(computerStockToBuy);
-                GameStateObj.StockToBuy[computerStockToBuy] = sharesToBuy;
-                // Post visible event, transaction will finalize on "Next Turn" button press by player
-                if (sharesToBuy > 0)
-                    LogGameEvent(Players[PlayerTurn].Name + " is purchasing " + sharesToBuy.ToString() + " shares of " + Companies[computerStockToBuy].Name);
-
-                //GameStateObj.ResetStockExchange();
-            }
+            ExecuteComputerTurn();
         }
     }
 
-    private int SelectComputerMove(Dictionary<int, Move> moves, int playerId)
+    async void ExecuteComputerTurn()
+    {
+        // Computer move
+
+        await Sleep(1000);
+
+        //Have computer user make move selection
+        int computerMove = SelectComputerMove(AvailableMoves, PlayerTurn);
+        MakeMove(computerMove);
+
+        await Sleep(1000);
+
+        //ExecuteMove(AvailableMoves[computerMove].X, AvailableMoves[computerMove].Y, map);
+        GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
+
+        // Have computer user make stock purchases
+        int computerStockToBuy = BuyComputerStock(PlayerTurn);
+        if (computerStockToBuy > 0)
+        {
+            // MaxCanBuy
+            int sharesToBuy = MaxCanBuy(computerStockToBuy);
+            GameStateObj.StockToBuy[computerStockToBuy] = sharesToBuy;
+            // Post visible event, transaction will finalize on "Next Turn" button press by player
+            if (sharesToBuy > 0)
+                LogGameEvent(Players[PlayerTurn].Name + " is purchasing " + sharesToBuy.ToString() + " shares of " + Companies[computerStockToBuy].Name);
+
+            //GameStateObj.ResetStockExchange();
+        }
+    }
+
+    private int SelectComputerMove(Dictionary<int, Move>
+        moves, int playerId)
     {
         switch (Players[playerId].Persona)
         {
@@ -818,11 +847,14 @@
         //        int y_move;
         //MoveOutcome move_outcome;
 
-        SortedDictionary<string, Move> tempMoves = new SortedDictionary<string, Move>();
+        SortedDictionary<string, Move>
+            tempMoves = new SortedDictionary<string, Move>
+                ();
 
         int existingCompanies = ExistingCompanies();
 
-        List<Move> openSectors = map.OpenSectors();
+        List<Move>
+            openSectors = map.OpenSectors();
         int moveIndex;
 
         // Find open moves
@@ -852,7 +884,9 @@
         }
 
         //Take the sorted dictionary and re-key to numeric index
-        Dictionary<int, Move> moves = new Dictionary<int, Move>();
+        Dictionary<int, Move>
+            moves = new Dictionary<int, Move>
+                ();
         foreach (Move mv in tempMoves.Values)
             moves.Add(moves.Count + 1, mv);
 
@@ -878,8 +912,9 @@
         GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
 
         // Calculate results of the move
-        ExecuteMove(move.X, move.Y, map);
         GameStateObj.LastMove = move;
+        ExecuteMove(move.X, move.Y, map);
+
 
         //Advance Game
         GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
@@ -1042,7 +1077,8 @@
 
             //initialize adjacent locals
             string[] neighbors = map.GetNeighbors(x, y);
-            List<string> adjacentCompanies = map.AdjacentCompanies(x, y);
+            List<string>
+                adjacentCompanies = map.AdjacentCompanies(x, y);
 
 
             // Check for adjacent companies
@@ -1094,7 +1130,8 @@
 
         //initialize adjacent locals
         string[] neighbors = theMap.GetNeighbors(x, y);
-        List<string> adjacentCompanies = theMap.AdjacentCompanies(x, y);
+        List<string>
+            adjacentCompanies = theMap.AdjacentCompanies(x, y);
 
         // Develop Sector
         theMap[x, y] = Map.DevelopedSector;
@@ -1211,7 +1248,7 @@
             // Update the newly developed sector that created the merger
             theMap[x, y] = survivor;
 
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         //Check for black hole(s), that could wipe out any newly merged or expanded companies!
@@ -1285,7 +1322,7 @@
         }
 
         //Force redraw of maps
-        StateHasChanged();  // Since our map display is a set of string, it does not seem to force a refresh for changes to Map array
+        StateHasChanged();  
 
         return moveOutcome;
     }
@@ -1324,10 +1361,10 @@
         {
             bool currentTurn = ((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn == Events.ElementAt(i).Turn);
             Console.WriteLine(((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn).ToString(), Events.ElementAt(i).Turn);
-            eventString += (currentTurn ? "<b>" : "") + Events.ElementAt(i).Message + (currentTurn ? "</b>" : "") + "<br/>";
+            eventString += (currentTurn ? "<b>" : "") + Events.ElementAt(i).Message + (currentTurn ? "</b>" : "") + "<br />";
         }
         return eventString;
-        //return String.Join("<br/>", Events.ToArray().Reverse());
+        //return String.Join("<br />", Events.ToArray().Reverse());
     }
 
     private void LogGameEvent(string eventText)
@@ -1369,24 +1406,28 @@
     private int PlayerRank(int PlayerId)
     {
         /*
-    int[] rankings = PlayerRanks();
-    for (int i = 0; i <= rankings.GetUpperBound(0); i++)
-    {
+        int[] rankings = PlayerRanks();
+        for (int i = 0; i <= rankings.GetUpperBound(0); i++)
+        {
         if (rankings[i] == PlayerId)
-            return i+1;
-    }
-            return 0; //oops
+        return i+1;
+        }
+        return 0; //oops
         */
 
-        Dictionary<int, int> rankings = PlayerRanks();
+        Dictionary<int, int>
+            rankings = PlayerRanks();
 
         return rankings[PlayerId];
     }
 
-    private Dictionary<int, int> PlayerRanks()
+    private Dictionary<int, int>
+        PlayerRanks()
     {
 
-        Dictionary<int, long> rankvalues = new Dictionary<int, long>();
+        Dictionary<int, long>
+            rankvalues = new Dictionary<int, long>
+                ();
 
         foreach (var p in Players)
         {
@@ -1397,9 +1438,12 @@
 
         var results = rankvalues.OrderByDescending(p => p.Value);
 
-        Dictionary<int, int> ranking = new Dictionary<int, int>();
+        Dictionary<int, int>
+            ranking = new Dictionary<int, int>
+                ();
 
-        foreach (KeyValuePair<int, long> pair in results)
+        foreach (KeyValuePair<int, long>
+            pair in results)
         {
             ranking.Add(pair.Key, ranking.Count + 1);
             Console.WriteLine("Ranking value player " + pair.Key + " = " + ranking[pair.Key]);
