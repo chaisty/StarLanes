@@ -25,6 +25,7 @@ namespace StarLanes
 
         public Map(Map mapToCopy)
         {
+            Sectors = new string[mapToCopy.Sectors.GetUpperBound(0), mapToCopy.Sectors.GetUpperBound(1)];
             for (int x = mapToCopy.Sectors.GetLowerBound(0); x <= mapToCopy.Sectors.GetUpperBound(0); x++)
             {
                 for (int y = mapToCopy.Sectors.GetLowerBound(1); y <= mapToCopy.Sectors.GetUpperBound(1); y++)

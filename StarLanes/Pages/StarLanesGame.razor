@@ -58,21 +58,21 @@
             <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="GameConfig.StarChance" />% (0-15, default 10)<br />
             <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="GameConfig.BlackholeChance" />% (0-5, default 3)<br />
             <label for="BlackholeConsumptionChance">Black Hole Consumption %: </label><input id="BlackholeConsumptionChance" type="number" min="0" max="100" @bind="GameConfig.BlackholeConsumptionChance" /> (0-100, default 25, applies to developed sectors, not companies)<br />
-        *@    @*<label for="StartingOrder">Starting Player:</label><br />*@
-         @*   <input type="checkbox" name="RandomizeWhoGoesFirst" @bind="GameConfig.RandomizeFirstMover" /><label for="RandomizeWhoGoesFirst">Randomize Who Goes First</label> <br />
-            <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="GameConfig.FounderShares" /> (0-20, default 5)<br />
-            <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" step="100" @bind="GameConfig.PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
-            <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="GameConfig.DividendPercentage" />% (1-10, default 5)<br />
-            <label for="MergerRatio">Merger Ratio: </label><input id="MergerRatio" type="number" min="1" max="5" @bind="GameConfig.MergerRatio" /> (1-5, default 2, number of shares of smaller merged company to equal 1 in new company)<br />
-            <input type="checkbox" name="StockSplits" @bind="GameConfig.StockSplits" /><label for="StockSplitPrice">Stock Split at: $</label><input id="StockSplitPrice" disabled="@(!GameConfig.StockSplits)" type="number" min="2000" max="20000" step="100" @bind="GameConfig.StockSplitPrice" /><br />
-            <label for="SectorValue">Sector Value $: </label><input id="SectorValue" type="number" min="0" max="500" step="100" @bind="GameConfig.NormalValue" /> (0-500, 100 default) <br />
-            <label for="StarSectorValue">Star Sector Value $: </label><input id="StarSectorValue" type="number" min="0" max="2000" step="100" @bind="GameConfig.StarValue" /> (0-2000, 500 default) <br />
-            <label for="BlackholeDestructive">Blackhole Destroys: </label><input id="BlackholeDestroys" type="checkbox" @bind="GameConfig.BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
-            <label for="BlackholeSectorValue">Blackhole Sector Value $: </label><input id="BlackholeSectorValue" disabled="@(GameConfig.BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="GameConfig.BlackholeValue" /> (-2000-0, -500 default) <br />
-            <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(GameConfig.DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="GameConfig.NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
-            <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="GameConfig.NumberOfMoves" /> (3-5, default 4)<br />
+        *@ @*<label for="StartingOrder">Starting Player:</label><br />*@
+        @*   <input type="checkbox" name="RandomizeWhoGoesFirst" @bind="GameConfig.RandomizeFirstMover" /><label for="RandomizeWhoGoesFirst">Randomize Who Goes First</label> <br />
+                <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="GameConfig.FounderShares" /> (0-20, default 5)<br />
+                <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" step="100" @bind="GameConfig.PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
+                <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="GameConfig.DividendPercentage" />% (1-10, default 5)<br />
+                <label for="MergerRatio">Merger Ratio: </label><input id="MergerRatio" type="number" min="1" max="5" @bind="GameConfig.MergerRatio" /> (1-5, default 2, number of shares of smaller merged company to equal 1 in new company)<br />
+                <input type="checkbox" name="StockSplits" @bind="GameConfig.StockSplits" /><label for="StockSplitPrice">Stock Split at: $</label><input id="StockSplitPrice" disabled="@(!GameConfig.StockSplits)" type="number" min="2000" max="20000" step="100" @bind="GameConfig.StockSplitPrice" /><br />
+                <label for="SectorValue">Sector Value $: </label><input id="SectorValue" type="number" min="0" max="500" step="100" @bind="GameConfig.NormalValue" /> (0-500, 100 default) <br />
+                <label for="StarSectorValue">Star Sector Value $: </label><input id="StarSectorValue" type="number" min="0" max="2000" step="100" @bind="GameConfig.StarValue" /> (0-2000, 500 default) <br />
+                <label for="BlackholeDestructive">Blackhole Destroys: </label><input id="BlackholeDestroys" type="checkbox" @bind="GameConfig.BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
+                <label for="BlackholeSectorValue">Blackhole Sector Value $: </label><input id="BlackholeSectorValue" disabled="@(GameConfig.BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="GameConfig.BlackholeValue" /> (-2000-0, -500 default) <br />
+                <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(GameConfig.DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="GameConfig.NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
+                <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="GameConfig.NumberOfMoves" /> (3-5, default 4)<br />
 
-        </div>
+            </div>
         *@
     }
 
@@ -902,119 +902,178 @@
     }
 
     @* Returns True if new round *@
-private bool NextPlayerTurn()
-{
-    PlayerTurn++;
-    if (PlayerTurn > GameConfig.NumberOfPlayers)
+    private bool NextPlayerTurn()
     {
-        PlayerTurn = 1;
-        GameRound++;
-        return true;
-    }
-    else { return false; }
-}
-
-private string SectorClass(string sectorValue)
-{
-    switch (sectorValue)
-    {
-        case Map.NullSector:
-            return "map-sector-null";
-        case Map.EmptySector:
-            return "map-sector-empty";
-        case Map.DevelopedSector:
-            return "map-sector-developed";
-        case Map.StarSector:
-            return "map-sector-star";
-        case Map.BlackholeSector:
-            return "map-sector-blackhole";
-        case "1":
-        case "2":
-        case "3":
-        case "4":
-        case "5":
-        case "6":
-        case "7":
-        case "8":
-            return "map-sector-move";
-    }
-
-    if ("ABCDEFGHIJKL".Contains(sectorValue)) return "map-sector-company";
-
-    return String.Empty;
-}
-
-//prints the map using text string - for debugging purposes only
-public string PrintMap()
-{
-    return map.PrintMap(GameConfig.GameState == GameConfiguration.GameStates.PlayerMove, AvailableMoves);
-}
-
-public int CalculateAdjacentSectorValue(string sectorstate)
-{
-    switch (sectorstate)
-    {
-        case Map.StarSector:
-            return GameConfig.StarValue;
-        case Map.BlackholeSector:
-            return (GameConfig.BlackholeDestroys ? 0 : GameConfig.BlackholeValue);
-        default:
-            return 0;
-    }
-}
-
-public int CalculateSharePrice(Company company)
-{
-    int value = 0;
-
-    for (int x = 0; x <= map.X_Dimension; x++)
-    {
-        for (int y = 0; y <= map.Y_Dimension; y++)
+        PlayerTurn++;
+        if (PlayerTurn > GameConfig.NumberOfPlayers)
         {
-            if (map[x, y] == company.Symbol)    //if the company owns this sector
-            {
-                value += 100; // for the sector itself
-                string[] neighbors = map.GetNeighbors(x, y);
-                foreach (string s in neighbors)
-                { value += CalculateAdjacentSectorValue(s); }
-            }
+            PlayerTurn = 1;
+            GameRound++;
+            return true;
+        }
+        else { return false; }
+    }
+
+    private string SectorClass(string sectorValue)
+    {
+        switch (sectorValue)
+        {
+            case Map.NullSector:
+                return "map-sector-null";
+            case Map.EmptySector:
+                return "map-sector-empty";
+            case Map.DevelopedSector:
+                return "map-sector-developed";
+            case Map.StarSector:
+                return "map-sector-star";
+            case Map.BlackholeSector:
+                return "map-sector-blackhole";
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+            case "8":
+                return "map-sector-move";
+        }
+
+        if ("ABCDEFGHIJKL".Contains(sectorValue)) return "map-sector-company";
+
+        return String.Empty;
+    }
+
+    //prints the map using text string - for debugging purposes only
+    public string PrintMap()
+    {
+        return map.PrintMap(GameConfig.GameState == GameConfiguration.GameStates.PlayerMove, AvailableMoves);
+    }
+
+    public int CalculateAdjacentSectorValue(string sectorstate)
+    {
+        switch (sectorstate)
+        {
+            case Map.StarSector:
+                return GameConfig.StarValue;
+            case Map.BlackholeSector:
+                return (GameConfig.BlackholeDestroys ? 0 : GameConfig.BlackholeValue);
+            default:
+                return 0;
         }
     }
 
-    return value - company.SplitOffset; // Value of sectors on map minus prior stock split values
-}
-
-
-public int CompanySize(Company company)
-{
-    return map.NumberOfSymbolsOnMap(company.Symbol);
-}
-
-public long PlayerStockWorth(int playerid)
-{
-    int stockvalue = 0;
-    foreach (Company c in Companies.Values)
+    public int CalculateSharePrice(Company company)
     {
-        stockvalue += c.StockHolderShares[playerid] * c.ShareValue;
+        int value = 0;
+
+        for (int x = 0; x <= map.X_Dimension; x++)
+        {
+            for (int y = 0; y <= map.Y_Dimension; y++)
+            {
+                if (map[x, y] == company.Symbol)    //if the company owns this sector
+                {
+                    value += 100; // for the sector itself
+                    string[] neighbors = map.GetNeighbors(x, y);
+                    foreach (string s in neighbors)
+                    { value += CalculateAdjacentSectorValue(s); }
+                }
+            }
+        }
+
+        return value - company.SplitOffset; // Value of sectors on map minus prior stock split values
     }
-    return stockvalue;
-}
 
-public long PlayerNetWorth(int playerid)
-{
-    return Players[playerid].Money + PlayerStockWorth(playerid);
-}
 
-public MoveOutcome DetermineMoveOutcome(int x, int y)
-{
+    public int CompanySize(Company company)
     {
+        return map.NumberOfSymbolsOnMap(company.Symbol);
+    }
+
+    public long PlayerStockWorth(int playerid)
+    {
+        int stockvalue = 0;
+        foreach (Company c in Companies.Values)
+        {
+            stockvalue += c.StockHolderShares[playerid] * c.ShareValue;
+        }
+        return stockvalue;
+    }
+
+    public long PlayerNetWorth(int playerid)
+    {
+        return Players[playerid].Money + PlayerStockWorth(playerid);
+    }
+
+    public MoveOutcome DetermineMoveOutcome(int x, int y)
+    {
+        {
+            // evalute nearby spaces to determine outcome of this move
+            MoveOutcome moveOutcome = MoveOutcome.DevelopSector;
+
+            //initialize adjacent locals
+            string[] neighbors = map.GetNeighbors(x, y);
+            List<string> adjacentCompanies = map.AdjacentCompanies(x, y);
+
+
+            // Check for adjacent companies
+            if (adjacentCompanies.Count == 0)
+            {
+                // If it's all empty sectors nearby
+                if (String.Join("", neighbors) == new String('x', 4).Replace("x", Map.EmptySector))
+                {
+                    moveOutcome = MoveOutcome.DevelopSector;
+                }
+
+                // Check for creation of new company
+                if ((String.Join("", neighbors).Contains(Map.StarSector)) || (String.Join("", neighbors).Contains(Map.DevelopedSector)))
+                {
+                    moveOutcome = MoveOutcome.StartNewCompany;
+                }
+            }
+            // Check for expansion of company
+            else if (adjacentCompanies.Count == 1)
+            {
+                moveOutcome = MoveOutcome.ExpandCompany;
+            }
+            // Check for Merger
+            else if (adjacentCompanies.Count > 1)
+            {
+                moveOutcome = MoveOutcome.Merger;
+            }
+
+            //Check for black hole
+            if (moveOutcome != MoveOutcome.StartNewCompany) // there will be two outcomes actually, but the new company will cause issues if max companies already exist, so prevent that
+            {
+                if (GameConfig.BlackholeChance > 0)
+                {
+                    if (String.Join("", neighbors).Contains(Map.BlackholeSector))
+                    {
+                        moveOutcome = MoveOutcome.Blackhole;
+                    }
+                }
+            }
+
+            return moveOutcome;
+        }
+    }
+
+    public MoveOutcome ExecuteMove(int x, int y, Map theMap)
+    {
+
+
+        Map newMap = new Map(theMap);
+
+
         // evalute nearby spaces to determine outcome of this move
-        MoveOutcome moveOutcome = MoveOutcome.DevelopSector;
+        MoveOutcome moveOutcome = MoveOutcome.DevelopSector; //default
 
         //initialize adjacent locals
-        string[] neighbors = map.GetNeighbors(x, y);
-        List<string> adjacentCompanies = map.AdjacentCompanies(x, y);
+        string[] neighbors = theMap.GetNeighbors(x, y);
+        List<string> adjacentCompanies = theMap.AdjacentCompanies(x, y);
 
+        // Develop Sector
+        theMap[x, y] = Map.DevelopedSector;
 
         // Check for adjacent companies
         if (adjacentCompanies.Count == 0)
@@ -1022,373 +1081,305 @@ public MoveOutcome DetermineMoveOutcome(int x, int y)
             // If it's all empty sectors nearby
             if (String.Join("", neighbors) == new String('x', 4).Replace("x", Map.EmptySector))
             {
-                moveOutcome = MoveOutcome.DevelopSector;
+                // Develop Sector
+                theMap[x, y] = Map.DevelopedSector;
             }
 
             // Check for creation of new company
             if ((String.Join("", neighbors).Contains(Map.StarSector)) || (String.Join("", neighbors).Contains(Map.DevelopedSector)))
             {
+                // Make a new company
                 moveOutcome = MoveOutcome.StartNewCompany;
+                int newCo = AvailableCompanySlot();
+
+                if (newCo == 0)
+                { } // ?? Shouldn't end up here, no more companies available! ADD CODE to handle this?
+
+                // Open up the new company
+                Companies[newCo].OpenCompany(PlayerTurn, GameConfig.FounderShares);
+                theMap[x, y] = Companies[newCo].Symbol;
+
+                // Expand into any adjacent developed sectors
+                if (neighbors[0] == Map.DevelopedSector)
+                    theMap[x, y - 1] = Companies[newCo].Symbol;
+                if (neighbors[1] == Map.DevelopedSector)
+                    theMap[x - 1, y] = Companies[newCo].Symbol;
+                if (neighbors[2] == Map.DevelopedSector)
+                    theMap[x + 1, y] = Companies[newCo].Symbol;
+                if (neighbors[3] == Map.DevelopedSector)
+                    theMap[x, y + 1] = Companies[newCo].Symbol;
+
+                LogGameEvent("NEW COMPANY!", Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
             }
         }
         // Check for expansion of company
         else if (adjacentCompanies.Count == 1)
         {
+            //Expansion
             moveOutcome = MoveOutcome.ExpandCompany;
+
+            // Expand into "move" sector
+            theMap[x, y] = adjacentCompanies[0];
+
+            // Expand into any developed adjacent sectors
+            if (neighbors[0] == Map.DevelopedSector)
+                theMap[x, y - 1] = adjacentCompanies[0];
+            if (neighbors[1] == Map.DevelopedSector)
+                theMap[x - 1, y] = adjacentCompanies[0];
+            if (neighbors[2] == Map.DevelopedSector)
+                theMap[x + 1, y] = adjacentCompanies[0];
+            if (neighbors[3] == Map.DevelopedSector)
+                theMap[x, y + 1] = adjacentCompanies[0];
         }
         // Check for Merger
         else if (adjacentCompanies.Count > 1)
         {
+            //Merger!
             moveOutcome = MoveOutcome.Merger;
-        }
 
-        //Check for black hole
-        if (moveOutcome != MoveOutcome.StartNewCompany) // there will be two outcomes actually, but the new company will cause issues if max companies already exist, so prevent that
-        {
-            if (GameConfig.BlackholeChance > 0)
+            //Sort companies by alpabetical
+            adjacentCompanies.Sort();
+
+            string foo = String.Empty;
+
+            // Add the symbol and the size to a dictionary to iterate
+            Dictionary<string, int>
+                coS = new Dictionary<string, int>
+                    ();
+            foreach (string s in adjacentCompanies)
             {
-                if (String.Join("", neighbors).Contains(Map.BlackholeSector))
+                coS.Add(s, CompanySize(Companies[Company.KeyFromSymbol(s)]));
+                foo += s + "=" + coS[s] + ", ";
+            }
+
+            string survivor = string.Empty;
+
+            // Merge largest and smallest companies, until we're down to just one company
+            do
+            {
+                int winner = 0;
+                for (int i = 1; i < coS.Count; i++)
                 {
-                    moveOutcome = MoveOutcome.Blackhole;
+                    if (coS.ElementAt(i).Value > coS.ElementAt(winner).Value)
+                        winner = i;
                 }
-            }
-        }
 
-        return moveOutcome;
-    }
-}
+                survivor = coS.ElementAt(winner).Key;
 
-public MoveOutcome ExecuteMove(int x, int y, Map theMap)
-{
-
-    //Map newMap = new Map(theMap);
-
-    // evalute nearby spaces to determine outcome of this move
-    MoveOutcome moveOutcome = MoveOutcome.DevelopSector; //default
-
-    //initialize adjacent locals
-    string[] neighbors = theMap.GetNeighbors(x, y);
-    List<string> adjacentCompanies = theMap.AdjacentCompanies(x, y);
-
-    // Develop Sector
-    theMap[x, y] = Map.DevelopedSector;
-
-    // Check for adjacent companies
-    if (adjacentCompanies.Count == 0)
-    {
-        // If it's all empty sectors nearby
-        if (String.Join("", neighbors) == new String('x', 4).Replace("x", Map.EmptySector))
-        {
-            // Develop Sector
-            theMap[x, y] = Map.DevelopedSector;
-        }
-
-        // Check for creation of new company
-        if ((String.Join("", neighbors).Contains(Map.StarSector)) || (String.Join("", neighbors).Contains(Map.DevelopedSector)))
-        {
-            // Make a new company
-            moveOutcome = MoveOutcome.StartNewCompany;
-            int newCo = AvailableCompanySlot();
-
-            if (newCo == 0)
-            { } // ?? Shouldn't end up here, no more companies available! ADD CODE to handle this?
-
-            // Open up the new company
-            Companies[newCo].OpenCompany(PlayerTurn, GameConfig.FounderShares);
-            theMap[x, y] = Companies[newCo].Symbol;
-
-            // Expand into any adjacent developed sectors
-            if (neighbors[0] == Map.DevelopedSector)
-                theMap[x, y - 1] = Companies[newCo].Symbol;
-            if (neighbors[1] == Map.DevelopedSector)
-                theMap[x - 1, y] = Companies[newCo].Symbol;
-            if (neighbors[2] == Map.DevelopedSector)
-                theMap[x + 1, y] = Companies[newCo].Symbol;
-            if (neighbors[3] == Map.DevelopedSector)
-                theMap[x, y + 1] = Companies[newCo].Symbol;
-
-            LogGameEvent("NEW COMPANY!", Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
-        }
-    }
-    // Check for expansion of company
-    else if (adjacentCompanies.Count == 1)
-    {
-        //Expansion
-        moveOutcome = MoveOutcome.ExpandCompany;
-
-        // Expand into "move" sector
-        theMap[x, y] = adjacentCompanies[0];
-
-        // Expand into any developed adjacent sectors
-        if (neighbors[0] == Map.DevelopedSector)
-            theMap[x, y - 1] = adjacentCompanies[0];
-        if (neighbors[1] == Map.DevelopedSector)
-            theMap[x - 1, y] = adjacentCompanies[0];
-        if (neighbors[2] == Map.DevelopedSector)
-            theMap[x + 1, y] = adjacentCompanies[0];
-        if (neighbors[3] == Map.DevelopedSector)
-            theMap[x, y + 1] = adjacentCompanies[0];
-    }
-    // Check for Merger
-    else if (adjacentCompanies.Count > 1)
-    {
-        //Merger!
-        moveOutcome = MoveOutcome.Merger;
-
-        //Sort companies by alpabetical
-        adjacentCompanies.Sort();
-
-        string foo = String.Empty;
-
-        // Add the symbol and the size to a dictionary to iterate
-        Dictionary<string, int>
-            coS = new Dictionary<string, int>
-                ();
-        foreach (string s in adjacentCompanies)
-        {
-            coS.Add(s, CompanySize(Companies[Company.KeyFromSymbol(s)]));
-            foo += s + "=" + coS[s] + ", ";
-        }
-
-        string survivor = string.Empty;
-
-        // Merge largest and smallest companies, until we're down to just one company
-        do
-        {
-            int winner = 0;
-            for (int i = 1; i < coS.Count; i++)
-            {
-                if (coS.ElementAt(i).Value > coS.ElementAt(winner).Value)
-                    winner = i;
-            }
-
-            survivor = coS.ElementAt(winner).Key;
-
-            int loser = coS.Count - 1;
-            for (int i = coS.Count - 2; i >= 0; i--)
-            {
-                if (coS.ElementAt(i).Value < coS.ElementAt(loser).Value)
-                    loser = i;
-            }
-
-            // merge winner and loser
-            MergeCompanies(Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)], Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)]);
-
-            string winnerName = Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
-            string loserName = Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)].Name;
-            LogGameEvent("MERGER!!!!!", $"{winnerName} and {loserName} have merged! The unified company will now be known as {winnerName}.");
-
-            //remove loser
-            coS.Remove(coS.ElementAt(loser).Key);
-        } while (coS.Count > 1);
-
-        // Update the newly developed sector that created the merger
-        theMap[x, y] = survivor;
-
-        //StateHasChanged();
-    }
-
-    //Check for black hole(s), that could wipe out any newly merged or expanded companies!
-    if (GameConfig.BlackholeChance > 0)
-    {
-        for (int x_loop = 0; x_loop <= theMap.X_Dimension; x_loop++)
-        {
-            for (int y_loop = 0; y_loop <= theMap.Y_Dimension; y_loop++)
-            {
-                if (theMap[x_loop, y_loop] == Map.BlackholeSector)
+                int loser = coS.Count - 1;
+                for (int i = coS.Count - 2; i >= 0; i--)
                 {
-                    //Wipe out companies that touched the blackhole!
-                    adjacentCompanies = theMap.AdjacentCompanies(x_loop, y_loop);
-                    if (adjacentCompanies.Count > 0)
-                    {
-                        foreach (string c in adjacentCompanies)
-                        {
-                            theMap.ReplaceSymbolOnMap(Companies[Company.KeyFromSymbol(c)].Symbol, Map.EmptySector);
-                            Companies[Company.KeyFromSymbol(c)].CloseCompany();
+                    if (coS.ElementAt(i).Value < coS.ElementAt(loser).Value)
+                        loser = i;
+                }
 
-                            LogGameEvent("DISASTER!", Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
-                        }
-                    }
+                // merge winner and loser
+                MergeCompanies(Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)], Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)]);
 
-                    //Randomly destroy developed sectors next to blackholes
-                    string[] blackholeNeighbors = theMap.GetNeighbors(x_loop, y_loop);
-                    for (int n = 0; n < blackholeNeighbors.GetUpperBound(0); n++)
+                string winnerName = Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
+                string loserName = Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)].Name;
+                LogGameEvent("MERGER!!!!!", $"{winnerName} and {loserName} have merged! The unified company will now be known as {winnerName}.");
+
+                //remove loser
+                coS.Remove(coS.ElementAt(loser).Key);
+            } while (coS.Count > 1);
+
+            // Update the newly developed sector that created the merger
+            theMap[x, y] = survivor;
+
+            //StateHasChanged();
+        }
+
+        //Check for black hole(s), that could wipe out any newly merged or expanded companies!
+        if (GameConfig.BlackholeChance > 0)
+        {
+            for (int x_loop = 0; x_loop <= theMap.X_Dimension; x_loop++)
+            {
+                for (int y_loop = 0; y_loop <= theMap.Y_Dimension; y_loop++)
+                {
+                    if (theMap[x_loop, y_loop] == Map.BlackholeSector)
                     {
-                        if (blackholeNeighbors[n] == Map.DevelopedSector)
+                        //Wipe out companies that touched the blackhole!
+                        adjacentCompanies = theMap.AdjacentCompanies(x_loop, y_loop);
+                        if (adjacentCompanies.Count > 0)
                         {
-                            if (rand.Next(1, 100) <= GameConfig.BlackholeConsumptionChance)
+                            foreach (string c in adjacentCompanies)
                             {
-                                // Destroy the sector
-                                int x_destroyed = x_loop;
-                                int y_destroyed = y_loop;
-                                if (n == 0) { y_destroyed = y_loop - 1; }
-                                if (n == 1) { x_destroyed = x_loop - 1; }
-                                if (n == 2) { x_destroyed = x_loop + 1; }
-                                if (n == 3) { y_destroyed = y_loop + 1; }
+                                theMap.ReplaceSymbolOnMap(Companies[Company.KeyFromSymbol(c)].Symbol, Map.EmptySector);
+                                Companies[Company.KeyFromSymbol(c)].CloseCompany();
 
+                                LogGameEvent("DISASTER!", Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
+                            }
+                        }
 
-                                // The sector just developed on this turn cannot be destroyed on the same turn
-                                if ((x != x_destroyed) && (y != y_destroyed))
+                        //Randomly destroy developed sectors next to blackholes
+                        string[] blackholeNeighbors = theMap.GetNeighbors(x_loop, y_loop);
+                        for (int n = 0; n < blackholeNeighbors.GetUpperBound(0); n++)
+                        {
+                            if (blackholeNeighbors[n] == Map.DevelopedSector)
+                            {
+                                if (rand.Next(1, 100) <= GameConfig.BlackholeConsumptionChance)
                                 {
-                                    theMap[x_destroyed, y_destroyed] = Map.NullSector;
-                                    LogGameEvent("Sector " + Move.ToString(x_destroyed, y_destroyed) + " consumed by black hole!");
+                                    // Destroy the sector
+                                    int x_destroyed = x_loop;
+                                    int y_destroyed = y_loop;
+                                    if (n == 0) { y_destroyed = y_loop - 1; }
+                                    if (n == 1) { x_destroyed = x_loop - 1; }
+                                    if (n == 2) { x_destroyed = x_loop + 1; }
+                                    if (n == 3) { y_destroyed = y_loop + 1; }
+
+
+                                    // The sector just developed on this turn cannot be destroyed on the same turn
+                                    if ((x != x_destroyed) && (y != y_destroyed))
+                                    {
+                                        theMap[x_destroyed, y_destroyed] = Map.NullSector;
+                                        LogGameEvent("Sector " + Move.ToString(x_destroyed, y_destroyed) + " consumed by black hole!");
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+
         }
 
-    }
-
-    // Calculate the final share prices
-    foreach (Company company in Companies.Values)
-    {
-        if (company.IsActive)
+        // Calculate the final share prices
+        foreach (Company company in Companies.Values)
         {
-            company.ShareValue = CalculateSharePrice(company);
-
-            // Check for bankruptcy
-            if (company.ShareValue <= 0)    // for games that use blackholes as negative values on stock price
+            if (company.IsActive)
             {
-                company.CloseCompany();
-                LogGameEvent("BANKRUPCTY!", company.Name + " has gone bankrupt and is out of business.");
-            }
+                company.ShareValue = CalculateSharePrice(company);
 
-            // Check for stock split
-            if (GameConfig.StockSplits)
-            {
-                while (company.ShareValue >= GameConfig.StockSplitPrice)
+                // Check for bankruptcy
+                if (company.ShareValue <= 0)    // for games that use blackholes as negative values on stock price
                 {
-                    company.SplitStock(GameConfig.StockSplitPrice);
-                    LogGameEvent("Stock Split!", company.Name + " has split 2-for-1.");
+                    company.CloseCompany();
+                    LogGameEvent("BANKRUPCTY!", company.Name + " has gone bankrupt and is out of business.");
+                }
+
+                // Check for stock split
+                if (GameConfig.StockSplits)
+                {
+                    while (company.ShareValue >= GameConfig.StockSplitPrice)
+                    {
+                        company.SplitStock(GameConfig.StockSplitPrice);
+                        LogGameEvent("Stock Split!", company.Name + " has split 2-for-1.");
+                    }
                 }
             }
         }
+
+
+        //Force redraw of maps
+        StateHasChanged();
+
+        return moveOutcome;
     }
 
-
-    //Force redraw of maps
-    StateHasChanged();
-
-    return moveOutcome;
-}
-
-public void MergeCompanies(Company winner, Company loser)
-{
-    //Update Map
-    map.ReplaceSymbolOnMap(loser.Symbol, winner.Symbol);
-
-    // Trade in old stock
-    foreach (var item in loser.StockHolderShares)
+    public void MergeCompanies(Company winner, Company loser)
     {
-        winner.StockHolderShares[item.Key] += (item.Value / GameConfig.MergerRatio); // Award at 2 old for 1 new
-        Players[item.Key].Money += ((item.Value % GameConfig.MergerRatio) * loser.ShareValue); // Pay out remainer share
-    }
+        //Update Map
+        map.ReplaceSymbolOnMap(loser.Symbol, winner.Symbol);
 
-    // Close down prior company
-    loser.CloseCompany();
-}
-
-public int AvailableCompanySlot()
-{
-    foreach (var item in Companies)
-    {
-        if (!item.Value.IsActive) return item.Key;
-    }
-
-    return 0;   // no available company slots
-}
-
-private string EventsText()
-{
-    //List events in reverse chronological order
-    string eventString = String.Empty;
-    for (int i = Events.Count - 1; i >= 0; i--)
-    {
-        bool currentTurn = ((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn == Events.ElementAt(i).Turn);
-        eventString += (currentTurn ? "<b>" : "") + Events.ElementAt(i).Message + (currentTurn ? "</b>" : "") + "<br />";
-    }
-    return eventString;
-    //return String.Join("<br />", Events.ToArray().Reverse());
-}
-
-private void LogGameEvent(string eventText)
-{
-    LogGameEvent("", eventText);
-}
-
-private void LogGameEvent(string eventHeader, string eventText)
-{
-    if (Events.Count >= 10)
-        Events.Dequeue();
-    Events.Enqueue(new Event((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn, "Round " + GameRound.ToString() + "&raquo; " + eventHeader + " " + eventText));
-}
-
-
-
-private int PlayerRankOld(int playerId)
-{
-    int rank = 1;
-    long netWorth = PlayerNetWorth(playerId);
-    for (int i = 1; i <= Players.Count; i++)
-    {
-        if (i != playerId)
+        // Trade in old stock
+        foreach (var item in loser.StockHolderShares)
         {
-            long iNetWorth = PlayerNetWorth(i);
-            if (iNetWorth > netWorth)       // Tie breaker one: Net Worth
-                rank++;
-            else if (iNetWorth == netWorth)
-                if (PlayerStockWorth(i) > PlayerStockWorth(playerId)) // Tie breaker two: Stock value
-                    rank++;
-                else if (playerId < i)  // Tie breaker three: player who had later move is considered disadvantaged, so gets ranked higher
-                    rank++;
+            winner.StockHolderShares[item.Key] += (item.Value / GameConfig.MergerRatio); // Award at 2 old for 1 new
+            Players[item.Key].Money += ((item.Value % GameConfig.MergerRatio) * loser.ShareValue); // Pay out remainer share
         }
+
+        // Close down prior company
+        loser.CloseCompany();
     }
 
-    return rank;
-}
-
-private int PlayerRank(int PlayerId)
-{
-    /*
-    int[] rankings = PlayerRanks();
-    for (int i = 0; i <= rankings.GetUpperBound(0); i++)
+    public int AvailableCompanySlot()
     {
-    if (rankings[i] == PlayerId)
-    return i+1;
+        foreach (var item in Companies)
+        {
+            if (!item.Value.IsActive) return item.Key;
+        }
+
+        return 0;   // no available company slots
     }
-    return 0; //oops
-    */
 
-    Dictionary<int, int>
-        rankings = PlayerRanks();
-
-    return rankings[PlayerId];
-}
-
-private Dictionary<int, int> PlayerRanks()
-{
-
-    Dictionary<int, long> rankvalues = new Dictionary<int, long>();
-
-    foreach (var p in Players)
+    private string EventsText()
     {
-        // rubric for sorting
-        rankvalues.Add(p.Key, PlayerNetWorth(p.Key) * (long)10000000 + PlayerStockWorth(p.Key) * 10 + p.Key);
+        //List events in reverse chronological order
+        string eventString = String.Empty;
+        for (int i = Events.Count - 1; i >= 0; i--)
+        {
+            bool currentTurn = ((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn == Events.ElementAt(i).Turn);
+            eventString += (currentTurn ? "<b>" : "") + Events.ElementAt(i).Message + (currentTurn ? "</b>" : "") + "<br />";
+        }
+        return eventString;
+        //return String.Join("<br />", Events.ToArray().Reverse());
     }
 
-    var results = rankvalues.OrderByDescending(p => p.Value);
-
-    Dictionary<int, int> ranking = new Dictionary<int, int>();
-
-    foreach (KeyValuePair<int, long> pair in results)
+    private void LogGameEvent(string eventText)
     {
-        ranking.Add(pair.Key, ranking.Count + 1);
+        LogGameEvent("", eventText);
     }
 
-    return ranking;
-}
+    private void LogGameEvent(string eventHeader, string eventText)
+    {
+        if (Events.Count >= 10)
+            Events.Dequeue();
+        Events.Enqueue(new Event((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn, "Round " + GameRound.ToString() + "&raquo; " + eventHeader + " " + eventText));
+    }
+
+
+
+    private int PlayerRankOld(int playerId)
+    {
+        int rank = 1;
+        long netWorth = PlayerNetWorth(playerId);
+        for (int i = 1; i <= Players.Count; i++)
+        {
+            if (i != playerId)
+            {
+                long iNetWorth = PlayerNetWorth(i);
+                if (iNetWorth > netWorth)       // Tie breaker one: Net Worth
+                    rank++;
+                else if (iNetWorth == netWorth)
+                    if (PlayerStockWorth(i) > PlayerStockWorth(playerId)) // Tie breaker two: Stock value
+                        rank++;
+                    else if (playerId < i)  // Tie breaker three: player who had later move is considered disadvantaged, so gets ranked higher
+                        rank++;
+            }
+        }
+
+        return rank;
+    }
+
+    private int PlayerRank(int PlayerId)
+    {
+        Dictionary<int, int> rankings = PlayerRanks();
+
+        return rankings[PlayerId];
+    }
+
+    private Dictionary<int, int> PlayerRanks()
+    {
+
+        Dictionary<int, long> rankvalues = new Dictionary<int, long>();
+
+        foreach (var p in Players)
+        {
+            // rubric for sorting
+            rankvalues.Add(p.Key, PlayerNetWorth(p.Key) * (long)100000000 + PlayerStockWorth(p.Key) * 10 + p.Key);
+        }
+
+        var results = rankvalues.OrderByDescending(p => p.Value);
+
+        Dictionary<int, int> ranking = new Dictionary<int, int>();
+
+        foreach (KeyValuePair<int, long> pair in results)
+        {
+            ranking.Add(pair.Key, ranking.Count + 1);
+        }
+
+        return ranking;
+    }
 }
 
