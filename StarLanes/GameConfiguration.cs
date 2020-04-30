@@ -105,7 +105,7 @@ namespace StarLanes
             {
                 if (value < 0) { playerStartingMoney = 0; }
                 else if (value > 20000) { playerStartingMoney = 20000; }
-                else { playerStartingMoney = value; }
+                else { playerStartingMoney = value - (value % 100); } // force to 00's
             }
         }
 
@@ -137,7 +137,7 @@ namespace StarLanes
                 else if (value > 1000)
                     normalValue = 1000;
                 else
-                    normalValue = value;
+                    normalValue = value - (value % 100);    // force to 00's
             }
         }
 
@@ -151,7 +151,7 @@ namespace StarLanes
                 else if (value > 2000)
                     starValue = 2000;
                 else
-                    starValue = value;
+                    starValue = value - (value % 100); // force to 00's
             }
         }
 
@@ -165,7 +165,7 @@ namespace StarLanes
                 else if (value > 0)
                     blackholeValue = 0;
                 else
-                    blackholeValue = value;
+                    blackholeValue = value - (value % 100); // force to 00's
             }
         }
 
@@ -310,7 +310,9 @@ namespace StarLanes
                 else if (value > 20000)
                     stockSplitPrice = 20000;
                 else
-                    stockSplitPrice = value;
+                {
+                    stockSplitPrice = value - (value % 100);    //force to 00's
+                }
             }
         }
     }

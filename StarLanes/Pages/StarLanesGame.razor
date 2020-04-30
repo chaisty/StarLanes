@@ -61,7 +61,7 @@
             @*<label for="StartingOrder">Starting Player:</label><br />*@
             <input type="checkbox" name="RandomizeWhoGoesFirst" @bind="GameConfig.RandomizeFirstMover" /><label for="RandomizeWhoGoesFirst">Randomize Who Goes First</label> <br />
             <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="GameConfig.FounderShares" /> (0-20, default 5)<br />
-            <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" @bind="GameConfig.PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
+            <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" step="100" @bind="GameConfig.PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
             <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="GameConfig.DividendPercentage" />% (1-10, default 5)<br />
             <label for="MergerRatio">Merger Ratio: </label><input id="MergerRatio" type="number" min="1" max="5" @bind="GameConfig.MergerRatio" /> (1-5, default 2, number of shares of smaller merged company to equal 1 in new company)<br />
             <input type="checkbox" name="StockSplits" @bind="GameConfig.StockSplits" /><label for="StockSplitPrice">Stock Split at: $</label><input id="StockSplitPrice" disabled="@(!GameConfig.StockSplits)" type="number" min="2000" max="20000" step="100" @bind="GameConfig.StockSplitPrice" /><br/>
