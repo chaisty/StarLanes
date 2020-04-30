@@ -1,5 +1,4 @@
-﻿@using System.Globalization; 
-
+﻿
 <div id="AdvOptions" class="collapse show" visible>
 
     @*   <div id="AdvOptions" class="collapse show" aria-labelledby="AdvOptionsHeader" data-parent="#AdvOptionsAccordion"> *@
@@ -29,7 +28,6 @@
     [Parameter]
     public GameConfiguration GameConfig { get; set; }
 
-    #region Set Rounds
     private void SetDefaultRounds(ChangeEventArgs e)
     {
         GameConfig.DefaultRounds = Convert.ToBoolean(e.Value);
@@ -37,8 +35,4 @@
             GameConfig.UpdateRoundsBasedOnPlayerCount();
 
     }
-
-
-    #endregion Set Rounds
-
 }

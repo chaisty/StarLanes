@@ -1,0 +1,37 @@
+﻿@*
+<div>
+    @foreach (var p in Players)
+    {
+
+        <div class="container player-status-box @(PlayerTurn == p.Key ? "player-status-box-active" : "")">
+            <div class="player-status-box-name @(PlayerTurn == p.Key ? "player-status-name-active" : "")">
+                @(p.Value.Name + " ["+ PlayerRank(p.Key) + "]") @((MarkupString)PlayerIcon(p.Key))
+            </div>
+            <div class="player-status-box-money">
+                Bank: @("$" + p.Value.Money.ToString())
+            </div>
+            <div class="player-status-box-stocks">
+                @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
+                {
+                    @((MarkupString)(c.Value.Symbol + ":&nbsp;" + c.Value.StockHolderShares[p.Key].ToString() + "&nbsp;&nbsp; "))
+                }
+            </div>
+            <div class="player-status-box-networth">
+                @(("Net Worth: $" + PlayerNetWorth(p.Key)))
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public GameConfiguration GameConfig { get; set; }
+
+    [Parameter]
+    public Dictionary<int, Player> Players { get; set; }
+
+    [Parameter]
+    public Dictionary<int, Company> Companies { get; set; }
+
+}
+    *@

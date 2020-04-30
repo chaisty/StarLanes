@@ -1,0 +1,23 @@
+﻿<div class="company-status-box">
+    <div class="company-status-box-name">
+        @(company.Name)
+    </div>
+    <div class="company-status-box-sharevalue">
+        @(company.ShareValue.ToString())
+    </div>
+    <div class="company-status-box-sharesoutstanding">
+        @(company.OutstandingShares())
+    </div>
+    <div class="company-status-box-size">
+        @(CompanySize)
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Company company { get; set; }
+
+    [Parameter]
+    public int CompanySize { get; set; }
+
+}
