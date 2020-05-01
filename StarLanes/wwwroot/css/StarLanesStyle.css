@@ -41,21 +41,24 @@
 
 @keyframes big-ping {
     0% {
-        transform: scale(.3);
-        background-color: gray;
+        transform: scale(1);
+        background-color: blue;
         border-radius: 100%;
     }
 
     50% {
-        background-color: lightgray;
+        background-color: cornflowerblue;
     }
 
-    75% { transform: scale(2.0); }
+    75% { transform: scale(2.0);
+          background-color: lightgray;
+    }
 
     100% {
         transform: scale(1.0);
         background-color: white;
         border-radius: 100%;
+        color: black;
     }
 }
 
@@ -162,6 +165,13 @@
     font-weight: 700;
     border-radius: 50%;
     background-color: whitesmoke;
+}
+
+.map-sector-move:hover {
+    font-weight: 700;
+    border-radius: 50%;
+    background-color: blue;
+    color: white;
 }
 
 .map-sector-star {

@@ -1,5 +1,5 @@
 ﻿<div class="map">
-    <div class="map-title">Map of the Galaxy</div>
+    <div class="map-title">Map of the Galaxy (last move = @foo.ToString()) </div>
     <div class="map-title">@((String.Concat(Enumerable.Repeat("*", GameConfig.X_dimension * 3 - 2))))</div>
     <div class="map-sectors">
         <div class="map-x-axis" style="clear: both;">
@@ -12,20 +12,29 @@
 
         @for (int y = 0; y <= map.Y_Dimension; y++)
         {
-            <div style="clear: both;">
-                <div class="map-sector map-axis map-y-axis" style="clear: none">@(y + 1)</div>
-                @for (int x = 0; x <= map.X_Dimension; x++)
-                {
-                    <div class="map-sector @(SectorClass(map[x, y])) @((GameStateObj.LastMove != null) && (GameStateObj.LastMove.X == x) && (GameStateObj.LastMove.Y == y) ? "map-last-move" : "")"
-                         >@(map[x, y])</div>
+    <div style="clear: both;">
+        <div class="map-sector map-axis map-y-axis" style="clear: none">@(y + 1)</div>
+        @for (int x = 0; x <= map.X_Dimension; x++)
+            {
+        string moveNumber = map[x,y];
+        @if ("123456789".Contains(map[x,y])) {
+        <div class="map-sector @(SectorClass(map[x, y])) @((GameStateObj.LastMove != null) && (GameStateObj.LastMove.X == x) && (GameStateObj.LastMove.Y == y) ? "map-last-move" : "")" @onclick="@(() => ShowMove(moveNumber))">@(map[x, y])</div>
+
                 }
-            </div>
+                else {
+        <div class="map-sector @(SectorClass(map[x, y])) @((GameStateObj.LastMove != null) && (GameStateObj.LastMove.X == x) && (GameStateObj.LastMove.Y == y) ? "map-last-move" : "")">@(map[x, y])</div>
+                }
+            }
+    </div>
         }
     </div>
 
 </div>
 
 @code {
+
+    private string foo = string.Empty;
+
     [Parameter]
     public GameConfiguration GameConfig { get; set; }
 
@@ -34,6 +43,18 @@
 
     [Parameter]
     public Map map { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnMoveClickCallback { get; set; }
+
+    private void ShowMove(string movenum)
+    {   
+        foo = movenum;
+        int move = int.Parse(movenum);
+        OnMoveClickCallback.InvokeAsync(move);
+
+    }
+
 
     // conditional CSS classes for sector based on their map value
     private string SectorClass(string sectorValue)
