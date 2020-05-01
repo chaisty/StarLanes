@@ -1061,7 +1061,7 @@ public MoveOutcome ExecuteMove(int x, int y, Map theMap)
     }
 
     //Check for black hole(s), that could wipe out any newly merged or expanded companies!
-    if (GameConfig.BlackholeChance > 0)
+    if ((GameConfig.BlackholeDestroys) && (GameConfig.BlackholeChance > 0))
     {
         for (int x_loop = 0; x_loop <= theMap.X_Dimension; x_loop++)
         {

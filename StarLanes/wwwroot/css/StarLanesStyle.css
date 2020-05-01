@@ -105,16 +105,22 @@
     width: 600px;
     align-content: center;
     text-align: center;
+    height: auto;
 }
 
 .map {
+    display: flex;
+    flex-direction:column;
     text-align: center;
     margin: auto;
+    height: auto;
+    width: auto;
 }
 
 .map-title {
     margin: auto;
     text-align: center;
+    width: 100%;
 }
 
 .map-axis {
@@ -122,8 +128,11 @@
 }
 
 .map-sectors {
-    margin: auto;
+    display: normal;
+    align-self: center;
     text-align: center;
+    height: auto;
+    width: auto;
 }
 
 .map-sector {
@@ -151,11 +160,8 @@
 
 .map-sector-move {
     font-weight: 700;
-}
-
-.map-sector-move:hover {
-    font-weight: 700;
-    background-color: lightgray;
+    border-radius: 50%;
+    background-color: whitesmoke;
 }
 
 .map-sector-star {
