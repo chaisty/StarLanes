@@ -59,6 +59,7 @@ namespace StarLanes
         private void OpenCompany()
         {
             ShareValue = 100;
+            SplitOffset = 0;
             IsActive = true;
         }
 
@@ -71,6 +72,7 @@ namespace StarLanes
         public void CloseCompany()
         {
             ShareValue = 0;
+            SplitOffset = 0;
             for (int p = 1; p <= StockHolderShares.Count; p++)
             { StockHolderShares[p] = 0; }
             IsActive = false;

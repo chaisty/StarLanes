@@ -34,7 +34,7 @@
     100% {transform: scale(0.1); }
 }
 
-@keyframes fadeOut {
+@keyframes fade-move {
     0% { opacity: 1; }
     100% { opacity: 0 }
 }
@@ -183,6 +183,11 @@
     font-weight: 700;
     animation-name: big-ping;
     animation-duration: 1s;
+}
+
+.map-unchosen-move {
+    animation-name: fade-move;
+    animation-duration: .5s;
 }
 
 .event-panel {
