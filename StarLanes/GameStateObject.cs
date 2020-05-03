@@ -13,6 +13,7 @@ namespace StarLanes
         public bool TestGame = false;
         public int GameRound = 0;
         public int PlayerTurn = 1;
+        public Dictionary<int, Move> AvailableMoves = new Dictionary<int, Move>();
         public int Winner = 0;
         public Move LastMove { get; set; }
 

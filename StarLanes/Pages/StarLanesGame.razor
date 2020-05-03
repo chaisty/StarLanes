@@ -120,7 +120,7 @@
                     @if (GameConfig.GameState == GameConfiguration.GameStates.PlayerMove)
                         {
                     <div class="player-moves-title">Available Moves:</div>
-                    @foreach (var move in AvailableMoves)
+                    @foreach (var move in GameStateObj.AvailableMoves)
                             {
                     <button class="btn btn-outline-secondary move-button" hidden="@(GameConfig.GameState != GameConfiguration.GameStates.PlayerMove)" disabled="@(GameConfig.GameState != GameConfiguration.GameStates.PlayerMove)" @onclick="(e => { MakeMove(move.Key); })">@(move.Value)</button>
                             }
@@ -128,7 +128,7 @@
                         @* if this is testing, allow for the player to regenerate the available moves *@
                         @if (GameStateObj.TestGame)
                                 {
-                        <button class="btn btn-primary" @onclick="(e => { map.RemoveMovesFromMap(AvailableMoves); AvailableMoves = GenerateMoves(); map.AddMovesToMap(AvailableMoves); })">GenerateMoves</button>
+                        <button class="btn btn-primary" @onclick="(e => { map.RemoveMovesFromMap(GameStateObj.AvailableMoves); GameStateObj.AvailableMoves = GenerateMoves(); map.AddMovesToMap(GameStateObj.AvailableMoves); })">GenerateMoves</button>
                                 }
                     </div>
                         }
@@ -281,9 +281,7 @@
     // Game state variables
     //int PlayerTurn = 1;
     //public intGameStateObj.GameRound = 0;
-    Dictionary<int, Move>
-        AvailableMoves = new Dictionary<int, Move>
-            ();
+    //Dictionary<int, Move> AvailableMoves = new Dictionary<int, Move>();
     //string MovesDescription = string.Empty;
 
     // Events objects for relaying game eent updates to players
@@ -462,8 +460,8 @@
         GameConfig.GameState = GameConfiguration.GameStates.PlayerMove;
 
         //Generate the moves for the player
-        AvailableMoves = GenerateMoves();
-        map.AddMovesToMap(AvailableMoves);
+        GameStateObj.AvailableMoves = GenerateMoves();
+        map.AddMovesToMap(GameStateObj.AvailableMoves);
 
         if (TheGame.Players[GameStateObj.PlayerTurn].IsComputer)
         {
@@ -478,7 +476,7 @@
         await Sleep(1000);
 
         //Have computer user make move selection
-        int computerMove = SelectComputerMove(AvailableMoves, GameStateObj.PlayerTurn);
+        int computerMove = SelectComputerMove(GameStateObj.AvailableMoves, GameStateObj.PlayerTurn);
         MakeMove(computerMove);
 
         await Sleep(1000);
@@ -516,9 +514,9 @@
         switch (TheGame.Players[playerId].Persona)
         {
             case Player.Personas.ERNIE:
-                return rand.Next(1, AvailableMoves.Count); ;   //random move;
+                return rand.Next(1, GameStateObj.AvailableMoves.Count); ;   //random move;
             default:
-                return rand.Next(1, AvailableMoves.Count); ;   //random move;
+                return rand.Next(1, GameStateObj.AvailableMoves.Count); ;   //random move;
         }
     }
 
@@ -634,7 +632,7 @@
 
     private void GetMoves()
     {
-        AvailableMoves = GenerateMoves();
+        GameStateObj.AvailableMoves = GenerateMoves();
     }
 
     private int ExistingCompanies()
@@ -699,13 +697,13 @@
 
     public void MakeMove(int moveNumber)
     {
-        Move move = AvailableMoves[moveNumber];
+        Move move = GameStateObj.AvailableMoves[moveNumber];
 
         //Update Status
         //GameStatus = "Player " + GameStateObj.PlayerTurn.ToString() + " opens up sector " + move.ToString();
         LogGameEvent(TheGame.Players[GameStateObj.PlayerTurn].Name + " develops sector " + move.ToString());
         // Update map with new status based on move
-        map.RemoveMovesFromMap(AvailableMoves);
+        map.RemoveMovesFromMap(GameStateObj.AvailableMoves);
         map[move.X, move.Y] = Map.DevelopedSector;
 
         GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
@@ -789,7 +787,7 @@ private bool NextPlayerTurn()
 //prints the map using text string - for debugging purposes only
 public string PrintMap()
 {
-    return map.PrintMap(GameConfig.GameState == GameConfiguration.GameStates.PlayerMove, AvailableMoves);
+    return map.PrintMap(GameConfig.GameState == GameConfiguration.GameStates.PlayerMove, GameStateObj.AvailableMoves);
 }
 
 public int CalculateAdjacentSectorValue(string sectorstate)
