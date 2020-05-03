@@ -9,6 +9,7 @@ namespace StarLanes
     {
 
         public Dictionary<int, Player> Players = new Dictionary<int, Player>();
+        public Dictionary<int, Company> Companies = new Dictionary<int, Company>();
 
         public Game()
         {

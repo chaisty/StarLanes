@@ -12,6 +12,7 @@ namespace StarLanes
         public int MoneyToBuy = 0;
         public bool TestGame = false;
         public int GameRound = 0;
+        public int PlayerTurn = 1;
         public int Winner = 0;
         public Move LastMove { get; set; }
 

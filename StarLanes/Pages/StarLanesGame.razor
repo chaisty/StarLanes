@@ -57,7 +57,7 @@
         @* Show whose turn it is *@
         <div class="col-9 turn-instructions-panel">
             <p>
-                <label style="font-weight:bold">@(TheGame.Players.ContainsKey(PlayerTurn) != true ? "" : TheGame.Players[PlayerTurn].Name + "'s") Turn: </label>
+                <label style="font-weight:bold">@(TheGame.Players.ContainsKey(GameStateObj.PlayerTurn) != true ? "" : TheGame.Players[GameStateObj.PlayerTurn].Name + "'s") Turn: </label>
                 <label>
                     @((MarkupString)(GameConfig.GameState == GameConfiguration.GameStates.PlayerMove ? "<b>Move<b> >" : "Move > "))
                     @((MarkupString)(GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing ? "<b>Stock Buying<b> > " : "Stock Trading > "))
@@ -73,15 +73,15 @@
             @foreach (var p in TheGame.Players)
             {
 
-                <div class="container player-status-box @(PlayerTurn == p.Key ? "player-status-box-active" : "")">
-                    <div class="player-status-box-name @(PlayerTurn == p.Key ? "player-status-name-active" : "")">
+                <div class="container player-status-box @(GameStateObj.PlayerTurn == p.Key ? "player-status-box-active" : "")">
+                    <div class="player-status-box-name @(GameStateObj.PlayerTurn == p.Key ? "player-status-name-active" : "")">
                         @(p.Value.Name + " ["+ PlayerRank(p.Key) + "]") @((MarkupString)PlayerIcon(p.Key))
                     </div>
                     <div class="player-status-box-money">
                         Bank: @("$" + p.Value.Money.ToString())
                     </div>
                     <div class="player-status-box-stocks">
-                        @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
+                        @foreach (var c in TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
                         {
                             @((MarkupString)(c.Value.Symbol + ":&nbsp;" + c.Value.StockHolderShares[p.Key].ToString() + "&nbsp;&nbsp; "))
                         }
@@ -114,7 +114,7 @@
             </div>
 
             <div class="player-actions">
-                <fieldset id="playeractionelements" disabled="@(!(TheGame.Players[PlayerTurn].IsHuman))">
+                <fieldset id="playeractionelements" disabled="@(!(TheGame.Players[GameStateObj.PlayerTurn].IsHuman))">
                     @* Available Move Buttons *@
                     <div class="player-moves-panel">
                         @if (GameConfig.GameState == GameConfiguration.GameStates.PlayerMove)
@@ -140,13 +140,13 @@
                     @if (GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing)
                     {
                         @* if there are any companies *@
-                        @if (Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
+                        @if (TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
                         {
                             <div class="clearfix">
-                                <span class="bold-small-header">Buy Stocks with $@(TheGame.Players[PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
+                                <span class="bold-small-header">Buy Stocks with $@(TheGame.Players[GameStateObj.PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
                             </div>
                             <div class="clearfix">
-                                @foreach (var c in Companies)
+                                @foreach (var c in TheGame.Companies)
                                 {
                                     @if (c.Value.IsActive)
                                     {
@@ -164,9 +164,9 @@
 
                                         @*
                                             <label class="player-actions-buysellstock">@(c.Value.Name)</label>
-                                            <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(PlayerTurn, c.Key, 1); })"> + </button>
-                                            <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[PlayerTurn])</span>
-                                            <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(PlayerTurn, c.Key, 1); })"> - </button>
+                                            <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { BuyStock(GameStateObj.PlayerTurn, c.Key, 1); })"> + </button>
+                                            <span class="btn btn-outline-secondary btn-sm">@(c.Value.StockHolderShares[GameStateObj.PlayerTurn])</span>
+                                            <button class="btn btn-outline-secondary btn-xs" disabled="@(GameState != GameStates.PlayerStockPurchasing)" @onclick="(e => { SellStock(GameStateObj.PlayerTurn, c.Key, 1); })"> - </button>
                                         *@
                                     }
                                 }
@@ -181,17 +181,17 @@
                         }
 
                         @* End Turn Button for Humans Players on their turns *@
-                        @if (TheGame.Players[PlayerTurn].IsHuman)
+                        @if (TheGame.Players[GameStateObj.PlayerTurn].IsHuman)
                         {
                             <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
-                                <button class="btn btn-primary" disabled="@(GameConfig.GameState != GameConfiguration.GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "Complete Turn")</button>
+                                <button class="btn btn-primary" disabled="@(GameConfig.GameState != GameConfiguration.GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "Complete Turn")</button>
                             </div>
                         }
                     }
                 </fieldset>
 
                 @* End Turn Button for Human to continue game after Computer Turn *@
-                @if ((GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing) && (TheGame.Players[PlayerTurn].IsComputer))
+                @if ((GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing) && (TheGame.Players[GameStateObj.PlayerTurn].IsComputer))
                 {
                     <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
                         <button class="btn btn-primary" @onclick="(e => { EndTurn(); })"> Next Turn </button>
@@ -220,7 +220,7 @@
             </div>
         </div>
 
-        @foreach (var c in Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
+        @foreach (var c in TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
         {
             <CompanyStatus company=@c.Value CompanySize=@CompanySize(c.Value)/>
         }
@@ -290,8 +290,7 @@
     public Map map = new Map(1, 1);
 
     // Initialize Companies
-    Dictionary<int, Company>
-    Companies = new Dictionary<int, Company>();
+    //Dictionary<int, Company> Companies = new Dictionary<int, Company>();
 
     //Initialize Player dictionary
     string[] PlayerName = new string[GameConfiguration.Max_NumberOfPlayers];
@@ -303,12 +302,12 @@
     public Dictionary<string, int> Stocks = new Dictionary<string, int>();
 
     // Game state variables
-    int PlayerTurn = 1;
+    //int PlayerTurn = 1;
     //public intGameStateObj.GameRound = 0;
     Dictionary<int, Move>
         AvailableMoves = new Dictionary<int, Move>
             ();
-    string MovesDescription = string.Empty;
+    //string MovesDescription = string.Empty;
 
     // Events objects for relaying game eent updates to players
     public class Event
@@ -365,14 +364,14 @@
 
         map[3, 5] = Map.BlackholeSector;
 
-        Companies[1].OpenCompany(1, GameConfig.FounderShares);
-        CalculateSharePrice(Companies[1]);
+        TheGame.Companies[1].OpenCompany(1, GameConfig.FounderShares);
+        CalculateSharePrice(TheGame.Companies[1]);
 
-        Companies[2].OpenCompany(2, GameConfig.FounderShares);
-        CalculateSharePrice(Companies[2]);
+        TheGame.Companies[2].OpenCompany(2, GameConfig.FounderShares);
+        CalculateSharePrice(TheGame.Companies[2]);
 
-        Companies[3].OpenCompany(3, GameConfig.FounderShares);
-        CalculateSharePrice(Companies[3]);
+        TheGame.Companies[3].OpenCompany(3, GameConfig.FounderShares);
+        CalculateSharePrice(TheGame.Companies[3]);
 
         StateHasChanged();
 
@@ -430,7 +429,7 @@
         // Initialize Companies
         for (int companyIndex = 1; companyIndex <= GameConfig.Max_Companies; companyIndex++)
         {
-            Companies.Add(companyIndex, new Company(companyIndex, GameStateObj.NumberOfPlayers));
+            TheGame.Companies.Add(companyIndex, new Company(companyIndex, GameStateObj.NumberOfPlayers));
         }
 
         //Initialize Map with empty sectors
@@ -489,7 +488,7 @@
         AvailableMoves = GenerateMoves();
         map.AddMovesToMap(AvailableMoves);
 
-        if (TheGame.Players[PlayerTurn].IsComputer)
+        if (TheGame.Players[GameStateObj.PlayerTurn].IsComputer)
         {
             ExecuteComputerTurn();
         }
@@ -502,7 +501,7 @@
         await Sleep(1000);
 
         //Have computer user make move selection
-        int computerMove = SelectComputerMove(AvailableMoves, PlayerTurn);
+        int computerMove = SelectComputerMove(AvailableMoves, GameStateObj.PlayerTurn);
         MakeMove(computerMove);
 
         await Sleep(1000);
@@ -513,12 +512,12 @@
         // Conditionally pay dividends
         if (GameConfig.DividendPayStage == GameConfiguration.DividendPayStages.BeforeStockBuying)
         {
-            PayDividend(PlayerTurn);
+            PayDividend(GameStateObj.PlayerTurn);
             StateHasChanged();
         }
 
         // Have computer user make stock purchases
-        int computerStockToBuy = BuyComputerStock(PlayerTurn);
+        int computerStockToBuy = BuyComputerStock(GameStateObj.PlayerTurn);
 
         if (computerStockToBuy > 0)
         {
@@ -528,7 +527,7 @@
             StateHasChanged();
             // Post visible event, transaction will finalize on "Next Turn" button press by player
             if (sharesToBuy > 0)
-                LogGameEvent(TheGame.Players[PlayerTurn].Name + " is purchasing " + sharesToBuy.ToString() + " shares of " + Companies[computerStockToBuy].Name);
+                LogGameEvent(TheGame.Players[GameStateObj.PlayerTurn].Name + " is purchasing " + sharesToBuy.ToString() + " shares of " + TheGame.Companies[computerStockToBuy].Name);
 
             //GameStateObj.ResetStockExchange();
         }
@@ -555,11 +554,11 @@
         int ownedShares = 0;
         int cheapestStock = 0;
 
-        for (int i = 1; i <= Companies.Count; i++)
+        for (int i = 1; i <= TheGame.Companies.Count; i++)
         {
-            if (Companies[i].IsActive)
+            if (TheGame.Companies[i].IsActive)
             {
-                if (Companies[i].StockHolderShares[playerId] >= ownedShares)
+                if (TheGame.Companies[i].StockHolderShares[playerId] >= ownedShares)
                 {
                     mostOwned = i;
                 }
@@ -572,14 +571,14 @@
 
             int stockValue = Int32.MaxValue;
 
-            for (int i = 1; i <= Companies.Count; i++)
+            for (int i = 1; i <= TheGame.Companies.Count; i++)
             {
-                if (Companies[i].IsActive)
+                if (TheGame.Companies[i].IsActive)
                 {
-                    if (Companies[i].ShareValue < stockValue)
+                    if (TheGame.Companies[i].ShareValue < stockValue)
                     {
                         cheapestStock = i;
-                        stockValue = Companies[cheapestStock].ShareValue;
+                        stockValue = TheGame.Companies[cheapestStock].ShareValue;
                     }
                 }
             }
@@ -596,13 +595,13 @@
 
     public long AvailableMoneyForStockBuying(int ExcludeCompanyId)
     {
-        long availableMoney = TheGame.Players[PlayerTurn].Money;
+        long availableMoney = TheGame.Players[GameStateObj.PlayerTurn].Money;
 
         for (int i = GameStateObj.StockToBuy.GetLowerBound(0); i <= GameStateObj.StockToBuy.GetUpperBound(0); i++)
         {
-            if (i != ExcludeCompanyId && Companies.ContainsKey(i) && Companies[i].IsActive)
+            if (i != ExcludeCompanyId && TheGame.Companies.ContainsKey(i) && TheGame.Companies[i].IsActive)
             {
-                availableMoney -= GameStateObj.StockToBuy[i] * Companies[i].ShareValue;
+                availableMoney -= GameStateObj.StockToBuy[i] * TheGame.Companies[i].ShareValue;
             }
         }
 
@@ -611,16 +610,16 @@
 
     public int MaxCanBuy(int CompanyKey)
     {
-        return Convert.ToInt32(Math.Floor(AvailableMoneyForStockBuying(CompanyKey) / (double)Companies[CompanyKey].ShareValue));
+        return Convert.ToInt32(Math.Floor(AvailableMoneyForStockBuying(CompanyKey) / (double)TheGame.Companies[CompanyKey].ShareValue));
     }
 
     public void ExecuteStockTrades()
     {
         for (int i = 0; i <= GameStateObj.StockToBuy.Length; i++)
         {
-            if (Companies.ContainsKey(i) && Companies[i].IsActive && (GameStateObj.StockToBuy[i] > 0))
+            if (TheGame.Companies.ContainsKey(i) && TheGame.Companies[i].IsActive && (GameStateObj.StockToBuy[i] > 0))
             {
-                BuyStock(PlayerTurn, i, GameStateObj.StockToBuy[i]);
+                BuyStock(GameStateObj.PlayerTurn, i, GameStateObj.StockToBuy[i]);
             }
         }
     }
@@ -630,11 +629,11 @@
         //int shares = 1;
 
         //Determine if the player has enough money
-        if (TheGame.Players[playerId].Money >= (shares * Companies[companyId].ShareValue))
+        if (TheGame.Players[playerId].Money >= (shares * TheGame.Companies[companyId].ShareValue))
         {
             //Buy shares
-            TheGame.Players[playerId].Money -= (shares * Companies[companyId].ShareValue);  // Take away the money
-            Companies[companyId].StockHolderShares[playerId] += shares; // Add the shares
+            TheGame.Players[playerId].Money -= (shares * TheGame.Companies[companyId].ShareValue);  // Take away the money
+            TheGame.Companies[companyId].StockHolderShares[playerId] += shares; // Add the shares
         }
         else
             shares = 0; // no shares bought
@@ -646,12 +645,12 @@
     private int SellStock(int playerId, int companyId, int shares)
     {
         // Determine if player has that many shares to sell, if trying to sell more than have, sell all
-        if (Companies[companyId].StockHolderShares[playerId] < shares)
-            shares = Companies[companyId].StockHolderShares[playerId];
+        if (TheGame.Companies[companyId].StockHolderShares[playerId] < shares)
+            shares = TheGame.Companies[companyId].StockHolderShares[playerId];
 
         // Sell the stock
-        TheGame.Players[playerId].Money += (shares * Companies[companyId].ShareValue); // Give the money
-        Companies[companyId].StockHolderShares[playerId] -= shares;
+        TheGame.Players[playerId].Money += (shares * TheGame.Companies[companyId].ShareValue); // Give the money
+        TheGame.Companies[companyId].StockHolderShares[playerId] -= shares;
 
         return shares;
     }
@@ -663,7 +662,7 @@
 
     private int ExistingCompanies()
     {
-        return Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
+        return TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
     }
 
     private Dictionary<int, Move> GenerateMoves()
@@ -672,9 +671,7 @@
         //        int y_move;
         //MoveOutcome move_outcome;
 
-        SortedDictionary<string, Move>
-            tempMoves = new SortedDictionary<string, Move>
-                ();
+        SortedDictionary<string, Move> tempMoves = new SortedDictionary<string, Move>();
 
         int existingCompanies = ExistingCompanies();
 
@@ -728,8 +725,8 @@
         Move move = AvailableMoves[moveNumber];
 
         //Update Status
-        //GameStatus = "Player " + PlayerTurn.ToString() + " opens up sector " + move.ToString();
-        LogGameEvent(TheGame.Players[PlayerTurn].Name + " develops sector " + move.ToString());
+        //GameStatus = "Player " + GameStateObj.PlayerTurn.ToString() + " opens up sector " + move.ToString();
+        LogGameEvent(TheGame.Players[GameStateObj.PlayerTurn].Name + " develops sector " + move.ToString());
         // Update map with new status based on move
         map.RemoveMovesFromMap(AvailableMoves);
         map[move.X, move.Y] = Map.DevelopedSector;
@@ -742,7 +739,7 @@
 
         // Conditionally pay Dividends if human player
         if (GameConfig.DividendPayStage == GameConfiguration.DividendPayStages.BeforeStockBuying)
-            PayDividend(PlayerTurn);
+            PayDividend(GameStateObj.PlayerTurn);
 
         //Advance Game
         GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
@@ -753,7 +750,7 @@
     private void EndTurn()
     {
         //Buy Stocks
-        //if (Players[PlayerTurn].IsHuman) { ExecuteStockTrades(); } //already executed if non-human player turn
+        //if (Players[GameStateObj.PlayerTurn].IsHuman) { ExecuteStockTrades(); } //already executed if non-human player turn
         ExecuteStockTrades();
         GameStateObj.ResetStockExchange();
         StateHasChanged();
@@ -802,10 +799,10 @@
     @* Returns True if new round *@
 private bool NextPlayerTurn()
 {
-    PlayerTurn++;
-    if (PlayerTurn > GameConfig.NumberOfPlayers)
+    GameStateObj.PlayerTurn++;
+    if (GameStateObj.PlayerTurn > GameConfig.NumberOfPlayers)
     {
-        PlayerTurn = 1;
+        GameStateObj.PlayerTurn = 1;
         GameStateObj.GameRound++;
         return true;
     }
@@ -861,7 +858,7 @@ public int CompanySize(Company company)
 public long PlayerStockWorth(int playerid)
 {
     int stockvalue = 0;
-    foreach (Company c in Companies.Values)
+    foreach (Company c in TheGame.Companies.Values)
     {
         stockvalue += c.StockHolderShares[playerid] * c.ShareValue;
     }
@@ -962,20 +959,20 @@ public MoveOutcome ExecuteMove(int x, int y, Map theMap)
             { } // ?? Shouldn't end up here, no more companies available! ADD CODE to handle this?
 
             // Open up the new company
-            Companies[newCo].OpenCompany(PlayerTurn, GameConfig.FounderShares);
-            theMap[x, y] = Companies[newCo].Symbol;
+            TheGame.Companies[newCo].OpenCompany(GameStateObj.PlayerTurn, GameConfig.FounderShares);
+            theMap[x, y] = TheGame.Companies[newCo].Symbol;
 
             // Expand into any adjacent developed sectors
             if (neighbors[0] == Map.DevelopedSector)
-                theMap[x, y - 1] = Companies[newCo].Symbol;
+                theMap[x, y - 1] = TheGame.Companies[newCo].Symbol;
             if (neighbors[1] == Map.DevelopedSector)
-                theMap[x - 1, y] = Companies[newCo].Symbol;
+                theMap[x - 1, y] = TheGame.Companies[newCo].Symbol;
             if (neighbors[2] == Map.DevelopedSector)
-                theMap[x + 1, y] = Companies[newCo].Symbol;
+                theMap[x + 1, y] = TheGame.Companies[newCo].Symbol;
             if (neighbors[3] == Map.DevelopedSector)
-                theMap[x, y + 1] = Companies[newCo].Symbol;
+                theMap[x, y + 1] = TheGame.Companies[newCo].Symbol;
 
-            LogGameEvent("NEW COMPANY!", TheGame.Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
+            LogGameEvent("NEW COMPANY!", TheGame.Players[GameStateObj.PlayerTurn].Name + " has founded a new company, " + TheGame.Companies[newCo].Name + ".");
         }
     }
     // Check for expansion of company
@@ -1014,7 +1011,7 @@ public MoveOutcome ExecuteMove(int x, int y, Map theMap)
                 ();
         foreach (string s in adjacentCompanies)
         {
-            coS.Add(s, CompanySize(Companies[Company.KeyFromSymbol(s)]));
+            coS.Add(s, CompanySize(TheGame.Companies[Company.KeyFromSymbol(s)]));
             foo += s + "=" + coS[s] + ", ";
         }
 
@@ -1040,10 +1037,10 @@ public MoveOutcome ExecuteMove(int x, int y, Map theMap)
             }
 
             // merge winner and loser
-            MergeCompanies(Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)], Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)]);
+            MergeCompanies(TheGame.Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)], TheGame.Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)]);
 
-            string winnerName = Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
-            string loserName = Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)].Name;
+            string winnerName = TheGame.Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
+            string loserName = TheGame.Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)].Name;
             LogGameEvent("MERGER!!!!!", $"{winnerName} and {loserName} have merged! The unified company will now be known as {winnerName}.");
 
             //remove loser
@@ -1071,10 +1068,10 @@ public MoveOutcome ExecuteMove(int x, int y, Map theMap)
                     {
                         foreach (string c in adjacentCompanies)
                         {
-                            theMap.ReplaceSymbolOnMap(Companies[Company.KeyFromSymbol(c)].Symbol, Map.EmptySector);
-                            Companies[Company.KeyFromSymbol(c)].CloseCompany();
+                            theMap.ReplaceSymbolOnMap(TheGame.Companies[Company.KeyFromSymbol(c)].Symbol, Map.EmptySector);
+                            TheGame.Companies[Company.KeyFromSymbol(c)].CloseCompany();
 
-                            LogGameEvent("DISASTER!", Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
+                            LogGameEvent("DISASTER!", TheGame.Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
                         }
                     }
 
@@ -1111,7 +1108,7 @@ public MoveOutcome ExecuteMove(int x, int y, Map theMap)
     }
 
     // Calculate the final share prices
-    foreach (Company company in Companies.Values)
+    foreach (Company company in TheGame.Companies.Values)
     {
         if (company.IsActive)
         {
@@ -1161,7 +1158,7 @@ public void MergeCompanies(Company winner, Company loser)
 
 public int AvailableCompanySlot()
 {
-    foreach (var item in Companies)
+    foreach (var item in TheGame.Companies)
     {
         if (!item.Value.IsActive) return item.Key;
     }
@@ -1175,7 +1172,7 @@ private string EventsText()
     string eventString = String.Empty;
     for (int i = Events.Count - 1; i >= 0; i--)
     {
-        bool currentTurn = ((GameStateObj.GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn == Events.ElementAt(i).Turn);
+        bool currentTurn = ((GameStateObj.GameRound - 1) * GameConfig.NumberOfPlayers + GameStateObj.PlayerTurn == Events.ElementAt(i).Turn);
         eventString += (currentTurn ? "<b>" : "") + Events.ElementAt(i).Message + (currentTurn ? "</b>" : "") + "<br />";
     }
     return eventString;
@@ -1191,7 +1188,7 @@ private void LogGameEvent(string eventHeader, string eventText)
 {
     if (Events.Count >= 10)
         Events.Dequeue();
-    Events.Enqueue(new Event((GameStateObj.GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn, "Round " + GameStateObj.GameRound.ToString() + "&raquo; " + eventHeader + " " + eventText));
+    Events.Enqueue(new Event((GameStateObj.GameRound - 1) * GameConfig.NumberOfPlayers + GameStateObj.PlayerTurn, "Round " + GameStateObj.GameRound.ToString() + "&raquo; " + eventHeader + " " + eventText));
 }
 
 
