@@ -12,7 +12,7 @@
     </tr>
     @foreach (var p in Players.OrderBy(r => r.Value.Rank))
     {
-        <tr class="@( (TheGame.PlayerRank(p.Key) == 1) ? "table-primary" : "" )" style="@((Players[p.Key].Rank == 1) ? "font-weight: 700" : "")">
+        <tr class="@( (TheGame.PlayerRank(p.Key) == 1) ? "table-primary" : "" )" style="@((TheGame.PlayerRank(p.Key) == 1) ? "font-weight: 700" : "")">
             <th>@(TheGame.PlayerRank(p.Key))</th>
             <td>@(p.Value.Name) @((MarkupString)PlayerIcon(p.Key))</td>
             <td>$@(Players[p.Key].StockWorth)</td>

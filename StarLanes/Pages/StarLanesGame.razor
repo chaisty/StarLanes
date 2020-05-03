@@ -485,7 +485,7 @@
         GameStateObj.LastMove = null;
         GameConfig.GameState = GameConfiguration.GameStates.PlayerMove;
 
-        //Generate the moves for the next player
+        //Generate the moves for the player
         AvailableMoves = GenerateMoves();
         map.AddMovesToMap(AvailableMoves);
 
@@ -510,13 +510,22 @@
         //ExecuteMove(AvailableMoves[computerMove].X, AvailableMoves[computerMove].Y, map);
         GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
 
+        // Conditionally pay dividends
+        if (GameConfig.DividendPayStage == GameConfiguration.DividendPayStages.BeforeStockBuying)
+        {
+            PayDividend(PlayerTurn);
+            StateHasChanged();
+        }
+
         // Have computer user make stock purchases
         int computerStockToBuy = BuyComputerStock(PlayerTurn);
+
         if (computerStockToBuy > 0)
         {
             // MaxCanBuy
             int sharesToBuy = MaxCanBuy(computerStockToBuy);
             GameStateObj.StockToBuy[computerStockToBuy] = sharesToBuy;
+            StateHasChanged();
             // Post visible event, transaction will finalize on "Next Turn" button press by player
             if (sharesToBuy > 0)
                 LogGameEvent(TheGame.Players[PlayerTurn].Name + " is purchasing " + sharesToBuy.ToString() + " shares of " + Companies[computerStockToBuy].Name);
@@ -731,6 +740,9 @@
         GameStateObj.LastMove = move;
         ExecuteMove(move.X, move.Y, map);
 
+        // Conditionally pay Dividends if human player
+        if (GameConfig.DividendPayStage == GameConfiguration.DividendPayStages.BeforeStockBuying)
+            PayDividend(PlayerTurn);
 
         //Advance Game
         GameConfig.GameState = GameConfiguration.GameStates.PlayerStockPurchasing;
@@ -765,19 +777,25 @@
         else //start the next round
         {
             // Pay Dividends to start the round
-            if (newRound) PayDividends();
-
+            if ((newRound) && (GameConfig.DividendPayStage == GameConfiguration.DividendPayStages.BetweenRounds))
+                PayDividends();
 
             ExecuteTurn();
 
         }
     }
 
+    private void PayDividend(int PlayerId)
+    {
+        TheGame.Players[PlayerId].Money += (int)Math.Round(PlayerStockWorth(PlayerId) * (double)GameConfig.DividendPercentage / 100);
+    }
+
     private void PayDividends()
     {
         foreach (var p in TheGame.Players)
         {
-            p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)GameConfig.DividendPercentage / 100);
+            PayDividend(p.Key);
+            //p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)GameConfig.DividendPercentage / 100);
         }
     }
 
