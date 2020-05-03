@@ -52,12 +52,12 @@
     @* Game Status Header *@
     <div class="row">
         <div class="col-3 header-round">
-            Round @(GameRound) of @(GameConfig.NumberOfRounds)
+            Round @(GameStateObj.GameRound) of @(GameConfig.NumberOfRounds)
         </div>
         @* Show whose turn it is *@
         <div class="col-9 turn-instructions-panel">
             <p>
-                <label style="font-weight:bold">@(Players.ContainsKey(PlayerTurn) != true ? "" : Players[PlayerTurn].Name + "'s") Turn: </label>
+                <label style="font-weight:bold">@(TheGame.Players.ContainsKey(PlayerTurn) != true ? "" : TheGame.Players[PlayerTurn].Name + "'s") Turn: </label>
                 <label>
                     @((MarkupString)(GameConfig.GameState == GameConfiguration.GameStates.PlayerMove ? "<b>Move<b> >" : "Move > "))
                     @((MarkupString)(GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing ? "<b>Stock Buying<b> > " : "Stock Trading > "))
@@ -70,7 +70,7 @@
     @* Show player status *@
     <div class="container row justify-content-center player-status-panel">
         <div>
-            @foreach (var p in Players)
+            @foreach (var p in TheGame.Players)
             {
 
                 <div class="container player-status-box @(PlayerTurn == p.Key ? "player-status-box-active" : "")">
@@ -114,7 +114,7 @@
             </div>
 
             <div class="player-actions">
-                <fieldset id="playeractionelements" disabled="@(!(Players[PlayerTurn].IsHuman))">
+                <fieldset id="playeractionelements" disabled="@(!(TheGame.Players[PlayerTurn].IsHuman))">
                     @* Available Move Buttons *@
                     <div class="player-moves-panel">
                         @if (GameConfig.GameState == GameConfiguration.GameStates.PlayerMove)
@@ -143,7 +143,7 @@
                         @if (Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
                         {
                             <div class="clearfix">
-                                <span class="bold-small-header">Buy Stocks with $@(Players[PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
+                                <span class="bold-small-header">Buy Stocks with $@(TheGame.Players[PlayerTurn].Money) ($@(AvailableMoneyForStockBuying()) unallocated)</span>
                             </div>
                             <div class="clearfix">
                                 @foreach (var c in Companies)
@@ -181,7 +181,7 @@
                         }
 
                         @* End Turn Button for Humans Players on their turns *@
-                        @if (Players[PlayerTurn].IsHuman)
+                        @if (TheGame.Players[PlayerTurn].IsHuman)
                         {
                             <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
                                 <button class="btn btn-primary" disabled="@(GameConfig.GameState != GameConfiguration.GameStates.PlayerStockPurchasing)" @onclick="(e => { EndTurn(); })">@(Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0 ? "Buy Stocks & Complete Turn" : "Complete Turn")</button>
@@ -191,7 +191,7 @@
                 </fieldset>
 
                 @* End Turn Button for Human to continue game after Computer Turn *@
-                @if ((GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing) && (Players[PlayerTurn].IsComputer))
+                @if ((GameConfig.GameState == GameConfiguration.GameStates.PlayerStockPurchasing) && (TheGame.Players[PlayerTurn].IsComputer))
                 {
                     <div style="text-align: center; margin: 10px 0px; align-self:flex-end">
                         <button class="btn btn-primary" @onclick="(e => { EndTurn(); })"> Next Turn </button>
@@ -232,8 +232,8 @@
 {
     <h2>The Game is over!</h2>
 
-    <p>After @((GameConfig.NumberOfRounds <= GameRound) ? GameConfig.NumberOfRounds : GameRound) Round@((GameConfig.NumberOfRounds > 1) ? "s" : "")...</p>
-    <h3>@(Players[GameStateObj.Winner].Name) is the winner!</h3>
+    <p>After @((GameConfig.NumberOfRounds <= GameStateObj.GameRound) ? GameConfig.NumberOfRounds : GameStateObj.GameRound) Round@((GameConfig.NumberOfRounds > 1) ? "s" : "")...</p>
+    <h3>@(TheGame.Players[GameStateObj.Winner].Name) is the winner!</h3>
     <table class="table">
         <tr>
             <th>Rank</th>
@@ -242,13 +242,13 @@
             <th>Cash</th>
             <th>Net Worth</th>
         </tr>
-        @foreach (var p in Players.OrderBy(r => r.Value.FinalRank))
+        @foreach (var p in TheGame.Players.OrderBy(r => r.Value.Rank))
         {
             <tr class="@( (PlayerRank(p.Key) == 1) ? "table-primary" : "" )" style="@((PlayerRank(p.Key) == 1) ? "font-weight: 700" : "")">
                 <th>@(PlayerRank(p.Key))</th>
                 <td>@(p.Value.Name) @((MarkupString)PlayerIcon(p.Key))</td>
                 <td>$@(PlayerStockWorth(p.Key))</td>
-                <td>$@(Players[p.Key].Money)</td>
+                <td>$@(TheGame.Players[p.Key].Money)</td>
                 <td>$@(PlayerNetWorth(p.Key))</td>
             </tr>
         }
@@ -265,10 +265,12 @@
         return "Move" + Id.ToString();
     }
 
+    private const string RobotIconPath = "css/font-awesome/robot.svg";
+
     private string PlayerIcon(int Id)
     {
-        if (Players[Id].IsComputer)
-            return "<img src=" + (char)34 + "css/font-awesome/robot.svg" + (char)34 + " width=" + (char)34 + "16" + (char)34 + " height=" + (char)34 + "16" + (char)34 + " alt=" + (char)34 + "C" + (char)34 + " />";
+        if (TheGame.Players[Id].IsComputer)
+            return "<img src=" + (char)34 + RobotIconPath + (char)34 + " width=" + (char)34 + "16" + (char)34 + " height=" + (char)34 + "16" + (char)34 + " alt=" + (char)34 + "C" + (char)34 + " />";
         else
             return "";
     }
@@ -281,8 +283,6 @@
 
 
 
-
-
     // Initialize Randomizer
     Random rand = new Random();
 
@@ -291,25 +291,20 @@
 
     // Initialize Companies
     Dictionary<int, Company>
-    Companies = new Dictionary<int, Company>
-        ();
+    Companies = new Dictionary<int, Company>();
 
     //Initialize Player dictionary
     string[] PlayerName = new string[GameConfiguration.Max_NumberOfPlayers];
     bool[] ComputerPlayer = new bool[GameConfiguration.Max_NumberOfPlayers];
-    Dictionary<int, Player>
-        Players = new Dictionary<int, Player>
-            ();
+    //Dictionary<int, Player> Players = new Dictionary<int, Player> ();
 
     //Create Stock Holding Tracker
     public int[,] StockHoldings = new int[1, 1];    //Redim this later
-    public Dictionary<string, int>
-        Stocks = new Dictionary<string, int>
-            ();
+    public Dictionary<string, int> Stocks = new Dictionary<string, int>();
 
     // Game state variables
     int PlayerTurn = 1;
-    public int GameRound = 0;
+    //public intGameStateObj.GameRound = 0;
     Dictionary<int, Move>
         AvailableMoves = new Dictionary<int, Move>
             ();
@@ -330,31 +325,11 @@
 
     public Queue<Event> Events = new Queue<Event>();
 
-    public class GameStateObject
-    {
-        public int NumberOfPlayers = 2;
-        public int[] StockToBuy = new int[GameConfiguration.Max_NumberOfCompanies + 1];
-        public int MoneyToBuy = 0;
-        public bool TestGame = false;
-        public int Winner = 0;
-        public Move LastMove { get; set; }
-
-        public GameStateObject()
-        {
-
-        }
-
-        public void ResetStockExchange()
-        {
-            Array.Clear(StockToBuy, 0, StockToBuy.Length);
-        }
-
-
-    }
-
     public GameStateObject GameStateObj = new GameStateObject();
 
     public GameConfiguration GameConfig = new GameConfiguration();
+
+    public Game TheGame = new Game();
 
     #region Test Games
     private void LoadTestGamePlayerNames()
@@ -428,7 +403,7 @@
         else
             GameConfig.FirstPlayer = 0;
 
-        GameRound = 1;
+        GameStateObj.GameRound = 1;
         if (GameConfig.DefaultRounds)
             GameConfig.UpdateRoundsBasedOnPlayerCount();
 
@@ -444,9 +419,11 @@
         for (int l = 1; l <= GameStateObj.NumberOfPlayers; l++)
         {
             // Start each Player with some $ and set their name
-            Players.Add(l, new Player(PlayerName[nameIndex], GameConfig.PlayerStartingMoney, ComputerPlayer[nameIndex] ? Player.RandomComputerPersona() : Player.Personas.Human));
-            if (string.IsNullOrWhiteSpace(Players[l].Name))
-            { Players[l].SetDefaultName(l); }  // Assign default name if none was entered
+            TheGame.Players.Add(l, new Player(PlayerName[nameIndex], GameConfig.PlayerStartingMoney, ComputerPlayer[nameIndex] ? Player.RandomComputerPersona() : Player.Personas.Human));
+            if (string.IsNullOrWhiteSpace(TheGame.Players[l].Name))
+            { TheGame.Players[l].SetDefaultName(l); }  // Assign default name if none was entered
+            if (TheGame.Players[l].IsComputer)
+            { TheGame.Players[l].IconPath = RobotIconPath; }
             nameIndex = (nameIndex < (GameStateObj.NumberOfPlayers - 1) ? nameIndex + 1 : 0);
         }
 
@@ -512,7 +489,7 @@
         AvailableMoves = GenerateMoves();
         map.AddMovesToMap(AvailableMoves);
 
-        if (Players[PlayerTurn].IsComputer)
+        if (TheGame.Players[PlayerTurn].IsComputer)
         {
             ExecuteComputerTurn();
         }
@@ -542,7 +519,7 @@
             GameStateObj.StockToBuy[computerStockToBuy] = sharesToBuy;
             // Post visible event, transaction will finalize on "Next Turn" button press by player
             if (sharesToBuy > 0)
-                LogGameEvent(Players[PlayerTurn].Name + " is purchasing " + sharesToBuy.ToString() + " shares of " + Companies[computerStockToBuy].Name);
+                LogGameEvent(TheGame.Players[PlayerTurn].Name + " is purchasing " + sharesToBuy.ToString() + " shares of " + Companies[computerStockToBuy].Name);
 
             //GameStateObj.ResetStockExchange();
         }
@@ -551,7 +528,7 @@
     private int SelectComputerMove(Dictionary<int, Move>
         moves, int playerId)
     {
-        switch (Players[playerId].Persona)
+        switch (TheGame.Players[playerId].Persona)
         {
             case Player.Personas.ERNIE:
                 return rand.Next(1, AvailableMoves.Count); ;   //random move;
@@ -610,7 +587,7 @@
 
     public long AvailableMoneyForStockBuying(int ExcludeCompanyId)
     {
-        long availableMoney = Players[PlayerTurn].Money;
+        long availableMoney = TheGame.Players[PlayerTurn].Money;
 
         for (int i = GameStateObj.StockToBuy.GetLowerBound(0); i <= GameStateObj.StockToBuy.GetUpperBound(0); i++)
         {
@@ -644,10 +621,10 @@
         //int shares = 1;
 
         //Determine if the player has enough money
-        if (Players[playerId].Money >= (shares * Companies[companyId].ShareValue))
+        if (TheGame.Players[playerId].Money >= (shares * Companies[companyId].ShareValue))
         {
             //Buy shares
-            Players[playerId].Money -= (shares * Companies[companyId].ShareValue);  // Take away the money
+            TheGame.Players[playerId].Money -= (shares * Companies[companyId].ShareValue);  // Take away the money
             Companies[companyId].StockHolderShares[playerId] += shares; // Add the shares
         }
         else
@@ -664,7 +641,7 @@
             shares = Companies[companyId].StockHolderShares[playerId];
 
         // Sell the stock
-        Players[playerId].Money += (shares * Companies[companyId].ShareValue); // Give the money
+        TheGame.Players[playerId].Money += (shares * Companies[companyId].ShareValue); // Give the money
         Companies[companyId].StockHolderShares[playerId] -= shares;
 
         return shares;
@@ -743,7 +720,7 @@
 
         //Update Status
         //GameStatus = "Player " + PlayerTurn.ToString() + " opens up sector " + move.ToString();
-        LogGameEvent(Players[PlayerTurn].Name + " develops sector " + move.ToString());
+        LogGameEvent(TheGame.Players[PlayerTurn].Name + " develops sector " + move.ToString());
         // Update map with new status based on move
         map.RemoveMovesFromMap(AvailableMoves);
         map[move.X, move.Y] = Map.DevelopedSector;
@@ -772,16 +749,16 @@
         // Increment Turn
         bool newRound = NextPlayerTurn();
 
-        if (GameRound > GameConfig.NumberOfRounds)
+        if (GameStateObj.GameRound > GameConfig.NumberOfRounds)
         {
             // The Game is over!
             GameConfig.GameState = GameConfiguration.GameStates.GameEnding;
 
             // Determine the final rankings
-            foreach (var p in Players)
+            foreach (var p in TheGame.Players)
             {
-                p.Value.FinalRank = PlayerRank(p.Key);
-                if (p.Value.FinalRank == 1)
+                p.Value.Rank = PlayerRank(p.Key);
+                if (p.Value.Rank == 1)
                     GameStateObj.Winner = p.Key;
             }
         }
@@ -798,7 +775,7 @@
 
     private void PayDividends()
     {
-        foreach (var p in Players)
+        foreach (var p in TheGame.Players)
         {
             p.Value.Money += (int)Math.Round(PlayerStockWorth(p.Key) * (double)GameConfig.DividendPercentage / 100);
         }
@@ -811,7 +788,7 @@ private bool NextPlayerTurn()
     if (PlayerTurn > GameConfig.NumberOfPlayers)
     {
         PlayerTurn = 1;
-        GameRound++;
+        GameStateObj.GameRound++;
         return true;
     }
     else { return false; }
@@ -875,7 +852,7 @@ public long PlayerStockWorth(int playerid)
 
 public long PlayerNetWorth(int playerid)
 {
-    return Players[playerid].Money + PlayerStockWorth(playerid);
+    return TheGame.Players[playerid].Money + PlayerStockWorth(playerid);
 }
 
 public MoveOutcome DetermineMoveOutcome(int x, int y)
@@ -980,7 +957,7 @@ public MoveOutcome ExecuteMove(int x, int y, Map theMap)
             if (neighbors[3] == Map.DevelopedSector)
                 theMap[x, y + 1] = Companies[newCo].Symbol;
 
-            LogGameEvent("NEW COMPANY!", Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
+            LogGameEvent("NEW COMPANY!", TheGame.Players[PlayerTurn].Name + " has founded a new company, " + Companies[newCo].Name + ".");
         }
     }
     // Check for expansion of company
@@ -1157,7 +1134,7 @@ public void MergeCompanies(Company winner, Company loser)
     foreach (var item in loser.StockHolderShares)
     {
         winner.StockHolderShares[item.Key] += (item.Value / GameConfig.MergerRatio); // Award at 2 old for 1 new
-        Players[item.Key].Money += ((item.Value % GameConfig.MergerRatio) * loser.ShareValue); // Pay out remainer share
+        TheGame.Players[item.Key].Money += ((item.Value % GameConfig.MergerRatio) * loser.ShareValue); // Pay out remainer share
     }
 
     // Close down prior company
@@ -1180,7 +1157,7 @@ private string EventsText()
     string eventString = String.Empty;
     for (int i = Events.Count - 1; i >= 0; i--)
     {
-        bool currentTurn = ((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn == Events.ElementAt(i).Turn);
+        bool currentTurn = ((GameStateObj.GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn == Events.ElementAt(i).Turn);
         eventString += (currentTurn ? "<b>" : "") + Events.ElementAt(i).Message + (currentTurn ? "</b>" : "") + "<br />";
     }
     return eventString;
@@ -1196,7 +1173,7 @@ private void LogGameEvent(string eventHeader, string eventText)
 {
     if (Events.Count >= 10)
         Events.Dequeue();
-    Events.Enqueue(new Event((GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn, "Round " + GameRound.ToString() + "&raquo; " + eventHeader + " " + eventText));
+    Events.Enqueue(new Event((GameStateObj.GameRound - 1) * GameConfig.NumberOfPlayers + PlayerTurn, "Round " + GameStateObj.GameRound.ToString() + "&raquo; " + eventHeader + " " + eventText));
 }
 
 
@@ -1205,7 +1182,7 @@ private int PlayerRankOld(int playerId)
 {
     int rank = 1;
     long netWorth = PlayerNetWorth(playerId);
-    for (int i = 1; i <= Players.Count; i++)
+    for (int i = 1; i <= TheGame.Players.Count; i++)
     {
         if (i != playerId)
         {
@@ -1235,7 +1212,7 @@ private Dictionary<int, int> PlayerRanks()
 
     Dictionary<int, long> rankvalues = new Dictionary<int, long>();
 
-    foreach (var p in Players)
+    foreach (var p in TheGame.Players)
     {
         // rubric for sorting
         rankvalues.Add(p.Key, PlayerNetWorth(p.Key) * (long)100000000 + PlayerStockWorth(p.Key) * 10 + p.Key);

@@ -34,6 +34,8 @@ namespace StarLanes
         public int mergerRatio = 2; // Old shares needed to equal one new share
         public long playerStartingMoney = 6000;
         public int dividendPercentage = 5;
+        public enum DividendPayStages { BeforeStockBuying = 0, BetweenRounds = 1 }
+        public DividendPayStages DividendPayStage = DividendPayStages.BetweenRounds;    
         public bool StockSplits = true;
         public int stockSplitPrice = 3000;
 

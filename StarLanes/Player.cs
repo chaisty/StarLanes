@@ -20,7 +20,10 @@ namespace StarLanes
         public Dictionary<int, int> StockShares { get; set; }
         public Personas Persona { get; set; } = Personas.Human;
         //private string[] PersonaName = new string[Enum.Getnames( Persona]
-        public int FinalRank { get; set; }
+        public long StockWorth { get; set; } = 0;
+        public int Rank { get; set; } = 0;
+        public long NetWorth { get { return StockWorth + Money; } }
+        public string IconPath { get; set; }
 
         public Player(string name, long money)
         {
@@ -68,5 +71,8 @@ namespace StarLanes
 
             }
         }
+
+
+
     }
 }
