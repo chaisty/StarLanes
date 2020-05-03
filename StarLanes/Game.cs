@@ -10,6 +10,8 @@ namespace StarLanes
 
         public Dictionary<int, Player> Players = new Dictionary<int, Player>();
         public Dictionary<int, Company> Companies = new Dictionary<int, Company>();
+        //Initialize Map object
+        public Map GalaxyMap = new Map(1, 1);
 
         public Game()
         {
@@ -43,6 +45,21 @@ namespace StarLanes
             }
 
             return ranking;
+        }
+
+        public long PlayerStockWorth(int playerid)
+        {
+            int stockvalue = 0;
+            foreach (Company c in Companies.Values)
+            {
+                stockvalue += c.StockHolderShares[playerid] * c.ShareValue;
+            }
+            return stockvalue;
+        }
+
+        public long PlayerNetWorth(int playerid)
+        {
+            return Players[playerid].Money + PlayerStockWorth(playerid);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<h2>The Game is over!</h2>
 
 <p>After @((GameConfig.NumberOfRounds <= GameStateObj.GameRound) ? GameConfig.NumberOfRounds : GameStateObj.GameRound) Round@((GameConfig.NumberOfRounds > 1) ? "s" : "")...</p>
-<h3>@(Players[GameStateObj.Winner].Name) is the winner!</h3>
+<h3>@(TheGame.Players[GameStateObj.Winner].Name) is the winner!</h3>
 <table class="table">
     <tr>
         <th>Rank</th>
@@ -10,14 +10,14 @@
         <th>Cash</th>
         <th>Net Worth</th>
     </tr>
-    @foreach (var p in Players.OrderBy(r => r.Value.Rank))
+    @foreach (var p in TheGame.Players.OrderBy(r => r.Value.Rank))
     {
         <tr class="@( (TheGame.PlayerRank(p.Key) == 1) ? "table-primary" : "" )" style="@((TheGame.PlayerRank(p.Key) == 1) ? "font-weight: 700" : "")">
             <th>@(TheGame.PlayerRank(p.Key))</th>
             <td>@(p.Value.Name) @((MarkupString)PlayerIcon(p.Key))</td>
-            <td>$@(Players[p.Key].StockWorth)</td>
-            <td>$@(Players[p.Key].Money)</td>
-            <td>$@(Players[p.Key].NetWorth)</td>
+            <td>$@(TheGame.PlayerStockWorth(p.Key))</td>
+            <td>$@(TheGame.Players[p.Key].Money)</td>
+            <td>$@(TheGame.PlayerNetWorth(p.Key))</td>
         </tr>
     }
 </table>
@@ -32,8 +32,6 @@
     [Parameter]
     public GameConfiguration GameConfig { get; set; }
 
-    [Parameter]
-    public Dictionary<int, Player> Players { get; set; }
 
     private string PlayerIcon(int Id)
     {
