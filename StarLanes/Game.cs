@@ -11,7 +11,7 @@ namespace StarLanes
         public Dictionary<int, Player> Players = new Dictionary<int, Player>();
         public Dictionary<int, Company> Companies = new Dictionary<int, Company>();
         //Initialize Map object
-        public Map GalaxyMap = new Map(1, 1);
+        public GalaxyMap Map = new GalaxyMap(1, 1);
 
         public Game()
         {
@@ -32,7 +32,7 @@ namespace StarLanes
             foreach (var p in Players)
             {
                 // rubric for sorting
-                rankvalues.Add(p.Key, Players[p.Key].NetWorth * (long)100000000 + Players[p.Key].StockWorth * 10 + p.Key);
+                rankvalues.Add(p.Key, PlayerNetWorth(p.Key) * (long)100000000 + PlayerStockWorth(p.Key) * 10 + p.Key);
             }
 
             var results = rankvalues.OrderByDescending(p => p.Value);

@@ -47,7 +47,7 @@
     public GameStateObject GameStateObj { get; set; }
 
     [Parameter]
-    public Map map { get; set; }
+    public GalaxyMap map { get; set; }
 
     [Parameter]
     public EventCallback<int> OnMoveClickCallback { get; set; }
@@ -68,15 +68,15 @@
     {
         switch (sectorValue)
         {
-            case Map.ConsumedSector:
+            case GalaxyMap.ConsumedSector:
                 return "map-sector-consumed";
-            case Map.EmptySector:
+            case GalaxyMap.EmptySector:
                 return "map-sector-empty";
-            case Map.DevelopedSector:
+            case GalaxyMap.DevelopedSector:
                 return "map-sector-developed";
-            case Map.StarSector:
+            case GalaxyMap.StarSector:
                 return "map-sector-star";
-            case Map.BlackholeSector:
+            case GalaxyMap.BlackholeSector:
                 return "map-sector-blackhole";
             case "1":
             case "2":

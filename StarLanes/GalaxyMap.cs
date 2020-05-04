@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace StarLanes
 {
-    public class Map
+    public class GalaxyMap
     {
         // Map Constants
         public const string MapTitle = "Map of the Galaxy";
@@ -18,12 +18,12 @@ namespace StarLanes
 
         // Constructors
 
-        public Map(int X_Dimension, int Y_Dimension)
+        public GalaxyMap(int X_Dimension, int Y_Dimension)
         {
             Sectors = new string[X_Dimension, Y_Dimension];
         }
 
-        public Map(Map mapToCopy)
+        public GalaxyMap(GalaxyMap mapToCopy)
         {
             Sectors = new string[mapToCopy.Sectors.GetUpperBound(0), mapToCopy.Sectors.GetUpperBound(1)];
             for (int x = 0; x <= mapToCopy.Sectors.GetUpperBound(0); x++)
@@ -129,7 +129,7 @@ namespace StarLanes
         {
             foreach (Move m in Moves.Values)
             {
-                Sectors[m.X, m.Y] = Map.EmptySector;
+                Sectors[m.X, m.Y] = GalaxyMap.EmptySector;
             }
         }
 
