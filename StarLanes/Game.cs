@@ -63,17 +63,17 @@ namespace StarLanes
 
         public Game GetClone()
         {
-            Game newGame = (Game)this.MemberwiseClone();    //Copy any values (note, as of 0.8.3 this doesn't copy anything we need)
+            Game newGame = new Game(); // (Game)this.MemberwiseClone();    //Copy any values (note, as of 0.8.3 this doesn't copy anything we need)
 
 //            foreach (var c in Companies)
 //            {
 //                Console.WriteLine(c.Key + ": " + c.Value.Name + ", " + c.Value.StockHolderShares.Count);
 //            }
             newGame.Companies = new Dictionary<int, Company>();
-            foreach (var c in Companies) { newGame.Companies.Add(c.Key, c.Value); }
+            foreach (var c in Companies) { newGame.Companies.Add(c.Key, c.Value.GetClone()); }
             newGame.Players = new Dictionary<int, Player>();
-            foreach (var p in Players) { newGame.Players.Add(p.Key, p.Value); }
-            newGame.Map = new GalaxyMap(Map);
+            foreach (var p in Players) { newGame.Players.Add(p.Key, p.Value.GetClone()); }
+            newGame.Map = GalaxyMap.GetClone(Map);
 
             return newGame;
         }
@@ -91,6 +91,16 @@ namespace StarLanes
         public long PlayerNetWorth(int playerid)
         {
             return Players[playerid].Money + PlayerStockWorth(playerid);
+        }
+
+        public int AvailableCompanySlot()
+        {
+            foreach (var item in Companies)
+            {
+                if (!item.Value.IsActive) return item.Key;
+            }
+
+            return 0;   // no available company slots
         }
     }
 }

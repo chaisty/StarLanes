@@ -4,17 +4,17 @@
     <div class="map-sectors">
         <div class="map-x-axis" style="clear: both;">
             <div class="map-sector">&nbsp;</div>
-            @for (int x = 0; x <= map.X_Dimension; x++)
+            @for (int x = 0; x <= map.X_UpperBound; x++)
             {
                 <div class="map-sector map-axis map-x-axis">@((char)(x + 65))</div>
             }
         </div>
 
-        @for (int y = 0; y <= map.Y_Dimension; y++)
+        @for (int y = 0; y <= map.Y_UpperBound; y++)
         {
             <div style="clear: both;">
                 <div class="map-sector map-axis map-y-axis" style="clear: none">@(y + 1)</div>
-                @for (int x = 0; x <= map.X_Dimension; x++)
+                @for (int x = 0; x <= map.X_UpperBound; x++)
                 {
                     string moveNumber = map[x, y];
                     @if ("123456789".Contains(map[x, y]))

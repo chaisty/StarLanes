@@ -36,6 +36,23 @@ namespace StarLanes
             }
         }
 
+        public static GalaxyMap GetClone(GalaxyMap mapToClone)
+        {
+            GalaxyMap newMap = new GalaxyMap(mapToClone.X_Dimension, mapToClone.Y_Dimension);
+
+            Console.WriteLine("OLD MAP DIM TO COPY IS: " + mapToClone.Sectors.GetUpperBound(0).ToString() + "," + mapToClone.Sectors.GetUpperBound(1).ToString());
+            Console.WriteLine("NEW MAP DIM IS: " + newMap.Sectors.GetUpperBound(0).ToString() + "," + newMap.Sectors.GetUpperBound(1).ToString());
+            for (int x = 0; x <= mapToClone.Sectors.GetUpperBound(0); x++)
+            {
+                for (int y = 0; y <= mapToClone.Sectors.GetUpperBound(1); y++)
+                {
+                    newMap.Sectors[x, y] = mapToClone.Sectors[x, y];
+                }
+            }
+
+            return newMap;
+        }
+
         public string this[int x, int y]
         {
             get => Sectors[x, y];
@@ -44,9 +61,13 @@ namespace StarLanes
 
         // Properties
 
-        public int X_Dimension => Sectors.GetUpperBound(0);
+        public int X_UpperBound => Sectors.GetUpperBound(0);
 
-        public int Y_Dimension => Sectors.GetUpperBound(1);
+        public int Y_UpperBound => Sectors.GetUpperBound(1);
+
+        public int X_Dimension => X_UpperBound + 1;
+
+        public int Y_Dimension => Y_UpperBound + 1;
 
         // Functions
 
@@ -61,10 +82,10 @@ namespace StarLanes
             if (x > 0)
                 neighbors[1] = Sectors[x - 1, y];
 
-            if (x < X_Dimension)
+            if (x < X_UpperBound)
                 neighbors[2] = Sectors[x + 1, y];
 
-            if (y < Y_Dimension)
+            if (y < Y_UpperBound)
                 neighbors[3] = Sectors[x, y + 1];
 
             return neighbors;
@@ -157,7 +178,7 @@ namespace StarLanes
         {
             for (int x = 0; x < MapString.Length; x++)
             {
-                if ((x + StartX) < X_Dimension)
+                if ((x + StartX) < X_UpperBound)
                     Sectors[x, Y] = MapString[x + StartX].ToString();
             }
         }
@@ -167,7 +188,7 @@ namespace StarLanes
         {
             for (int y = 0; y < MapStrings.GetUpperBound(0); y++)
             {
-                if ((y + StartY) < X_Dimension)
+                if ((y + StartY) < X_UpperBound)
                     StringToMapSection(MapStrings[y], StartX, StartY);
             }
         }
@@ -177,8 +198,8 @@ namespace StarLanes
         {
 
             // Copy the Map so we can overlay the Moves
-            string[,] Map2 = new string[X_Dimension + 1, Y_Dimension + 1];
-            Array.Copy(Sectors, 0, Map2, 0, X_Dimension * Y_Dimension);
+            string[,] Map2 = new string[X_UpperBound + 1, Y_UpperBound + 1];
+            Array.Copy(Sectors, 0, Map2, 0, X_UpperBound * Y_UpperBound);
 
             // Add Moves on Map
             if (showMoves && (AvailableMoves != null))

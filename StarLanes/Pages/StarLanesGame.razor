@@ -385,9 +385,9 @@
         GalaxyMap newMap = new GalaxyMap(GameConfig.X_dimension, GameConfig.Y_dimension);
 
         //Initialize Map with empty sectors
-        for (int y = 0; y <= newMap.Y_Dimension; y++)
+        for (int y = 0; y <= newMap.Y_UpperBound; y++)
         {
-            for (int x = 0; x <= newMap.X_Dimension; x++)
+            for (int x = 0; x <= newMap.X_UpperBound; x++)
             {
                 int sectortype = rand.Next(1, 100);
 
@@ -469,8 +469,8 @@
         }
     }
 
-    private int SelectComputerMove(Dictionary<int, Move>
-        moves, int playerId)
+    [Obsolete]
+    private int SelectComputerMove(Dictionary<int, Move> moves, int playerId)
     {
         switch (TheGame.Players[playerId].Persona)
         {
@@ -479,6 +479,12 @@
             default:
                 return rand.Next(1, GameStateObj.AvailableMoves.Count); ;   //random move;
         }
+    }
+
+    private int SelectComputerMove(Game game, Dictionary<int, Move> moves, int playerId)
+    {
+        //Simply take the highest rated move - no personality right now
+        return EvaluateMoves(moves, game, playerId);
     }
 
     private void EvaluateMove(Move move)
@@ -768,13 +774,34 @@ public int CalculateAdjacentSectorValue(string sectorstate)
     }
 }
 
+public int CalculateSharePrice(Company company, GalaxyMap map)
+{
+    int value = 0;
+
+    for (int x = 0; x <= map.X_UpperBound; x++)
+    {
+        for (int y = 0; y <= map.Y_UpperBound; y++)
+        {
+            if (map[x, y] == company.Symbol)    //if the company owns this sector
+            {
+                value += 100; // for the sector itself
+                string[] neighbors = map.GetNeighbors(x, y);
+                foreach (string s in neighbors)
+                { value += CalculateAdjacentSectorValue(s); }
+            }
+        }
+    }
+
+    return value - company.SplitOffset; // Value of sectors on Map minus prior stock split values
+}
+
 public int CalculateSharePrice(Company company)
 {
     int value = 0;
 
-    for (int x = 0; x <= TheGame.Map.X_Dimension; x++)
+    for (int x = 0; x <= TheGame.Map.X_UpperBound; x++)
     {
-        for (int y = 0; y <= TheGame.Map.Y_Dimension; y++)
+        for (int y = 0; y <= TheGame.Map.Y_UpperBound; y++)
         {
             if (TheGame.Map[x, y] == company.Symbol)    //if the company owns this sector
             {
@@ -850,42 +877,79 @@ public MoveOutcome DetermineMoveOutcome(int x, int y)
     }
 }
 
+
+// Prioritizes improving ranking
+public long EvaluateMoveA(Game game, Game testGame, int playerId)
+{
+    // Determine value of move
+    long value = (game.PlayerRank(playerId) - testGame.PlayerRank(playerId)) * 1000000000000000; // moving up in rank most value
+    if (testGame.PlayerRank(playerId) == 1)
+    {
+        // measure gap with 2nd place
+        value += 100 * (testGame.PlayerNetWorth(playerId) - testGame.PlayerNetWorth(testGame.PlayerRanked(2)));
+    }
+    else
+    {
+        // try and close gap with 1st place
+        value += 100 * (testGame.PlayerNetWorth(playerId) - testGame.PlayerNetWorth(testGame.PlayerRanked(1)));
+    }
+
+    return value;
+}
+
+// Prioritizes catching up to 1st place or increasing gap with 2nd place
+public long EvaluateMoveB(Game testGame, int playerId)
+{
+    long value = 0;
+    Dictionary<int, long> playerNetWorthDiffs = new Dictionary<int, long>();
+    foreach (var p in testGame.Players)
+    {
+        playerNetWorthDiffs.Add(p.Key, testGame.PlayerNetWorth(playerId) - testGame.PlayerNetWorth(p.Key));
+        //Console.Write("MOVE VAL: " + p.Key + " diff is " + playerNetWorthDiffs[p.Key].ToString());
+    }
+    //Console.WriteLine();
+    playerNetWorthDiffs = playerNetWorthDiffs.OrderBy(p => p.Value).ToDictionary(x => x.Key, x => x.Value);
+
+    int multiplier = 10;
+    foreach (var v in playerNetWorthDiffs)
+    {
+        if (v.Key != playerId)
+        {
+            value += (v.Value) * multiplier;
+            //Console.Write("MOVE VAL: " + v.Key + " diff is " + playerNetWorthDiffs[v.Key].ToString() ", ");
+            multiplier *= 10;
+        }
+    }
+    //Console.WriteLine();
+
+    return value;
+}
+
 public int EvaluateMoves(Dictionary<int, Move> moves, Game game, int playerId)
 {
-    SortedDictionary<double, int> moveValues = new SortedDictionary<double, int>();
+    SortedDictionary<long, int> moveValues = new SortedDictionary<long, int>();
 
     Console.WriteLine("Evaluate Moves");
     foreach (var m in moves)
     {
         Game testGame = game.GetClone();
 
-        Console.WriteLine("X=" + testGame.Map.X_Dimension.ToString() + ", Y=" + testGame.Map.Y_Dimension.ToString());
-        ExecuteMove(m.Value.X, m.Value.Y, testGame.Map);
+        ExecuteMove(m.Value.X, m.Value.Y, testGame);
 
         // Determine value of move
-        double value = (testGame.PlayerRank(playerId) - game.PlayerRank(playerId)) * 1000000000; // moving up in rank most value
-        if (testGame.PlayerRank(playerId) == 1)
-        {
-            // measure gap with 2nd place
-            value += testGame.PlayerNetWorth(playerId) - testGame.PlayerNetWorth(testGame.PlayerRanked(2));
-        }
-        else
-        {
-            // try and close gap with 1st place
-            value += testGame.PlayerNetWorth(testGame.PlayerRanked(1)) - testGame.PlayerNetWorth(playerId);
-        }
+        Console.Write("Move " + m.Value + ": Current Rank = " + game.PlayerRank(playerId).ToString() + ", New Rank = " + testGame.PlayerRank(playerId).ToString());
+        //long value = EvaluateMoveA(game, testGame, playerId);
+        long value = EvaluateMoveB(testGame, playerId);
 
         // Add insignificant random to chose between equal value moves
-        double random = 0.0;
+        int random = 0;
         do
         {
-            random = rand.NextDouble();
+            random = rand.Next(9);
         } while (moveValues.ContainsKey(value + random));
 
-        Console.WriteLine(m.Key + "=" + value.ToString());
+        //Console.WriteLine("Move " + m.Key + "=" + value.ToString());
         moveValues.Add(value + random, m.Key);
-
-
     }
 
     return moveValues.ElementAt(0).Value; /// return the move with the highest value
@@ -894,7 +958,220 @@ public int EvaluateMoves(Dictionary<int, Move> moves, Game game, int playerId)
 
 public MoveOutcome ExecuteMove(int x, int y, Game testGame)
 {
+    //Map newMap = new Map(theMap);
 
+    Console.Write("ExecuteMove(x,y,Game)");
+
+    // evalute nearby spaces to determine outcome of this move
+    MoveOutcome moveOutcome = MoveOutcome.DevelopSector; //default
+
+    //initialize adjacent locals
+    string[] neighbors = testGame.Map.GetNeighbors(x, y);
+    List<string> adjacentCompanies = testGame.Map.AdjacentCompanies(x, y);
+
+    // Develop Sector
+    testGame.Map[x, y] = GalaxyMap.DevelopedSector;
+
+    // Check for adjacent companies
+    if (adjacentCompanies.Count == 0)
+    {
+        // If it's all empty sectors nearby
+        if (String.Join("", neighbors) == new String('x', 4).Replace("x", GalaxyMap.EmptySector))
+        {
+            // Develop Sector
+            testGame.Map[x, y] = GalaxyMap.DevelopedSector;
+        }
+
+        // Check for creation of new company
+        if ((String.Join("", neighbors).Contains(GalaxyMap.StarSector)) || (String.Join("", neighbors).Contains(GalaxyMap.DevelopedSector)))
+        {
+            // Make a new company
+            moveOutcome = MoveOutcome.StartNewCompany;
+            int newCo = testGame.AvailableCompanySlot();
+
+            if (newCo == 0)
+            { } // ?? Shouldn't end up here, no more companies available! ADD CODE to handle this?
+
+            // Open up the new company
+            testGame.Companies[newCo].OpenCompany(GameStateObj.PlayerTurn, GameConfig.FounderShares);
+            testGame.Map[x, y] = testGame.Companies[newCo].Symbol;
+
+            // Expand into any adjacent developed sectors
+            if (neighbors[0] == GalaxyMap.DevelopedSector)
+                testGame.Map[x, y - 1] = testGame.Companies[newCo].Symbol;
+            if (neighbors[1] == GalaxyMap.DevelopedSector)
+                testGame.Map[x - 1, y] = testGame.Companies[newCo].Symbol;
+            if (neighbors[2] == GalaxyMap.DevelopedSector)
+                testGame.Map[x + 1, y] = testGame.Companies[newCo].Symbol;
+            if (neighbors[3] == GalaxyMap.DevelopedSector)
+                testGame.Map[x, y + 1] = testGame.Companies[newCo].Symbol;
+
+            //LogGameEvent("NEW COMPANY!", testGame.Players[GameStateObj.PlayerTurn].Name + " has founded a new company, " + testGame.Companies[newCo].Name + ".");
+        }
+    }
+    // Check for expansion of company
+    else if (adjacentCompanies.Count == 1)
+    {
+        //Expansion
+        moveOutcome = MoveOutcome.ExpandCompany;
+
+        // Expand into "move" sector
+        testGame.Map[x, y] = adjacentCompanies[0];
+
+        // Expand into any developed adjacent sectors
+        if (neighbors[0] == GalaxyMap.DevelopedSector)
+            testGame.Map[x, y - 1] = adjacentCompanies[0];
+        if (neighbors[1] == GalaxyMap.DevelopedSector)
+            testGame.Map[x - 1, y] = adjacentCompanies[0];
+        if (neighbors[2] == GalaxyMap.DevelopedSector)
+            testGame.Map[x + 1, y] = adjacentCompanies[0];
+        if (neighbors[3] == GalaxyMap.DevelopedSector)
+            testGame.Map[x, y + 1] = adjacentCompanies[0];
+    }
+    // Check for Merger
+    else if (adjacentCompanies.Count > 1)
+    {
+        //Merger!
+        moveOutcome = MoveOutcome.Merger;
+
+        //Sort companies by alpabetical
+        adjacentCompanies.Sort();
+
+        string foo = String.Empty;
+
+        // Add the symbol and the size to a dictionary to iterate
+        Dictionary<string, int>
+            coS = new Dictionary<string, int>
+                ();
+        foreach (string s in adjacentCompanies)
+        {
+            coS.Add(s, CompanySize(testGame.Companies[Company.KeyFromSymbol(s)]));
+            foo += s + "=" + coS[s] + ", ";
+        }
+
+        string survivor = string.Empty;
+
+        // Merge largest and smallest companies, until we're down to just one company
+        do
+        {
+            int winner = 0;
+            for (int i = 1; i < coS.Count; i++)
+            {
+                if (coS.ElementAt(i).Value > coS.ElementAt(winner).Value)
+                    winner = i;
+            }
+
+            survivor = coS.ElementAt(winner).Key;
+
+            int loser = coS.Count - 1;
+            for (int i = coS.Count - 2; i >= 0; i--)
+            {
+                if (coS.ElementAt(i).Value < coS.ElementAt(loser).Value)
+                    loser = i;
+            }
+
+            // merge winner and loser
+            MergeCompanies(testGame.Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)], testGame.Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)]);
+
+            string winnerName = testGame.Companies[Company.KeyFromSymbol(coS.ElementAt(winner).Key)].Name;
+            string loserName = testGame.Companies[Company.KeyFromSymbol(coS.ElementAt(loser).Key)].Name;
+            //LogGameEvent("MERGER!!!!!", $"{winnerName} and {loserName} have merged! The unified company will now be known as {winnerName}.");
+
+            //remove loser
+            coS.Remove(coS.ElementAt(loser).Key);
+        } while (coS.Count > 1);
+
+        // Update the newly developed sector that created the merger
+        testGame.Map[x, y] = survivor;
+
+        //StateHasChanged();
+    }
+
+    //Check for black hole(s), that could wipe out any newly merged or expanded companies!
+    if ((GameConfig.BlackholeDestroys) && (GameConfig.BlackholeChance > 0))
+    {
+        for (int x_loop = 0; x_loop <= testGame.Map.X_UpperBound; x_loop++)
+        {
+            for (int y_loop = 0; y_loop <= testGame.Map.Y_UpperBound; y_loop++)
+            {
+                if (testGame.Map[x_loop, y_loop] == GalaxyMap.BlackholeSector)
+                {
+                    //Wipe out companies that touched the blackhole!
+                    adjacentCompanies = testGame.Map.AdjacentCompanies(x_loop, y_loop);
+                    if (adjacentCompanies.Count > 0)
+                    {
+                        foreach (string c in adjacentCompanies)
+                        {
+                            testGame.Map.ReplaceSymbolOnMap(testGame.Companies[Company.KeyFromSymbol(c)].Symbol, GalaxyMap.EmptySector);
+                            testGame.Companies[Company.KeyFromSymbol(c)].CloseCompany();
+
+                            //LogGameEvent("DISASTER!", testGame.Companies[Company.KeyFromSymbol(c)].Name + " sucked into black hole at Sector " + Move.ToString(x_loop, y_loop));
+                        }
+                    }
+
+                    //Randomly destroy developed sectors next to blackholes
+                    string[] blackholeNeighbors = testGame.Map.GetNeighbors(x_loop, y_loop);
+                    for (int n = 0; n < blackholeNeighbors.GetUpperBound(0); n++)
+                    {
+                        if (blackholeNeighbors[n] == GalaxyMap.DevelopedSector)
+                        {
+                            if (rand.Next(1, 100) <= GameConfig.BlackholeConsumptionChance)
+                            {
+                                // Destroy the sector
+                                int x_destroyed = x_loop;
+                                int y_destroyed = y_loop;
+                                if (n == 0) { y_destroyed = y_loop - 1; }
+                                if (n == 1) { x_destroyed = x_loop - 1; }
+                                if (n == 2) { x_destroyed = x_loop + 1; }
+                                if (n == 3) { y_destroyed = y_loop + 1; }
+
+
+                                // The sector just developed on this turn cannot be destroyed on the same turn
+                                if ((x != x_destroyed) && (y != y_destroyed))
+                                {
+                                    testGame.Map[x_destroyed, y_destroyed] = GalaxyMap.ConsumedSector;
+                                    //LogGameEvent("Sector " + Move.ToString(x_destroyed, y_destroyed) + " consumed by black hole!");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    // Calculate the final share prices
+    foreach (Company company in testGame.Companies.Values)
+    {
+        if (company.IsActive)
+        {
+            company.ShareValue = CalculateSharePrice(company, testGame.Map);
+
+            // Check for bankruptcy
+            if (company.ShareValue <= 0)    // for games that use blackholes as negative values on stock price
+            {
+                company.CloseCompany();
+                //LogGameEvent("BANKRUPCTY!", company.Name + " has gone bankrupt and is out of business.");
+            }
+
+            // Check for stock split
+            if (GameConfig.StockSplits)
+            {
+                while (company.ShareValue >= GameConfig.StockSplitPrice)
+                {
+                    company.SplitStock(GameConfig.StockSplitPrice);
+                    //LogGameEvent("Stock Split!", company.Name + " has split 2-for-1.");
+                }
+            }
+        }
+    }
+
+
+    //Force redraw of maps
+    //StateHasChanged();
+
+    return moveOutcome;
 }
 
 public MoveOutcome ExecuteMove(int x, int y, GalaxyMap theMap)
@@ -927,7 +1204,7 @@ public MoveOutcome ExecuteMove(int x, int y, GalaxyMap theMap)
         {
             // Make a new company
             moveOutcome = MoveOutcome.StartNewCompany;
-            int newCo = AvailableCompanySlot();
+            int newCo = TheGame.AvailableCompanySlot();
 
             if (newCo == 0)
             { } // ?? Shouldn't end up here, no more companies available! ADD CODE to handle this?
@@ -1030,9 +1307,9 @@ public MoveOutcome ExecuteMove(int x, int y, GalaxyMap theMap)
     //Check for black hole(s), that could wipe out any newly merged or expanded companies!
     if ((GameConfig.BlackholeDestroys) && (GameConfig.BlackholeChance > 0))
     {
-        for (int x_loop = 0; x_loop <= theMap.X_Dimension; x_loop++)
+        for (int x_loop = 0; x_loop <= theMap.X_UpperBound; x_loop++)
         {
-            for (int y_loop = 0; y_loop <= theMap.Y_Dimension; y_loop++)
+            for (int y_loop = 0; y_loop <= theMap.Y_UpperBound; y_loop++)
             {
                 if (theMap[x_loop, y_loop] == GalaxyMap.BlackholeSector)
                 {
@@ -1130,15 +1407,6 @@ public void MergeCompanies(Company winner, Company loser)
     loser.CloseCompany();
 }
 
-public int AvailableCompanySlot()
-{
-    foreach (var item in TheGame.Companies)
-    {
-        if (!item.Value.IsActive) return item.Key;
-    }
-
-    return 0;   // no available company slots
-}
 
 private string EventsText()
 {
