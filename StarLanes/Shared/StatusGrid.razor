@@ -1,0 +1,49 @@
+﻿<div>
+    <table>
+        <tr>
+            <td></td>
+            @foreach (Player p in TheGame.Players.Values)
+            {
+                <td>@p.Name</td>
+            }
+        </tr>
+        <tr>
+            <td>Bank</td>
+            @foreach (var p in TheGame.Players)
+            {
+                <td>$@p.Value.Money</td>
+            }
+        </tr>
+        <tr>
+            <td>Net Worth</td>
+            @foreach (var p in TheGame.Players)
+            {
+                <td>$@TheGame.PlayerNetWorth(p.Key)</td>
+            }
+            <td>Share Price</td>
+            <td>Shares</td>
+            <td>Sectors</td>
+        </tr>
+        @foreach (Company c in TheGame.Companies.Values)
+        {
+            @if (c.IsActive)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    @foreach (var p in TheGame.Players)
+                    {
+                        <td>@c.StockHolderShares[p.Key]</td>
+                    }
+                    <td>@c.ShareValue</td>
+                    <td>@c.OutstandingShares()</td>
+                    <td>@TheGame.Map.NumberOfSymbolsOnMap(c.Symbol)</td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public Game TheGame { get; set; }
+}

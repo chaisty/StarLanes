@@ -47,6 +47,37 @@ namespace StarLanes
             return ranking;
         }
 
+        public int PlayerRanked(int rank)
+        {
+            //returns playerId of player at specific rank
+            Dictionary<int, int> playerRanks = PlayerRanks();
+
+            foreach (var i in playerRanks)
+            {
+                if (i.Value == rank)
+                    return i.Key;
+            }
+
+            return 0;
+        }
+
+        public Game GetClone()
+        {
+            Game newGame = (Game)this.MemberwiseClone();    //Copy any values (note, as of 0.8.3 this doesn't copy anything we need)
+
+//            foreach (var c in Companies)
+//            {
+//                Console.WriteLine(c.Key + ": " + c.Value.Name + ", " + c.Value.StockHolderShares.Count);
+//            }
+            newGame.Companies = new Dictionary<int, Company>();
+            foreach (var c in Companies) { newGame.Companies.Add(c.Key, c.Value); }
+            newGame.Players = new Dictionary<int, Player>();
+            foreach (var p in Players) { newGame.Players.Add(p.Key, p.Value); }
+            newGame.Map = new GalaxyMap(Map);
+
+            return newGame;
+        }
+
         public long PlayerStockWorth(int playerid)
         {
             int stockvalue = 0;

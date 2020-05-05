@@ -25,6 +25,7 @@ namespace StarLanes
 
         public GalaxyMap(GalaxyMap mapToCopy)
         {
+            Console.WriteLine("MAP SIZE TO COPY IS: " + mapToCopy.Sectors.GetUpperBound(0).ToString() + "," + mapToCopy.Sectors.GetUpperBound(1).ToString());
             Sectors = new string[mapToCopy.Sectors.GetUpperBound(0), mapToCopy.Sectors.GetUpperBound(1)];
             for (int x = 0; x <= mapToCopy.Sectors.GetUpperBound(0); x++)
             {

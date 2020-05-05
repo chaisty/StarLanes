@@ -1,0 +1,29 @@
+﻿<div class="company-status-panel">
+
+    @* Leftmost box is column names *@
+    <div class="company-status-key">
+        <div class="company-status-box-name">
+            Company:
+        </div>
+        <div class="company-status-box-sharevalue">
+            Share Value($):
+        </div>
+        <div class="company-status-box-sharesoutstanding">
+            Outstanding Shares:
+        </div>
+        <div class="player-status-box-size">
+            # of Sectors:
+        </div>
+    </div>
+    @*
+    @foreach (var c in TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value))
+    {
+        <CompanyStatus company=@c.Value CompanySize=@CompanySize(c.Value) />
+    }
+        *@
+</div>
+
+@code {
+    [Parameter]
+    public Dictionary<int,Company> Companies { get; set; }
+    }

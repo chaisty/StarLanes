@@ -36,6 +36,13 @@ namespace StarLanes
             Persona = persona;
         }
 
+        public Player GetClone()
+        {
+            Player newPlayer = (Player)this.MemberwiseClone();
+
+            return newPlayer;
+        }
+
         public bool IsHuman => (Persona == Personas.Human);
 
         public bool IsComputer => (!IsHuman);
