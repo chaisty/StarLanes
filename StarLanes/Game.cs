@@ -12,6 +12,7 @@ namespace StarLanes
         public Dictionary<int, Company> Companies = new Dictionary<int, Company>();
         //Initialize Map object
         public GalaxyMap Map = new GalaxyMap(1, 1);
+        public Queue<GameEvent> Events = new Queue<GameEvent>();
 
         public Game()
         {
@@ -101,6 +102,34 @@ namespace StarLanes
             }
 
             return 0;   // no available company slots
+        }
+
+        public string EventsText(int currentRound, int currentTurn)
+        {
+ 
+            //List events in reverse chronological order
+            string eventString = String.Empty;
+            for (int i = Events.Count - 1; i >= 0; i--)
+            {
+                GameEvent currentEvent = Events.ElementAt(i);
+                bool isCurrentTurn = ((currentEvent.Round == currentRound) && (currentEvent.Turn == currentTurn));
+                eventString += (isCurrentTurn ? "<b>" : "") + (String.IsNullOrEmpty(currentEvent.Header) ? "" : currentEvent.Header + " ") + currentEvent.Message + (isCurrentTurn ? "</b>" : "") + "<br />";
+            }
+            return eventString;
+            //return String.Join("<br />", Events.ToArray().Reverse());
+        }
+
+        public GameEvent LogGameEvent(int round, int turn, string header, string message)
+        {
+            GameEvent newEvent = new GameEvent(round, turn, header, message);
+            return newEvent;
+        }
+
+        public void LogGameEvent(GameEvent newEvent)
+        {
+            if (Events.Count >= 10)
+                Events.Dequeue();
+            Events.Enqueue(newEvent);
         }
     }
 }
