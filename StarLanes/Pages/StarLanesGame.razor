@@ -203,8 +203,9 @@
             <CompanyStatus company=@c.Value CompanySize=@TheGame.CompanySize(c.Value) />
         }
     </div>
-
+    @*
     <StatusGrid TheGame="@TheGame" />
+        *@
 }
 
 @if (GameConfig.GameState == GameConfiguration.GameStates.GameEnding)
@@ -953,7 +954,7 @@ public MoveOutcome ExecuteMove(int x, int y, Game testGame, bool simulation)
     // Check for adjacent companies
     if (adjacentCompanies.Count == 0)
     {
-        Console.WriteLine("x=" + x.ToString() + ", y=" + y.ToString() + " > " + String.Join("|", neighbors));
+        //Console.WriteLine("x=" + x.ToString() + ", y=" + y.ToString() + " > " + String.Join("|", neighbors));
 
         // If it's all empty sectors nearby
         if (String.Join("", neighbors) == new String('x', 4).Replace("x", GalaxyMap.EmptySector))

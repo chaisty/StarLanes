@@ -132,6 +132,7 @@ namespace StarLanes
         public GameEvent LogGameEvent(int round, int turn, string header, string message)
         {
             GameEvent newEvent = new GameEvent(round, turn, header, message);
+            LogGameEvent(newEvent);
             return newEvent;
         }
 
