@@ -104,6 +104,16 @@ namespace StarLanes
             return 0;   // no available company slots
         }
 
+        public int ExistingCompanies()
+        {
+            return Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count;
+        }
+
+        public int CompanySize(Company company)
+        {
+            return Map.NumberOfSymbolsOnMap(company.Symbol);
+        }
+
         public string EventsText(int currentRound, int currentTurn)
         {
  

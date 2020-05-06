@@ -58,7 +58,10 @@ namespace StarLanes
 
         public Company GetClone()
         {
-            Company newCompany = (Company)this.MemberwiseClone();
+            Company newCompany = new Company(Name, Symbol, StockHolderShares.Count); // (Company)this.MemberwiseClone();
+            newCompany.ShareValue = ShareValue;
+            newCompany.SplitOffset = SplitOffset;
+            newCompany.IsActive = IsActive;
             for (int p = 1; p <= StockHolderShares.Count; p++)
             {
                 newCompany.StockHolderShares[p] = StockHolderShares[p];
