@@ -1059,7 +1059,7 @@ public MoveOutcome ExecuteMove(int x, int y, Game testGame, bool simulation)
             testGame.LogGameEvent(GameStateObj.GameRound, GameStateObj.PlayerTurn, "MERGER!!!!!", $"{winnerName} and {loserName} have merged! The unified company will now be known as {winnerName}.");
 
             //remove loser
-            coS.Remove(coS.ElementAt(loser).Key);
+            coS.Remove(coS.ElementAt(loserIndex).Key);
         } while (coS.Count > 1);
 
         // Update the newly developed sector that created the merger
