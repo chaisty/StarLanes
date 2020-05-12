@@ -1,49 +1,160 @@
-﻿<div>
-    <table>
-        <tr>
-            <td></td>
-            @foreach (Player p in TheGame.Players.Values)
+﻿<div class="table-container status-grid flex-row align-items-start">
+    <div class="flex-row clearfix">
+        <div class="flex-column status-grid-data-header-column flex-column">
+            <div class="status-grid-data-header-spacer">&nbsp;</div>
+            <div class="status-grid-data-player-row-header">Bank:</div>
+            <div class="status-grid-data-player-row-header">Stock:</div>
+            <div class="status-grid-data-player-row-header">Net Worth:</div>
+            @*
+            @foreach (Company c in TheGame.Companies.Values)
             {
-                <td>@p.Name</td>
+                @if (c.IsActive)
+                {
+                    <div class="status-grid-data-company-row-header">@c.Name</div>
+                }
             }
-        </tr>
-        <tr>
-            <td>Bank</td>
-            @foreach (var p in TheGame.Players)
-            {
-                <td>$@p.Value.Money</td>
-            }
-        </tr>
-        <tr>
-            <td>Net Worth</td>
-            @foreach (var p in TheGame.Players)
-            {
-                <td>$@TheGame.PlayerNetWorth(p.Key)</td>
-            }
-            <td>Share Price</td>
-            <td>Shares</td>
-            <td>Sectors</td>
-        </tr>
-        @foreach (Company c in TheGame.Companies.Values)
+                *@
+        </div>
+        @foreach (var p in TheGame.Players)
         {
-            @if (c.IsActive)
-            {
-                <tr>
-                    <td>@c.Name</td>
-                    @foreach (var p in TheGame.Players)
+            <div class="flex-column status-grid-player-panel">
+                <div class="status-grid-player-box @(GameStateObj.PlayerTurn == p.Key ? "status-grid-player-box-active" : "") flex-column ">
+                    <div class="status-grid-player-name-panel">
+
+                        <div class="status-grid-player-name">@(p.Value.Name)</div>
+                        <div class="status-grid-player-icon">@((MarkupString)PlayerIcon(p.Key))</div>
+                    </div>
+                    <div class="status-grid-data-cell">@p.Value.Money.ToString("C0")</div>
+                    <div class="status-grid-data-cell">@TheGame.PlayerStockWorth(p.Key).ToString("C0")</div>
+                    <div style="display:flex; flex-direction:row; justify-content:space-between;">
+                        <div class="medal rank-@(TheGame.PlayerRank(p.Key))">@(TheGame.PlayerRank(p.Key))<sup>@(PlaceSuffix(TheGame.PlayerRank(p.Key)))</sup></div>
+                        <div class="status-grid-data-cell">@TheGame.PlayerNetWorth(p.Key).ToString("C0")</div>
+                    </div>
+
+                </div>
+
+                @*
+                <div class="status-grid-stock-box flex-column">
+                    @foreach (Company c in TheGame.Companies.Values)
                     {
-                        <td>@c.StockHolderShares[p.Key]</td>
+                        @if (c.IsActive)
+                        {
+                            <div class="status-grid-data-cell">@c.StockHolderShares[p.Key]</div>
+                        }
                     }
-                    <td>@c.ShareValue</td>
-                    <td>@c.OutstandingShares()</td>
-                    <td>@TheGame.Map.NumberOfSymbolsOnMap(c.Symbol)</td>
-                </tr>
-            }
+                </div>
+                    *@
+            </div>
         }
-    </table>
-</div>
+        @*
+        <div class="flex-column status-grid-company-attribute-panel">
+            <div class="status-grid-company-attribute-box">
+                <div class="status-grid-data-cell" style="margin-bottom: 2px;">&nbsp;</div>
+                <div class="status-grid-data-cell">&nbsp;</div>
+                <div class="status-grid-data-cell">&nbsp;</div>
+                <div class="status-grid-company-attribute-name">Value</div>
+            </div>
+            <div class="status-grid-stock-box flex-column">
+                @foreach (Company c in TheGame.Companies.Values)
+                {
+                    @if (c.IsActive)
+                    {
+                        <div class="status-grid-data-cell">@c.ShareValue.ToString("C0")</div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="flex-column status-grid-company-attribute-panel">
+            <div class="status-grid-company-attribute-box">
+                <div class="status-grid-data-cell" style="margin-bottom: 2px;">&nbsp;</div>
+                <div class="status-grid-data-cell">&nbsp;</div>
+                <div class="status-grid-data-cell">&nbsp;</div>
+                <div class="status-grid-company-attribute-name">Shares</div>
+            </div>
+            <div class="status-grid-company-attribute-box flex-column">
+                @foreach (Company c in TheGame.Companies.Values)
+                {
+                    @if (c.IsActive)
+                    {
+                        <div class="status-grid-data-cell">@c.OutstandingShares()</div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="flex-column status-grid-company-attribute-panel">
+            <div class="status-grid-company-attribute-box">
+                <div class="status-grid-data-cell" style="margin-bottom: 2px;">&nbsp;</div>
+                <div class="status-grid-data-cell">&nbsp;</div>
+                <div class="status-grid-data-cell">&nbsp;</div>
+                <div class="status-grid-company-attribute-name">Sectors</div>
+            </div>
+            <div class="status-grid-company-attribute-box flex-column">
+                @foreach (Company c in TheGame.Companies.Values)
+                {
+                    @if (c.IsActive)
+                    {
+                        <div class="status-grid-data-cell">@TheGame.CompanySize(c)</div>
+                    }
+                }
+            </div>
+        </div>
+            *@
+
+    </div>
+    @*
+    <div class="flex-row clearfix">
+        <div class="flex-column status-grid-data-header-column status-grid-data-company-header-column">
+            <div class="status-grid-data-header-spacer">&nbsp;</div>
+            @foreach (Company c in TheGame.Companies.Values)
+            {
+                @if (c.IsActive)
+                {
+                    <div class="status-grid-data-header">@c.Name</div>
+                }
+            }
+        </div>
+
+
+        @foreach (var c in TheGame.Companies)
+        {
+            <div class="status-grid-stocklisting-panel flex-column ">
+                @foreach (var p in TheGame.Players)
+                {
+                    <div class="status-grid-data-cell">@c.Value.StockHolderShares[p.Key]</div>
+                }
+            </div>
+        }
+    </div>
+        *@
+                        </div>
 
 @code {
     [Parameter]
     public Game TheGame { get; set; }
+
+    [Parameter]
+    public GameStateObject GameStateObj { get; set; }
+
+    private const string RobotIconPath = "css/font-awesome/robot.svg";
+    private string PlayerIcon(int Id)
+    {
+        if (TheGame.Players[Id].IsComputer)
+            return "<img src=" + (char)34 + RobotIconPath + (char)34 + " width=" + (char)34 + "16" + (char)34 + " height=" + (char)34 + "16" + (char)34 + " alt=" + (char)34 + "C" + (char)34 + " />";
+        else
+            return "";
+    }
+
+    private string PlaceSuffix(int rank)
+    {
+        if (rank == 1)
+            return "st";
+        else if (rank == 2)
+            return "nd";
+        else if (rank == 3)
+            return "rd";
+        else
+            return "th";
+    }
 }
+
+

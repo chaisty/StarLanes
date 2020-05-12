@@ -2,15 +2,29 @@
 
 <h1>Welcome to Star Lanes!</h1>
 
-<div class="foo">
+<div class="main-page">
     <p>THE GAME OF INTERSTELLAR TRADING</p>
     <p>
-        STAR LANES is a game of interstellar trading.<br/>
-        The object of the game is to amass the greatest amount<br/>
-        of money. This is accomplished by establishing vast,<br/>
-        interstellar shipping lanes, and purchasing stock in<br/>
-        the companies that control those trade routes.<br/>
+        STAR LANES is a game of interstellar trading.<br />
+        The object of the game is to amass the greatest amount<br />
+        of money. This is accomplished by establishing vast,<br />
+        interstellar shipping lanes, and purchasing stock in<br />
+        the companies that control those trade routes.<br />
     </p>
-    <p>Version @(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())</p>
+
+    <p>WebAssembly Version @(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())</p>
+@*
+    <button type="button" class="btn btn-primary"
+            onclick="exampleJsFunctions.returnArrayAsyncJs()">
+        Trigger .NET static method ReturnArrayAsync
+    </button>
+*@
 </div>
+
+
+@code {
+
+    }
+
+
 

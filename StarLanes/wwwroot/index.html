@@ -1,4 +1,29 @@
 ﻿<!DOCTYPE html>
+
+<script language="javascript">
+    window.addEventListener("beforeunload", function (e) {
+        var confirmationMessage = 'It looks like you have been editing something. '
+            + 'If you leave before saving, your changes will be lost.';
+
+        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    });
+</script>
+
+<script>
+    function switchCSS() {
+        if (document.getElementById('kaypro-theme').disabled) {
+            document.getElementById('theme').disabled = true;
+            document.getElementById('kaypro-theme').disabled = false;
+        }
+        else {
+            document.getElementById('kaypro-theme').disabled = true;   
+            document.getElementById('theme').disabled = false;
+         }
+        return;
+    };
+</script>
+
 <html>
 
 <head>
@@ -6,8 +31,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>StarLanes</title>
     <base href="/" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" id="theme"/>
+    <link href="css/kaypro.css" rel="stylesheet" id="kaypro-theme" disabled="true"/> 
 </head>
 
 <body>

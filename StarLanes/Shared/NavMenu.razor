@@ -1,23 +1,33 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject IJSRuntime JSRuntime;
+
+<div class="top-row pl-4 navbar navbar-dark pr-4" id="topnavbar">
     <a class="navbar-brand" href="">StarLanes</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
-</div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="StarLanesGame">
-                <span class="oi oi-plus" aria-hidden="true"></span> Star Lanes
-            </NavLink>
-        </li>
-    </ul>
+    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+        <ul class="nav">
+            @*
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                    </NavLink>
+                </li>
+            *@
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="StarLanesGame">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Play Star Lanes
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <button id="switchCSS" @onclick="DoSwitchCSS">
+                    Toggle Style
+                </button>
+
+            </li>
+        </ul>
+    </div>
 </div>
 
 @code {
@@ -28,5 +38,13 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private string result;
+
+    public async void DoSwitchCSS()
+    {
+        result = await JSRuntime.InvokeAsync<string>("switchCSS");
+        //StateHasChanged();
     }
 }

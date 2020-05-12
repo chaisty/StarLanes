@@ -1,23 +1,44 @@
-﻿<div class="company-status-box">
-    <div class="company-status-box-name">
-        @(company.Name)
+﻿<div class="table-container company-status-grid">
+
+    @* Header for the display of company values and stock ownership*@
+    <div class="company-status-grid-row-header clearfix">
+        <div class="company-status-grid-attribute-company-name">Company</div>
+        <div class="company-status-grid-attribute-name">Value</div>
+        <div class="company-status-grid-attribute-name">Shares</div>
+        <div class="company-status-grid-attribute-name">Sectors</div>
+        @foreach (Player p in TheGame.Players.Values)
+        {
+            <div class="company-status-grid-attribute-name">@p.Name</div>
+        }
     </div>
-    <div class="company-status-box-sharevalue">
-        @(company.ShareValue.ToString())
-    </div>
-    <div class="company-status-box-sharesoutstanding">
-        @(company.OutstandingShares())
-    </div>
-    <div class="company-status-box-size">
-        @(CompanySize)
-    </div>
+
+    @* Display each company *@
+    @foreach (Company c in TheGame.Companies.Values)
+    {
+        <div class="company-status-grid-row flex-row clearfix">
+
+            @if (c.IsActive)
+            {
+                <div class="company-status-grid-company-name">@c.Name</div>
+                <div class="company-status-grid-data-cell-value">@c.ShareValue.ToString("C0")</div>
+                <div class="company-status-grid-data-cell">@c.OutstandingShares()</div>
+                <div class="company-status-grid-data-cell">@TheGame.CompanySize(c)</div>
+                @foreach (var p in TheGame.Players)
+                {
+                    <div class="company-status-grid-data-cell @(GameStateObj.PlayerTurn == p.Key ? "status-grid-data-cell-active" : "")">@c.StockHolderShares[p.Key]</div>
+                }
+            }
+
+        </div>
+    }
 </div>
 
 @code {
     [Parameter]
-    public Company company { get; set; }
+    public Game TheGame { get; set; }
 
     [Parameter]
-    public int CompanySize { get; set; }
-
+    public GameStateObject GameStateObj { get; set; }
 }
+
+

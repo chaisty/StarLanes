@@ -2,9 +2,23 @@
     color: green;
 }
 
+.game {
+    font-size: 0.9rem
+}
+
+.game-title {
+    height: auto;
+    margin-right: 50px;
+}
+
+.game-header-panel {
+    display: flex;
+    justify-content:flex-start;
+}
+
 .header-round {
     font-weight: 800;
-    font-size: large;
+    font-size: 125%
 }
 
 @keyframes last-move-highlight {
@@ -66,10 +80,16 @@
     padding: 2px 16px;
 }
 
+.panel-map-and-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .player-actions {
     border: none;
     border-width: 1px;
-    height: 400px;
+    height: auto;
     width: 400px;
     align-content: center;
     float: left;
@@ -84,7 +104,6 @@
 }
 
 .player-actions-buysellstock {
-    font-size: medium;
     width: 100%
 }
 
@@ -105,7 +124,9 @@
 }
 
 .map-panel {
-    width: 600px;
+    display: flex;
+    flex-direction: column;
+    min-width: 187.5px;
     align-content: center;
     text-align: center;
     height: auto;
@@ -130,20 +151,17 @@
     font-weight: 700;
 }
 
-.map-sectors {
-    display: normal;
-    align-self: center;
-    text-align: center;
-    height: auto;
-    width: auto;
+.map-row {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
 }
 
 .map-sector {
-    width: 30px;
-    padding: 0px 9px;
-    font-size: medium;
-    float: left;
-    clear: none;
+    width: 1.75em; /* 30px; */
+    padding: 0px 0px 0px 0px;
+ /*   float: left; */
+/*    clear: none; */
 }
 
 .map-sector-blackhole {
@@ -210,6 +228,30 @@
     height: 100%
 }
 
+.stock-buying-company-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: left;
+    align-content: center;
+}
+
+.stock-buying-company-name {
+    width: 10em;
+    margin: 3px 0px 0px 0px;
+}
+
+.stock-buying-controls {
+    width: auto;
+}
+
+.stock-buying-share-value {
+    width: 6em;
+    text-align:right;
+    vertical-align: middle;
+    margin: unset;
+}
+
 .player-status-box {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border: outset;
@@ -219,7 +261,6 @@
     max-height: 225px;
     width: 200px;
     float: left;
-    font-family: Courier New, Courier, monospace;
     position: relative;
 }
 
@@ -252,6 +293,59 @@
     float: none;
 }
 
+.company-status-grid {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+}
+
+.company-status-grid-row-header
+{
+    display: flex;
+    justify-content: flex-start;
+    font-weight: 700;
+    width: auto;
+}
+
+.company-status-grid-row {
+    display: flex;
+    justify-content: flex-start;
+    width: auto;
+}
+
+.company-status-grid-company-name {
+    font-weight: 700;
+    text-align: left;
+    width: 11em;
+}
+
+.company-status-grid-attribute-company-name {
+    width: 11em;
+    text-align: left;
+    border-bottom: solid 1px black;
+}
+
+.company-status-grid-attribute-name {
+    width: 8em;
+    text-align: center;
+    border-bottom: solid 1px black;
+}
+
+.company-status-grid-data-cell-value {
+    width: 8em;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0px 1em;
+}
+
+.company-status-grid-data-cell {
+    width: 8em;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0px 2em;
+}
+
+
 .company-status-key {
     border: thin;
     border-width: 2px;
@@ -259,7 +353,6 @@
     width: 180px;
     padding: 10px 2px;
     float: left;
-    font-family: Courier New, Courier, monospace;
     font-size: smaller;
 }
 
@@ -270,7 +363,6 @@
     height: 125px;
     width: 100px;
     float: left;
-    font-family: Courier New, Courier, monospace;
     font-size: smaller;
 }
 
@@ -287,4 +379,157 @@
 }
 
 .player-status-box-size {
+}
+
+.status-grid {
+    flex-direction: row;
+}
+
+.status-grid-header {
+    font-weight: 700;
+    border-bottom-style: dashed;
+    border-bottom-width: 2px;
+    text-align: center;
+
+}
+
+.status-grid-data-header {
+    text-align: left;
+    font-weight: 700;
+}
+
+.status-grid-data-header-column {
+    width: 10em;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    float: left;
+    border-width: 2px;
+    padding: 4px 2px;
+}
+
+.status-grid-data-player-row-header {
+    font-weight: 700;
+}
+
+.status-grid-data-company-row-header {
+
+}
+
+.status-grid-data-header-spacer {
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(0,0,0,0);
+    border-bottom-style: dashed;
+}
+
+.status-grid-player-panel {
+    width: 175px;
+    float: left;
+}
+
+.status-grid-company-attribute-panel {
+    width: 90px;
+    float: left;
+}
+.status-grid-company-attribute-box {
+    width: 100%;
+    float: left;
+/*    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.0);
+    border: outset; */
+    border-width: 2px;
+    border-color: rgba(0,0,0,0);
+    margin: 4px;
+}
+
+.status-grid-player-box {
+    width: 100%;
+    float: left;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    border: outset;
+    border-width: 2px;
+    padding: 2px 8px;
+}
+
+.status-grid-player-box-active {
+    border-color: blue;
+}
+
+.status-grid-player-name-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom-style: dashed;
+    border-bottom-width: 2px;
+}
+
+.status-grid-player-name {
+    font-weight: 700;
+    text-align: center;
+}
+
+.status-grid-player-icon {
+    height: auto;
+}
+
+.status-grid-data-cell {
+    text-align: right;
+}
+
+.status-grid-company-attribute-name {
+    font-weight: 700;
+    border-bottom-style: none;
+    border-bottom-width: 2px;
+    text-align: center;
+}
+
+.status-grid-stock-box {
+    width: 100%;
+    float: left;
+/*    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);*/
+/*    border: outset; */
+    border-width: 2px;
+    padding: 2px 8px;
+}
+
+.status-grid-stocklisting-panel {
+    width: 175px;
+    float: left;
+    border: outset;
+    border-width: 2px;
+    border-color: #ffffff;
+    padding: 2px 8px;
+}
+
+.medal {
+    width: auto;
+    height: 1.3rem;
+/*    border-radius: 50%; */
+    text-align: center;
+    line-height: 1rem;
+    font-weight: 700;
+}
+
+.rank-1 {
+    background: #f4d367;
+    border: solid 2px #d4af37;
+}
+
+.rank-2 {
+    background: #d0d0d0;
+    border: solid 2px #a8a8a8;
+}
+
+.rank-3 {
+    background: #CD7F32;
+    border: solid 2px #A46628;
+}
+
+.rank-4 {
+    background: #9D8F3A;
+    border: solid 2px #b0b0b0;
+}
+
+.rank-5 {
+    background: #302820;
+    border: solid 2px #302820;
 }

@@ -10,8 +10,7 @@
 
 
 html, body {
-/*    font-family: 'DEC Terminal Modern', Courier New, Courier, monospace; */
-      font-family: 'Roboto'; 
+  font-family: 'DEC Terminal Modern', Courier New, Courier, monospace;
 }
 
 a, .btn-link {
@@ -20,7 +19,7 @@ a, .btn-link {
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
+    background-color: #00ff00;
     border-color: #1861ac;
 }
 
