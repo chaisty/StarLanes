@@ -1,9 +1,5 @@
-﻿.foo {
-    color: green;
-}
-
-.game {
-    font-size: 0.9rem
+﻿.game {
+    font-size: 1.0rem;
 }
 
 .game-title {
@@ -93,6 +89,7 @@
     width: 400px;
     align-content: center;
     float: left;
+    margin: 10px 20px 10px 20px;
 }
 
 .player-moves-panel {
@@ -210,23 +207,48 @@
 
 .event-panel {
     display: flex;
-    width: 300px;
-    height: 75px;
-    margin: 15px 15px 15px 15px;
+    flex-direction: column;
+    overflow: auto;
+    width: 30em;
+    height: 100%;
+    margin: 5px 15px 5px 15px;
 }
 
 .event-panel-title {
-    border-right-width: 2px;
-    border-right-style: dashed;
-    text-align: left;
+    border-bottom-width: 2px;
+    border-bottom-style: dashed;
+    text-align: center;
     margin: 0 0 0 0;
 }
 
-.event-panel-readout {
-    /*    flex-grow: 1; */
+.event-panel-event {
+    display: flex;
+    flex-direction: column;
     font-size: small;
-    height: 100%
+    height: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+ /*   border-bottom: dashed 1px gray; */
 }
+
+.event-panel-event-header {
+    margin: 0 0 0 0;
+    font-size: 1.1em;
+}
+
+.event-panel-event-recent {
+    font-weight: 600;
+    background-color: whitesmoke;
+}
+
+.tiny-divider {
+    height: 0px;
+    width: 100%;
+    border-bottom:solid 1px gray;
+    align-self: center;
+}
+
+
 
 .stock-buying-company-box {
     display: flex;
@@ -236,9 +258,31 @@
     align-content: center;
 }
 
+.stock-buying-panel-condensed {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: flex-start;
+    width: 40em;
+}
+
+.stock-buying-company-box-vertical {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    width: 4em;
+}
+
 .stock-buying-company-name {
     width: 10em;
     margin: 3px 0px 0px 0px;
+}
+
+.stock-buying-controls-vertical {
+    width: 4em;
 }
 
 .stock-buying-controls {
@@ -248,6 +292,13 @@
 .stock-buying-share-value {
     width: 6em;
     text-align:right;
+    vertical-align: middle;
+    margin: unset;
+}
+
+.stock-buying-share-value-vertical {
+    width: 4em;
+    text-align: center;
     vertical-align: middle;
     margin: unset;
 }
@@ -290,7 +341,10 @@
 }
 
 .company-status-panel {
-    float: none;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .company-status-grid {
@@ -325,24 +379,44 @@
     border-bottom: solid 1px black;
 }
 
-.company-status-grid-attribute-name {
+.company-status-grid-attribute-name-value {
     width: 8em;
     text-align: center;
     border-bottom: solid 1px black;
+}
+
+.company-status-grid-attribute-name {
+    width: 6em;
+    text-align: center;
+    border-bottom: solid 1px black;
+}
+
+.company-status-grid-attribute-player-name {
+    width: 8em;
+    text-align: center;
+    border-bottom: solid 1px black;
+    padding: 0px .5em;
 }
 
 .company-status-grid-data-cell-value {
     width: 8em;
     text-align: right;
     box-sizing: border-box;
-    padding: 0px 1em;
+    padding: 0px .2em;
 }
 
 .company-status-grid-data-cell {
-    width: 8em;
+    width: 6em;
     text-align: right;
     box-sizing: border-box;
-    padding: 0px 2em;
+    padding: 0px .2em;
+}
+
+.company-status-grid-player-data-cell {
+    width: 6em;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0px 1.5em;
 }
 
 
@@ -382,7 +456,9 @@
 }
 
 .status-grid {
+    display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .status-grid-header {
@@ -399,7 +475,7 @@
 }
 
 .status-grid-data-header-column {
-    width: 10em;
+    width: auto;
     text-align: left;
     display: flex;
     flex-direction: column;
@@ -410,6 +486,7 @@
 
 .status-grid-data-player-row-header {
     font-weight: 700;
+    text-align: right;
 }
 
 .status-grid-data-company-row-header {
@@ -457,7 +534,7 @@
 .status-grid-player-name-panel {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     border-bottom-style: dashed;
     border-bottom-width: 2px;
 }
@@ -502,13 +579,15 @@
 
 .medal {
     width: auto;
-    height: 1.3rem;
+    height: 1.4rem;
 /*    border-radius: 50%; */
     text-align: center;
-    line-height: 1rem;
-    font-weight: 700;
+    line-height: 1.2rem;
+    font-weight: 500;
+    border: solid 1px black;
 }
 
+/*
 .rank-1 {
     background: #f4d367;
     border: solid 2px #d4af37;
@@ -533,3 +612,4 @@
     background: #302820;
     border: solid 2px #302820;
 }
+    */

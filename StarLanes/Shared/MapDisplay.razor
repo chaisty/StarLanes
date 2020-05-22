@@ -1,6 +1,15 @@
 ﻿<div class="map" tabindex="0" @onkeypress="KeyPress">
-    <div class="map-title">Map of the Galaxy</div>
-    <div class="map-title">@((String.Concat(Enumerable.Repeat("*", GameConfig.X_dimension * 3 - 2))))</div>
+
+    @if (true)
+    {
+        <div style="background-color:#111111; color:white; width: 100%; ">Map of the Galaxy</div>
+    }
+    else
+    {
+        /* Kaypro style */
+        <div class="map-title">Map of the Galaxy</div>
+        <div class="map-title">@((String.Concat(Enumerable.Repeat("*", GameConfig.X_dimension * 3 - 2))))</div>
+    }
     <div>
         @* Draw the x-axis with letters *@
         <div class="map-row" style="clear: both;">

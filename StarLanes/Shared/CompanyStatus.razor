@@ -3,33 +3,41 @@
     @* Header for the display of company values and stock ownership*@
     <div class="company-status-grid-row-header clearfix">
         <div class="company-status-grid-attribute-company-name">Company</div>
-        <div class="company-status-grid-attribute-name">Value</div>
+        <div class="company-status-grid-attribute-name-value">Value</div>
         <div class="company-status-grid-attribute-name">Shares</div>
         <div class="company-status-grid-attribute-name">Sectors</div>
         @foreach (Player p in TheGame.Players.Values)
         {
-            <div class="company-status-grid-attribute-name">@p.Name</div>
+            <div class="company-status-grid-attribute-player-name">@p.Name</div>
         }
     </div>
 
-    @* Display each company *@
-    @foreach (Company c in TheGame.Companies.Values)
+    @if (TheGame.ExistingCompanies() > 0)
     {
-        <div class="company-status-grid-row flex-row clearfix">
+        @* Display each company *@
+        @foreach (Company c in TheGame.Companies.Values)
+        {
+<div class="company-status-grid-row flex-row clearfix">
 
-            @if (c.IsActive)
-            {
-                <div class="company-status-grid-company-name">@c.Name</div>
-                <div class="company-status-grid-data-cell-value">@c.ShareValue.ToString("C0")</div>
-                <div class="company-status-grid-data-cell">@c.OutstandingShares()</div>
-                <div class="company-status-grid-data-cell">@TheGame.CompanySize(c)</div>
-                @foreach (var p in TheGame.Players)
-                {
-                    <div class="company-status-grid-data-cell @(GameStateObj.PlayerTurn == p.Key ? "status-grid-data-cell-active" : "")">@c.StockHolderShares[p.Key]</div>
-                }
-            }
+    @if (c.IsActive)
+    {
+        <input style="width:3em; border:none" type="number" value="0" min="0" max="1000" />
+        <div class="company-status-grid-company-name">@c.Name</div>
+        <div class="company-status-grid-data-cell-value">@c.ShareValue.ToString("C0")</div>
+        <div class="company-status-grid-data-cell">@c.OutstandingShares()</div>
+        <div class="company-status-grid-data-cell">@TheGame.CompanySize(c)</div>
+        @foreach (var p in TheGame.Players)
+        {
+            <div class="company-status-grid-player-data-cell @(GameStateObj.PlayerTurn == p.Key ? "status-grid-data-cell-active" : "")">@c.StockHolderShares[p.Key]</div>
+        }
+    }
 
-        </div>
+</div>
+        }
+    }
+    else
+    {
+        <div style="text-align: center">No companies active.</div>
     }
 </div>
 

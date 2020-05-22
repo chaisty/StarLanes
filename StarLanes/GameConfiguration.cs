@@ -39,20 +39,6 @@ namespace StarLanes
         public bool StockSplits = true;
         public int stockSplitPrice = 3000;
 
-        string GameStatus = "Not Started.";
-
-        public enum GameStates
-        {
-            NotStarted = 0,
-            Initiating = 1,
-            PlayerMove = 10,
-            PlayerStockPurchasing = 15,
-            BetweenMoves = 17,
-            GameEnding = 20,
-            GameEnded = 25
-        }
-        public GameStates GameState = GameStates.NotStarted;
-
         public bool RandomizePlayerOrder = true;
         public bool RandomizeFirstMover = true;
         public int FirstPlayer = 0;

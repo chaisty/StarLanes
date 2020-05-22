@@ -7,7 +7,11 @@
          format('truetype');
 }
 
-
+/*
+body {
+    font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+    line-height: calc(1em + (1.5 - 1.2) * ((100vw - 300px)/(1600 - 300)));
+}*/
 
 html, body {
 /*    font-family: 'DEC Terminal Modern', Courier New, Courier, monospace; */

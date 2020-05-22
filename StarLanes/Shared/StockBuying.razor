@@ -1,0 +1,53 @@
+﻿<div class="clearfix">
+    <span class="bold-small-header">Buy Stocks with @(TheGame.Players[GameStateObj.PlayerTurn].Money.ToString("C0")) (@(AvailableMoneyForStockBuying().ToString("C0")) unallocated)</span>
+</div>
+<div class="stock-buying-panel-condensed">
+    @foreach (var c in TheGame.Companies)
+    {
+        @if (c.Value.IsActive)
+        {
+            <div class="stock-buying-company-box-vertical">
+                <label title="@(c.Value.Name)">@(c.Value.Symbol)</label>
+                <div class="stock-buying-controls">
+                    <label class="stock-buying-share-value-vertical" for="Buy=@(c.Key)">@(c.Value.ShareValue.ToString("C0"))</label>
+                    <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                    <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
+
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Game TheGame { get; set; }
+
+    [Parameter]
+    public GameStateObject GameStateObj { get; set; }
+
+    public long AvailableMoneyForStockBuying()
+    {
+        return AvailableMoneyForStockBuying(0); // pass a 0 to indicate not to exclude any company;
+    }
+
+    public long AvailableMoneyForStockBuying(int ExcludeCompanyId)
+    {
+        long availableMoney = TheGame.Players[GameStateObj.PlayerTurn].Money;
+
+        for (int i = GameStateObj.StockToBuy.GetLowerBound(0); i <= GameStateObj.StockToBuy.GetUpperBound(0); i++)
+        {
+            if (i != ExcludeCompanyId && TheGame.Companies.ContainsKey(i) && TheGame.Companies[i].IsActive)
+            {
+                availableMoney -= GameStateObj.StockToBuy[i] * TheGame.Companies[i].ShareValue;
+            }
+        }
+
+        return availableMoney;
+    }
+
+    public int MaxCanBuy(int CompanyKey)
+    {
+        return Convert.ToInt32(Math.Floor(AvailableMoneyForStockBuying(CompanyKey) / (double)TheGame.Companies[CompanyKey].ShareValue));
+    }
+}

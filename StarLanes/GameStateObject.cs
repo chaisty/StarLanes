@@ -17,6 +17,18 @@ namespace StarLanes
         public int Winner = 0;
         public Move LastMove { get; set; }
 
+        public enum GameStates
+        {
+            NotStarted = 0,
+            Initiating = 1,
+            PlayerMove = 10,
+            PlayerStockPurchasing = 15,
+            BetweenMoves = 17,
+            GameEnding = 20,
+            GameEnded = 25
+        }
+        public GameStates GameState = GameStates.NotStarted;
+
         public GameStateObject()
         {
 

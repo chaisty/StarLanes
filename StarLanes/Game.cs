@@ -13,6 +13,7 @@ namespace StarLanes
         //Initialize Map object
         public GalaxyMap Map = new GalaxyMap(1, 1);
         public Queue<GameEvent> Events = new Queue<GameEvent>();
+        public const int MaxEventsToDisplay = 100;
 
         public Game()
         {
@@ -138,7 +139,7 @@ namespace StarLanes
 
         public void LogGameEvent(GameEvent newEvent)
         {
-            if (Events.Count >= 10)
+            if (Events.Count >= MaxEventsToDisplay)
                 Events.Dequeue();
             Events.Enqueue(newEvent);
         }

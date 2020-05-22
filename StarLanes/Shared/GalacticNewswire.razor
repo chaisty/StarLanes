@@ -1,16 +1,69 @@
-﻿<div class="container col event-panel clearfix" style="width: 100%; height: 100%; margin: 25px 10px;">
-    <div class="row-2 event-panel-title">
+﻿<div class="event-panel">
+    <div class="event-panel-title">
         Galactic Newswire
     </div>
-    <div class="event-panel-readout overflow-auto">
+
+    @*
+    <div class="row event-panel-readout overflow-auto">
         @((MarkupString)TheGame.EventsText(GameStateObj.GameRound, GameStateObj.PlayerTurn))
     </div>
+        *@
+
+    @*<div class="event-panel"> *@
+        @{ firstEvent = true; }
+        @foreach (GameEvent e in TheGame.Events.Reverse())
+        {
+
+    @*    <div class="list-group-item flex-column align-items-start m-0 p-0 event-panel-readout overflow-auto">*@
+            <div class="event-panel-event @(RecentEvent(e) ? "event-panel-event-recent" : "")">
+                @if ((lastEventTurnId != eventTurnId(e.Round, e.Turn)) && (true))
+                {
+                    lastEventTurnId = eventTurnId(e.Round, e.Turn);
+                    <div class="tiny-divider"></div>
+                }
+                @{firstEvent = false;}
+                @if (!String.IsNullOrWhiteSpace(e.Header))
+                {
+                    <div class="event-panel-event-header w-100">
+                        @e.Header
+                    </div>
+                }
+                <div>@e.Message</div>
+
+            </div>
+
+         }
+        @* </div> *@
 </div>
 
 @code {
+    private int lastEventTurnId = 0;
+    private bool firstEvent = true;
+
     [Parameter]
     public Game TheGame { get; set; }
 
     [Parameter]
     public GameStateObject GameStateObj { get; set; }
+
+    private int eventTurnId(int round, int turn)
+    {
+        return round * TheGame.Players.Count + turn;
+    }
+
+    private bool RecentEvent(GameEvent e)
+    {
+        int currentTurnId = GameStateObj.GameRound * TheGame.Players.Count + GameStateObj.PlayerTurn;
+        int eventTurnId = e.Round * TheGame.Players.Count + e.Turn;
+
+        // if 
+        if (((currentTurnId - 1) == eventTurnId) && (GameStateObj.GameState.CompareTo(GameStateObject.GameStates.PlayerMove) <= 0))
+            return true;
+        else if ((currentTurnId == eventTurnId) && (GameStateObj.GameState.CompareTo(GameStateObject.GameStates.PlayerMove) > 0))
+        {
+            return true;
+        }
+        else
+            return false;
+    }
 }
