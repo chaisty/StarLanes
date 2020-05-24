@@ -67,10 +67,10 @@ namespace StarLanes
         {
             Game newGame = new Game(); // (Game)this.MemberwiseClone();    //Copy any values (note, as of 0.8.3 this doesn't copy anything we need)
 
-//            foreach (var c in Companies)
-//            {
-//                Console.WriteLine(c.Key + ": " + c.Value.Name + ", " + c.Value.StockHolderShares.Count);
-//            }
+            //            foreach (var c in Companies)
+            //            {
+            //                Console.WriteLine(c.Key + ": " + c.Value.Name + ", " + c.Value.StockHolderShares.Count);
+            //            }
             newGame.Companies = new Dictionary<int, Company>();
             foreach (var c in Companies) { newGame.Companies.Add(c.Key, c.Value.GetClone()); }
             newGame.Players = new Dictionary<int, Player>();
@@ -117,7 +117,7 @@ namespace StarLanes
 
         public string EventsText(int currentRound, int currentTurn)
         {
- 
+
             //List events in reverse chronological order
             string eventString = String.Empty;
             for (int i = Events.Count - 1; i >= 0; i--)

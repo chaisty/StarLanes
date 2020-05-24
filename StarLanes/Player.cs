@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StarLanes
 {
@@ -60,7 +59,7 @@ namespace StarLanes
         }
 
         public static string DefaultName(Personas persona, int instance)
-        { 
+        {
             switch (persona)
             {
                 case Personas.Human:

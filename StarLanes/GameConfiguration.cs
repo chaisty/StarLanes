@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StarLanes
+﻿namespace StarLanes
 {
     public class GameConfiguration
     {
@@ -35,7 +30,7 @@ namespace StarLanes
         public long playerStartingMoney = 6000;
         public int dividendPercentage = 5;
         public enum DividendPayStages { BeforeStockBuying = 0, BetweenRounds = 1 }
-        public DividendPayStages DividendPayStage = DividendPayStages.BetweenRounds;    
+        public DividendPayStages DividendPayStage = DividendPayStages.BetweenRounds;
         public bool StockSplits = true;
         public int stockSplitPrice = 3000;
 

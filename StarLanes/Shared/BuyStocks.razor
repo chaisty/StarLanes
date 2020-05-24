@@ -1,0 +1,27 @@
+﻿<div class="table-container company-status-grid" style="width: 6em; border: solid 2px blue;">
+
+    @* Header for the display of company values and stock ownership*@
+    <div class="" style="display: flex; flex-direction: column;">
+        <div class="company-status-grid-row-header" style="border-bottom: solid 1px black;">Buy Stock</div>
+        @if (TheGame.ExistingCompanies() > 0)
+        {
+            @* Display purchase controls for each company *@
+            @foreach (var c in TheGame.Companies)
+            {
+
+                @if (c.Value.IsActive)
+                {
+                    <input id="buyshares@(c.Key)" style="width:3em; border:none; line-height: initial;" type="number" value="0" min="0" max="1000"  />
+                }
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Game TheGame { get; set; }
+
+    [Parameter]
+    public GameStateObject GameStateObj { get; set; }
+}

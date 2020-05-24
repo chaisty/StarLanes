@@ -65,7 +65,8 @@ namespace StarLanes
             for (int p = 1; p <= StockHolderShares.Count; p++)
             {
                 newCompany.StockHolderShares[p] = StockHolderShares[p];
-;            }
+                ;
+            }
 
             return newCompany;
         }

@@ -341,7 +341,6 @@
 }
 
 .company-status-panel {
-    margin-top: 15px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -402,21 +401,21 @@
     width: 8em;
     text-align: right;
     box-sizing: border-box;
-    padding: 0px .2em;
+    padding: 0px 1em;
 }
 
 .company-status-grid-data-cell {
     width: 6em;
     text-align: right;
     box-sizing: border-box;
-    padding: 0px .2em;
+    padding: 0px 1em;
 }
 
 .company-status-grid-player-data-cell {
-    width: 6em;
+    width: 8em;
     text-align: right;
     box-sizing: border-box;
-    padding: 0px 1.5em;
+    padding: 0px 2.5em;
 }
 
 

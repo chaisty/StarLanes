@@ -1,7 +1,7 @@
-﻿<div class="clearfix">
+﻿<div class="clearfix" style="width:100%;">
     <span class="bold-small-header">Buy Stocks with @(TheGame.Players[GameStateObj.PlayerTurn].Money.ToString("C0")) (@(AvailableMoneyForStockBuying().ToString("C0")) unallocated)</span>
 </div>
-<div class="stock-buying-panel-condensed">
+<div class="stock-buying-panel-condensed" style="width:100%">
     @foreach (var c in TheGame.Companies)
     {
         @if (c.Value.IsActive)
