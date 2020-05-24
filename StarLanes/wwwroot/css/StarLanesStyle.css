@@ -114,10 +114,11 @@
 }
 
 .btn-group-xs > .btn, .btn-xs {
-    padding: .4rem .4rem;
-    font-size: .875rem;
+    padding: .4em .4em;
+    font-size: .75em;
     line-height: .5;
-    border-radius: .2rem;
+    border-radius: .2em;
+    height: 1.25em;
 }
 
 .map-panel {
@@ -352,6 +353,17 @@
     width: auto;
 }
 
+.buy-stocks-header {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-weight: 700;
+    width: auto;
+    background-color: black;
+    color: white;
+    border-bottom: solid 1px black;
+}
+
 .company-status-grid-row-header
 {
     display: flex;
@@ -369,11 +381,11 @@
 .company-status-grid-company-name {
     font-weight: 700;
     text-align: left;
-    width: 11em;
+    width: 10em;
 }
 
 .company-status-grid-attribute-company-name {
-    width: 11em;
+    width: 10em;
     text-align: left;
     border-bottom: solid 1px black;
 }

@@ -1,23 +1,27 @@
 ﻿<div class="clearfix" style="width:100%;">
     <span class="bold-small-header">Buy Stocks with @(TheGame.Players[GameStateObj.PlayerTurn].Money.ToString("C0")) (@(AvailableMoneyForStockBuying().ToString("C0")) unallocated)</span>
 </div>
-<div class="stock-buying-panel-condensed" style="width:100%">
-    @foreach (var c in TheGame.Companies)
-    {
-        @if (c.Value.IsActive)
-        {
-            <div class="stock-buying-company-box-vertical">
-                <label title="@(c.Value.Name)">@(c.Value.Symbol)</label>
-                <div class="stock-buying-controls">
-                    <label class="stock-buying-share-value-vertical" for="Buy=@(c.Key)">@(c.Value.ShareValue.ToString("C0"))</label>
-                    <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
-                    <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
 
+@if (false)
+{
+    <div class="stock-buying-panel-condensed" style="width:100%">
+        @foreach (var c in TheGame.Companies)
+        {
+            @if (c.Value.IsActive)
+            {
+                <div class="stock-buying-company-box-vertical">
+                    <label title="@(c.Value.Name)">@(c.Value.Symbol)</label>
+                    <div class="stock-buying-controls">
+                        <label class="stock-buying-share-value-vertical" for="Buy=@(c.Key)">@(c.Value.ShareValue.ToString("C0"))</label>
+                        <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                        <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
+
+                    </div>
                 </div>
-            </div>
+            }
         }
-    }
-</div>
+    </div>
+}
 
 @code {
     [Parameter]

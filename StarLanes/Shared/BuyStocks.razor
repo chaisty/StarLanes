@@ -1,8 +1,8 @@
-﻿<div class="table-container company-status-grid" style="width: 6em; border: solid 2px blue;">
+﻿<div class="table-container company-status-grid" style="width: 7em; border: solid 2px blue; margin-left: 2px; margin-right: 2px;">
 
     @* Header for the display of company values and stock ownership*@
     <div class="" style="display: flex; flex-direction: column;">
-        <div class="company-status-grid-row-header" style="border-bottom: solid 1px black;">Buy Stock</div>
+        <div class="buy-stocks-header" >Buy Stocks</div>
         @if (TheGame.ExistingCompanies() > 0)
         {
             @* Display purchase controls for each company *@
@@ -11,7 +11,10 @@
 
                 @if (c.Value.IsActive)
                 {
-                    <input id="buyshares@(c.Key)" style="width:3em; border:none; line-height: initial;" type="number" value="0" min="0" max="1000"  />
+                    <div style="display: flex; flex-direction: row; margin-left: .75em; margin-right: .75em; line-height:1.5;">
+                        <input id="buyshares=@(c.Key)" style="width:3.5em; border:none; line-height: 1.25; text-align: right;" type="number"  @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                        <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
+                    </div>
                 }
             }
         }
@@ -24,4 +27,29 @@
 
     [Parameter]
     public GameStateObject GameStateObj { get; set; }
+
+    public long AvailableMoneyForStockBuying()
+    {
+        return AvailableMoneyForStockBuying(0); // pass a 0 to indicate not to exclude any company;
+    }
+
+    public long AvailableMoneyForStockBuying(int ExcludeCompanyId)
+    {
+        long availableMoney = TheGame.Players[GameStateObj.PlayerTurn].Money;
+
+        for (int i = GameStateObj.StockToBuy.GetLowerBound(0); i <= GameStateObj.StockToBuy.GetUpperBound(0); i++)
+        {
+            if (i != ExcludeCompanyId && TheGame.Companies.ContainsKey(i) && TheGame.Companies[i].IsActive)
+            {
+                availableMoney -= GameStateObj.StockToBuy[i] * TheGame.Companies[i].ShareValue;
+            }
+        }
+
+        return availableMoney;
+    }
+
+    public int MaxCanBuy(int CompanyKey)
+    {
+        return Convert.ToInt32(Math.Floor(AvailableMoneyForStockBuying(CompanyKey) / (double)TheGame.Companies[CompanyKey].ShareValue));
+    }
 }

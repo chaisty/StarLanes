@@ -119,9 +119,7 @@
                                 @* if there are any companies *@
                                 @if (TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
                                 {
-                                    <div style="display:flex; flex-direction: row; max-height:10em;">
-                                        <StockBuying TheGame="@TheGame" GameStateObj="@GameStateObj" />
-                                    </div>
+
                                 }
                                 else @* no companies *@
                                 {
@@ -156,12 +154,20 @@
             </div>
         </div>
 
-        <div style="display: flex; flex-direction: row;">
-             <BuyStocks TheGame="TheGame" />
-            <div class="company-status-panel">
-
-                <CompanyStatus TheGame="@TheGame" GameStateObj="@GameStateObj"/>
+        <div style="display: flex; flex-direction: row; justify-content:center">
+            @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
+            {
+                <BuyStocks TheGame="TheGame" GameStateObj="@GameStateObj" />
+            }
+            <div class="company-status-panel" style="margin-top:2px; margin-bottom: 2px;">
+                <CompanyStatus TheGame="@TheGame" GameStateObj="@GameStateObj" />
             </div>
+            @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
+            {
+                <div class="table-container company-status-grid" style="width: 7em; margin: 2px 2px 2px 2px;">
+                @* Nothing goes here, this is a spacer to balance the certer of the flex box*@
+                </div>
+            }
         </div>
     </div>
 }

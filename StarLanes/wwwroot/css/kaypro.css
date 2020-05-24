@@ -7,7 +7,13 @@
          format('truetype');
 }
 
-
+:root {
+    --main-color: green;
+    --main-highlight-color: brightgreen;
+    --backcolor: black;
+    --alt-highlight-color: darkgreen;
+    --alt-backcolor: darkgray;
+}
 
 html, body {
   font-family: 'DEC Terminal Modern', Courier New, Courier, monospace;
