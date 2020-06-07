@@ -1,14 +1,25 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import 'StarLanesStyle.css';
 
-/*
-body {
-    font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
-    line-height: calc(1em + (1.5 - 1.2) * ((100vw - 300px)/(1600 - 300)));
-}*/
+@font-face {
+    font-family: "DEC Terminal Modern";
+    src: url('fonts/_decterm.ttf')
+         format('truetype');
+}
+
+:root {
+    --main-color: green;
+    --main-highlight-color: brightgreen;
+    --backcolor: black;
+    --alt-highlight-color: darkgreen;
+    --alt-backcolor: darkgray;
+}
 
 html, body {
-/*    font-family: 'DEC Terminal Modern', Courier New, Courier, monospace; */
-      font-family: 'Roboto'; 
+  font-family: 'DEC Terminal Modern', Courier New, Courier, monospace;
+  background-color: black;
+  color: green;
+  font-size: 1.0em;
 }
 
 a, .btn-link {
@@ -17,7 +28,7 @@ a, .btn-link {
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
+    background-color: green;
     border-color: #1861ac;
 }
 

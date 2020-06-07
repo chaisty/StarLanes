@@ -15,9 +15,9 @@
         <tr class="@( (TheGame.PlayerRank(p.Key) == 1) ? "table-primary" : "" )" style="@((TheGame.PlayerRank(p.Key) == 1) ? "font-weight: 700" : "")">
             <th>@(TheGame.PlayerRank(p.Key))</th>
             <td>@(p.Value.Name) @((MarkupString)PlayerIcon(p.Key))</td>
-            <td>$@(TheGame.PlayerStockWorth(p.Key))</td>
-            <td>$@(TheGame.Players[p.Key].Money)</td>
-            <td>$@(TheGame.PlayerNetWorth(p.Key))</td>
+            <td style="text-align: right">@(TheGame.PlayerStockWorth(p.Key).ToString("C0"))</td>
+            <td style="text-align: right">@(TheGame.Players[p.Key].Money.ToString("C0"))</td>
+            <td style="text-align: right">@(TheGame.PlayerNetWorth(p.Key).ToString("C0"))</td>
         </tr>
     }
 </table>

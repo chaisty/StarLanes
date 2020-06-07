@@ -12,8 +12,8 @@
                 @if (c.Value.IsActive)
                 {
                     <div style="display: flex; flex-direction: row; margin-left: .75em; margin-right: .75em; line-height:1.5;">
-                        <input id="buyshares=@(c.Key)" style="width:3.5em; border:none; line-height: 1.25; text-align: right;" type="number"  @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
-                        <button class="btn btn-secondary btn-xs" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
+                        <input class="stock-input" id="buyshares=@(c.Key)" style="width:3.5em; border:none; line-height: 1.25; text-align: right;" type="number"  @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />
+                        <button class="btn btn-secondary btn-xs stock-buying-max-button" @onclick="() => { GameStateObj.StockToBuy[c.Key] = MaxCanBuy(c.Key); }">Max</button>
                     </div>
                 }
             }

@@ -1,0 +1,12 @@
+﻿<h5>Game Options Summary</h5>
+
+<label>Game Length: @(GameConfig.NumberOfRounds.ToString()) Rounds</label><br/>
+<label>Available Moves: @(GameConfig.NumberOfMoves)</label><br />
+<label>Max Number of Companies: @(GameConfig.NumberOfCompanies)</label><br />
+<label>Stock Splits: @(GameConfig.StockSplits ? "Yes, at " + GameConfig.StockSplitPrice.ToString("C0") : "No")</label><br />
+<label>Blackholes: @(GameConfig.BlackholeDestroys ? "Destructive" : (GameConfig.BlackholeValue == 0) ? "Impairs" : "No effect")</label><br />
+
+@code {
+    [Parameter]
+    public GameConfiguration GameConfig { get; set; }
+}

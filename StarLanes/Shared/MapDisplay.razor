@@ -1,8 +1,8 @@
-﻿<div class="map" tabindex="0" @onkeypress="KeyPress">
+﻿<div class="map @(GameConfig.Y_dimension > 14 ? "map-font-small" : "map-font-normal")" tabindex="0" @onkeypress="KeyPress">
 
     @if (true)
     {
-        <div style="background-color:#111111; color:white; width: 100%; ">Map of the Galaxy</div>
+        <div class="map-title">Map of the Galaxy</div>
     }
     else
     {

@@ -1,0 +1,25 @@
+﻿@font-face {
+    font-family: "DEC Terminal Modern";
+    src: url('fonts/_decterm.ttf') format('truetype');
+}
+
+
+:root {
+    --main-color: black;
+    --main-highlight-color: grey;
+    --backcolor: white;
+    --alt-highlight-color: blue;
+    --alt-backcolor: whitesmoke;
+    --alt-active-backcolor: blue;
+    --move-color: black;
+    --move-backcolor: whitesmoke;
+    --move-color-highlight: white;
+    --move-backcolor-highlight: blue;
+}
+   
+
+html, body {
+    /*    font-family: 'DEC Terminal Modern', Courier New, Courier, monospace; */
+    font-family: 'Roboto';
+}
+

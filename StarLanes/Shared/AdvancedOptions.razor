@@ -3,25 +3,25 @@
 
     @*   <div id="AdvOptions" class="collapse show" aria-labelledby="AdvOptionsHeader" data-parent="#AdvOptionsAccordion"> *@
 
-    <label for="NumberOfCompanies">Max # of Companies: </label><input id="NumberOfCompanies" type="number" min="5" max="@GameConfiguration.Max_NumberOfCompanies" @bind="GameConfig.NumberOfCompanies" /> (5-10, default 5)<br />
-    <label for="MapSize">Map Size: </label><input id="MapSizeX" type="number" min="6" max="20" @bind="GameConfig.X_dimension" /> x <input id="MapSizeY" type="number" min="5" max="20" @bind="GameConfig.Y_dimension" /> (Min 6x5, Normal 12x9, Max 20x20, default 12x9)<br />
-    <label for="StarLikelihood">Star Likelihood: </label><input id="StarLikelihood" type="number" min="0" max="15" @bind="GameConfig.StarChance" />% (0-15, default 10)<br />
-    <label for="BlackholeLikelihood">Black Hole Likelihood: </label><input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="GameConfig.BlackholeChance" />% (0-5, default 3)<br />
-    <label for="BlackholeConsumptionChance">Black Hole Consumption %: </label><input id="BlackholeConsumptionChance" type="number" min="0" max="100" @bind="GameConfig.BlackholeConsumptionChance" /> (0-100, default 25, applies to developed sectors, not companies)<br />
+    <label for="NumberOfCompanies">Max # of Companies: </label> <input id="NumberOfCompanies" type="number" min="5" max="@GameConfiguration.Max_NumberOfCompanies" @bind="GameConfig.NumberOfCompanies" /> (5-10, default 5)<br />
+    <label for="MapSize">Map Size: </label> <input id="MapSizeX" type="number" min="6" max="20" @bind="GameConfig.X_dimension" /> x <input id="MapSizeY" type="number" min="5" max="20" @bind="GameConfig.Y_dimension" /> (Min 6x5, Normal 12x9, Max 20x20, default 12x9)<br />
+    <label for="StarLikelihood">Star Likelihood %: </label> <input id="StarLikelihood" type="number" min="0" max="15" @bind="GameConfig.StarChance" /> (0-15, default 10)<br />
+    <label for="BlackholeLikelihood">Black Hole Likelihood %: </label> <input id="BlackholeLikelihood" type="number" min="0" max="5" @bind="GameConfig.BlackholeChance" /> (0-5, default 3)<br />
+    <label for="BlackholeConsumptionChance">Black Hole Consumption %: </label> <input id="BlackholeConsumptionChance" type="number" min="0" max="100" @bind="GameConfig.BlackholeConsumptionChance" /> (0-100, default 25, applies to developed sectors, not companies)<br />
     @*<label for="StartingOrder">Starting Player:</label><br />*@
-    <input type="checkbox" name="RandomizeWhoGoesFirst" @bind="GameConfig.RandomizeFirstMover" /><label for="RandomizeWhoGoesFirst">Randomize Who Goes First</label> <br />
-    <label for="FounderShares">Founder Shares: </label><input type="number" id="NumFounderShares" min="0" max="20" @bind="GameConfig.FounderShares" /> (0-20, default 5)<br />
-    <label for="StartingMoney">Starting Money: </label><input type="number" id="AmountStartingMoney" min="1000" max="10000" step="100" @bind="GameConfig.PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
-    <label for="DividendsPercentage">Dividends %: </label><input id="DividendsPercentage" type="number" min="1" max="10" @bind="GameConfig.DividendPercentage" />% (1-10, default 5)<br />
-    <label for="DividendPayStage">Pay Dividends: </label><input id="DividendPayBeforeStockBuying" type="checkbox" @bind="DividendsBeforeStockBuying"/>To player after Move, before Stock buying (original game)&nbsp;&nbsp;&nbsp;<input id="DividensPayBetweenRounds" type="checkbox" @bind="DividendsBetweenRounds"/>Between Rounds<br />
-    <label for="MergerRatio">Merger Ratio: </label><input id="MergerRatio" type="number" min="1" max="5" @bind="GameConfig.MergerRatio" /> (1-5, default 2, number of shares of smaller merged company to equal 1 in new company)<br />
-    <input type="checkbox" name="StockSplits" @bind="GameConfig.StockSplits" /><label for="StockSplitPrice">Stock Split at: $</label><input id="StockSplitPrice" disabled="@(!GameConfig.StockSplits)" type="number" min="2000" max="20000" step="100" @bind="GameConfig.StockSplitPrice" /><br />
-    <label for="SectorValue">Sector Value $: </label><input id="SectorValue" type="number" min="0" max="500" step="100" @bind="GameConfig.NormalValue" /> (0-500, 100 default) <br />
-    <label for="StarSectorValue">Star Sector Value $: </label><input id="StarSectorValue" type="number" min="0" max="2000" step="100" @bind="GameConfig.StarValue" /> (0-2000, 500 default) <br />
-    <label for="BlackholeDestructive">Blackhole Destroys: </label><input id="BlackholeDestroys" type="checkbox" @bind="GameConfig.BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
-    <label for="BlackholeSectorValue">Blackhole Sector Value $: </label><input id="BlackholeSectorValue" disabled="@(GameConfig.BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="GameConfig.BlackholeValue" /> (-2000-0, -500 default) <br />
-    <label for="NumberOfRounds"># of Rounds: </label><input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(GameConfig.DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="GameConfig.NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
-    <label for="AvailableMovesPerTurn"># of Available Moves: </label><input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="GameConfig.NumberOfMoves" /> (3-5, default 4)<br />
+    <input type="checkbox" name="RandomizeWhoGoesFirst" @bind="GameConfig.RandomizeFirstMover" /> <label for="RandomizeWhoGoesFirst">Randomize Who Goes First</label> <br />
+    <label for="FounderShares">Founder Shares: </label> <input type="number" id="NumFounderShares" min="0" max="20" @bind="GameConfig.FounderShares" /> (0-20, default 5)<br />
+    <label for="StartingMoney">Starting Money: </label> <input type="number" id="AmountStartingMoney" min="1000" max="10000" step="100" @bind="GameConfig.PlayerStartingMoney" /> (1,000-20,000, default 6,000)<br />
+    <label for="DividendsPercentage">Dividends %: </label> <input id="DividendsPercentage" type="number" min="1" max="10" @bind="GameConfig.DividendPercentage" /> (1-10, default 5)<br />
+    <label for="DividendPayStage">Pay Dividends: </label> <input id="DividendPayBeforeStockBuying" type="checkbox" @bind="DividendsBeforeStockBuying"/> To player after Move, before Stock buying (original game)&nbsp;&nbsp;&nbsp;<input id="DividensPayBetweenRounds" type="checkbox" @bind="DividendsBetweenRounds"/> Between Rounds<br />
+    <label for="MergerRatio">Merger Ratio: </label> <input id="MergerRatio" type="number" min="1" max="5" @bind="GameConfig.MergerRatio" /> (1-5, default 2, number of shares of smaller merged company to equal 1 in new company)<br />
+    <input type="checkbox" name="StockSplits" @bind="GameConfig.StockSplits" /> <label for="StockSplitPrice">Stock Split at $:</label> <input id="StockSplitPrice" disabled="@(!GameConfig.StockSplits)" type="number" min="2000" max="20000" step="100" @bind="GameConfig.StockSplitPrice" /><br />
+    <label for="SectorValue">Sector Value $: </label> <input id="SectorValue" type="number" min="0" max="500" step="100" @bind="GameConfig.NormalValue" /> (0-500, 100 default) <br />
+    <label for="StarSectorValue">Star Sector Value $: </label> <input id="StarSectorValue" type="number" min="0" max="2000" step="100" @bind="GameConfig.StarValue" /> (0-2000, 500 default) <br />
+    <label for="BlackholeDestructive">Blackhole Destroys: </label> <input id="BlackholeDestroys" type="checkbox" @bind="GameConfig.BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
+    <label for="BlackholeSectorValue">Blackhole Sector Value $: </label> <input id="BlackholeSectorValue" disabled="@(GameConfig.BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="GameConfig.BlackholeValue" /> (-2000-0, -500 default) <br />
+    <label for="NumberOfRounds"># of Rounds: </label> <input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(GameConfig.DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="GameConfig.NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
+    <label for="AvailableMovesPerTurn"># of Available Moves: </label> <input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="GameConfig.NumberOfMoves" /> (3-5, default 4)<br />
 
 </div>
 

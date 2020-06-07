@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Content Remove="Pages\FetchData.razor" />
+    <Content Remove="wwwroot\css\kaypro - Copy.css" />
   </ItemGroup>
 
   <ItemGroup>
