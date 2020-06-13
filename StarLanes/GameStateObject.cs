@@ -7,7 +7,7 @@ namespace StarLanes
     {
         public int NumberOfPlayers = 2;
         public int[] StockToBuy = new int[GameConfiguration.Max_NumberOfCompanies + 1];
-        public int MoneyToBuy = 0;
+        public int AvailableMoneyForStockBuying = 0;
         public bool TestGame = false;
         public int GameRound = 0;
         public int PlayerTurn = 1;

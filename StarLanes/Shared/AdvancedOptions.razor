@@ -21,7 +21,7 @@
     <label for="BlackholeDestructive">Blackhole Destroys: </label> <input id="BlackholeDestroys" type="checkbox" @bind="GameConfig.BlackholeDestroys" /> (If false, Blackhole adjacency only penalizes stock value)<br />
     <label for="BlackholeSectorValue">Blackhole Sector Value $: </label> <input id="BlackholeSectorValue" disabled="@(GameConfig.BlackholeDestroys)" type="number" min="-2000" max="0" step="100" @bind="GameConfig.BlackholeValue" /> (-2000-0, -500 default) <br />
     <label for="NumberOfRounds"># of Rounds: </label> <input checked id="defaultRoundsByPlayerCount" type="checkbox" @onchange="(e) => { SetDefaultRounds(e); }" /> Use Default <input disabled="@(GameConfig.DefaultRounds)" id="NumberOfRounds" type="number" min="1" max="24" @bind="GameConfig.NumberOfRounds" /> (1-24, default based on number of players with 48-50 total turns)<br />
-    <label for="AvailableMovesPerTurn"># of Available Moves: </label> <input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="GameConfig.NumberOfMoves" /> (3-5, default 4)<br />
+    <label for="AvailableMovesPerTurn"># of Available Moves: </label> <input id="AvailableMovesPerTurn" type="number" min="4" max="5" @bind="GameConfig.NumberOfMoves" /> (3-6, default 5)<br />
 
 </div>
 

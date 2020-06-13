@@ -14,28 +14,50 @@
         <div class="game-title"><h1>Star Lanes</h1></div>
     </div>
 
-    <p>
-        <label for="numberOfPlayers"># of Players:</label> <input id="numberOfPlayers" type="number" min="2" max="@GameConfiguration.Max_NumberOfPlayers" @bind="GameConfig.NumberOfPlayers" />
-    </p>
-    <p>
-        @for (int p = 1; p <= GameConfig.NumberOfPlayers; p++)
-        {
+    <div class="game-setup" style="display: flex; flex-direction: row;">
+        <div class="player-setup">
+            <p>
+                <label for="numberOfPlayers"># of Players:</label> <input id="numberOfPlayers" type="number" min="2" max="@GameConfiguration.Max_NumberOfPlayers" @bind="GameConfig.NumberOfPlayers" />
+            </p>
+            <p>
+                @for (int p = 1; p <= GameConfig.NumberOfPlayers; p++)
+                {
 
-            var pa = p - 1;
-            @*<span class="text-danger">@_playerNameValidationMessage(p))</span>*@
-            <label for="playerName(@p)">Player @p Name:</label> <input id="playerName(@p)" type="text" minlength="2" maxlength="20" @bind="PlayerName[pa]" />
-            <label for="computerPlayer(@p)" style="font-size: small;"><input type="checkbox" id="computerPlayer(@p)" @bind="ComputerPlayer[pa]" /> Computer Player</label>
-            <br />
-        }
-    </p>
+                    var pa = p - 1;
+                    @*<span class="text-danger">@_playerNameValidationMessage(p))</span>*@
+                    <label for="playerName(@p)">Player @p Name:</label> <input id="playerName(@p)" type="text" minlength="2" maxlength="20" @bind="PlayerName[pa]" />
+                    <label for="computerPlayer(@p)" style="font-size: small;"><input type="checkbox" id="computerPlayer(@p)" @bind="ComputerPlayer[pa]" /> Computer Player</label>
+                    <br />
+                }
+            </p>
 
-    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="standard" checked @onchange="(e) => GameConfig.SetMapSize(12,9)">Standard Game (12x9)</label></div>
-    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="large" @onchange="(e) => GameConfig.SetMapSize(16,12)">Big Game (16x12)</label></div>
-    <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="jumbo" @onchange="(e) => GameConfig.SetMapSize(20,16)">Jumbo Game (20x16)</label></div>
+            <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="standard" checked @onchange="(e) => GameConfig.SetMapSize(12,9)">Standard Game (12x9)</label></div>
+            <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="large" @onchange="(e) => GameConfig.SetMapSize(16,12)">Big Game (16x12)</label></div>
+            <div class="form-check-inline"><label><input type="radio" class="form-check-input" name="gameformat" value="jumbo" @onchange="(e) => GameConfig.SetMapSize(20,16)">Jumbo Game (20x16)</label></div>
+            @*
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="game-options-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Ruleset: @(Ruleset)
+                </button>
+                <div class="dropdown-menu" areia-labelledby="game-options-dropdown">
+                    <a class="dropdown-item" href="#" @onclick='(e) => SetRuleset("Standard")'>Standard</a>
+                    <a class="dropdown-item" href="#">Classic</a>
+                    <a class="dropdown-item" href="#">Starry</a>
+                    <a class="dropdown-item" href="#">Dangerous</a>
+                </div>
+            </div>
+            *@
 
-    <p>
-        <button class="btn btn-primary" @onclick="InitializeGame">Start Game!</button>
-    </p>
+            <p>
+                <button class="btn btn-primary" @onclick="InitializeGame">Start Game!</button>
+            </p>
+
+        </div>
+        <div class="options-summary" style="padding-left:3em;">
+            <GameConfigSummary GameConfig=@GameConfig />
+        </div>
+    </div>
+
 
     <p>
         <button @onclick="(e) => ToggleAdvancedOptions()" class="btn btn-outline-secondary" data-toggle="buttons">
@@ -46,10 +68,6 @@
     @if (AdvancedOptionsVisible)
     {
         <AdvancedOptions GameConfig=@GameConfig />
-    }
-    else
-    {
-        <GameConfigSummary GameConfig=@GameConfig/>
     }
 
 }
@@ -86,8 +104,8 @@
             <StatusGrid TheGame="@TheGame" GameStateObj="@GameStateObj" />
         </div>
 
-        <div class="clearfix">
-            <div class="row panel-map-and-actions" style="margin: 20px 0px 20px 0px; height: @((TheGame.Map.Y_Dimension+1) * 1.2 + 6 + 5)em;">
+        <div class="clearfix" >
+            <div class="row panel-map-and-actions" style="margin: 20px 0px 20px 0px; ">
                 @* Container for side-by-side map and newswire*@
 
                 <div style="display: flex;  flex-direction: column; padding: 0px 1em 0px 1em;">
@@ -117,15 +135,12 @@
                                     </div>
                                 }
                             </div>
-
                             @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
                             {
                                 @* if there are any companies *@
                                 @if (TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
                                 {
-                                    <div class="clearfix" style="width:100%;">
-                                        <span class="bold-small-header">Buy Stocks with @(TheGame.Players[GameStateObj.PlayerTurn].Money.ToString("C0")) (@(AvailableMoneyForStockBuying().ToString("C0")) unallocated)</span>
-                                    </div>
+ 
                                 }
                                 else @* no companies *@
                                 {
@@ -142,6 +157,7 @@
                                     </div>
                                 }
                             }
+
                         </fieldset>
 
                         @* End Turn Button for Human to continue game after Computer Turn *@
@@ -154,26 +170,41 @@
                     </div>
                 </div>
 
-                <div>
+
+
+                <div style="display:flex; flex-direction:column; justify-content: space-between; height: @((TheGame.Map.Y_Dimension+1) * 1.2 + 6 + 5)em;">
                     <GalacticNewswire TheGame="@TheGame" GameStateObj="@GameStateObj" />
+                    <div>
+                        @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
+                        {
+                            @* if there are any companies *@
+                            @if (TheGame.Companies.Where(item => item.Value.IsActive).ToDictionary(item => item.Key, i => i.Value).Count > 0)
+                            {
+                                <div class="clearfix" style="width:100%;">
+                                    @* <span class="bold-small-header">Buy Stocks with @(TheGame.Players[GameStateObj.PlayerTurn].Money.ToString("C0")) (@(GameStateObj.AvailableMoneyForStockBuying.ToString("C0")) unallocated)</span>
+                                    *@          <StockBuying TheGame="TheGame" GameStateObj="@GameStateObj" />
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
 
         <div style="display: flex; flex-direction: row; justify-content:center">
-            @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
+         @*   @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
             {
-                <BuyStocks TheGame="TheGame" GameStateObj="@GameStateObj" />
-            }
+                <BuyStocks TheGame="TheGame" GameStateObj="@GameStateObj" /> 
+            } *@
             <div class="company-status-panel" style="margin-top:2px; margin-bottom: 2px;">
                 <CompanyStatus TheGame="@TheGame" GameStateObj="@GameStateObj" />
             </div>
-            @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
+   @*         @if (GameStateObj.GameState == GameStateObject.GameStates.PlayerStockPurchasing)
             {
                 <div class="table-container company-status-grid" style="width: 7em; margin: 2px 2px 2px 2px;">
-                @* Nothing goes here, this is a spacer to balance the certer of the flex box*@
+                @* Nothing goes here, this is a spacer to balance the certer of the flex box*@ @*
                 </div>
-            }
+            } *@
         </div>
     </div>
 }
@@ -203,6 +234,11 @@
             return "";
     }
 
+    public string Ruleset = "Standard";
+    private void SetRuleset(string ruleset)
+    {
+        Ruleset = ruleset;
+    }
     public bool AdvancedOptionsVisible = false;
     private void ToggleAdvancedOptions()
     {
@@ -662,7 +698,7 @@
         //Buy Stocks
         string stockPurchaseDescription = StockPurchaseDescription(GameStateObj);
         if (!String.IsNullOrWhiteSpace(stockPurchaseDescription))
-            LogGameEvent(TheGame.Players[GameStateObj.PlayerTurn].Name + " buys shares:", stockPurchaseDescription);
+            LogGameEvent(TheGame.Players[GameStateObj.PlayerTurn].Name + " buys shares: " + stockPurchaseDescription);
         ExecuteStockTrades();
         GameStateObj.ResetStockExchange();
         StateHasChanged();

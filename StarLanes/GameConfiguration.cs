@@ -40,7 +40,7 @@
         public int MaxNumberOfMovesPerGame = 48;
         public int numberOfRounds = 12;
         public bool DefaultRounds = true;
-        public int numberOfMoves = 4;  // # of sectors the player is allowed to choose among to develop on his turn
+        public int numberOfMoves = 5;  // # of sectors the player is allowed to choose among to develop on his turn
 
         public GameConfiguration()
         {
@@ -265,8 +265,8 @@
             {
                 if (value < 3)
                     numberOfMoves = 3;
-                else if (value > 5)
-                    numberOfMoves = 5;
+                else if (value > 6)
+                    numberOfMoves = 6;
                 else numberOfMoves = value;
             }
         }
