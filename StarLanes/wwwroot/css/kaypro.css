@@ -33,7 +33,72 @@ a, .btn-link {
 .btn-primary {
     color: var(--backcolor);
     background-color: var(--main-color);
-    border-color: #1861ac;
+    border-color: var(--main-color);
+}
+
+.btn-primary:hover {
+    color: var(--main-highlight-color);
+    background-color: var(--main-color);
+    border-color: var(--main-highlight-color);
+}
+
+.btn-outline-secondary {
+    color: var(--main-color);
+    background-color: var(--backcolor);
+    border-color: var(--main-color);
+    outline: none;
+}
+
+.btn-outline-secondary:hover {
+    color: var(--main-highlight-color);
+    background-color: var(--backcolor);
+    border-color: var(--main-highlight-color);
+    outline: none;
+}
+
+.btn-secondary {
+    color: var(--backcolor);
+    background: var(--main-color);
+    outline: var(--main-color);
+}
+
+.btn-secondary:focus {
+    color: var(--main-highlight-color);
+    outline: var(--main-highlight-color);
+}
+
+input {
+    color: var(--main-color);
+    background-color: var(--backcolor);
+    border-color: var(--main-color);
+}
+
+input:focus {
+    outline-color: var(--main-highlight-color);
+    outline: solid 2px;
+}
+
+
+
+input[type=radio] {
+    color: var(--main-color);
+    background-color: var(--backcolor);
+    border-color: var(--main-color);
+    font-size: 2em;
+}
+
+.status-grid-player-box {
+    border-color: var(--main-color);
+}
+
+.status-grid-player-box-active {
+    border-color: var(--main-highlight-color);
+}
+
+
+.event-panel-event-recent {
+    background-color: var(--backcolor);
+    font-weight: 700;
 }
 
 

@@ -89,6 +89,11 @@
     padding: 2px 16px;
 }
 
+
+#AdvOptions input[type=number] {
+    text-align: right;
+}
+
 .panel-map-and-actions {
     display: flex;
     flex-direction: row;
@@ -253,7 +258,8 @@
     overflow: auto;
     max-width: 30em;
     min-width: 30em;
-
+    max-height: 252px;
+    height: auto;
     flex-grow: 1;
     margin: 5px 15px 5px 15px;
 }
@@ -318,6 +324,16 @@
     align-content: center;
     text-align: center;
     width: 4em;
+}
+
+.stock-buying-company-box-vertical input {
+    text-align: right;
+}
+
+.stock-buying-company-box-vertical-stock-symbol {
+    margin: 2px 12px;
+    color: white;
+    background-color: gray;
 }
 
 .stock-buying-company-name {

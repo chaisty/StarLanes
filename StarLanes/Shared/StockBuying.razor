@@ -10,7 +10,7 @@
             @if (c.Value.IsActive)
             {
                 <div class="stock-buying-company-box-vertical">
-                    <label title="@(c.Value.Name)">@(c.Value.Symbol)</label>
+                    <label class="stock-buying-company-box-vertical-stock-symbol" title="@(c.Value.Name)">@(c.Value.Symbol)</label>
                     <div class="stock-buying-controls">
                         <label class="stock-buying-share-value-vertical" for="Buy=@(c.Key)">@(c.Value.ShareValue.ToString("C0"))</label>
                         <input id="Buy=@(c.Key)" style="width:3em" type="number" @bind="GameStateObj.StockToBuy[c.Key]" min="0" max="@(MaxCanBuy(c.Key))" />

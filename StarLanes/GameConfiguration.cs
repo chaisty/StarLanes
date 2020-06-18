@@ -1,4 +1,6 @@
-﻿namespace StarLanes
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace StarLanes
 {
     public class GameConfiguration
     {
@@ -75,6 +77,7 @@
             }
         }
 
+        [Range(5,10)]
         public int NumberOfCompanies
         {
             get { return Max_Companies; }
